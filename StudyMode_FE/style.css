@@ -1,0 +1,10 @@
+body {
+    background-color: #ffffff;
+    color: #060907;/*FFFFFF99 another grey*/
+    font-family: 'Figtree', sans-serif;
+    text-align: justify;
+}
+h1, h2, h3 {
+    color: #060907;
+    text-align: center;
+}
