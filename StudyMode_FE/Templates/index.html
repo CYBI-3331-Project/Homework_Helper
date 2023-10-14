@@ -1,24 +1,42 @@
+<!-- Python's 'Flask' module uses the 'Jinja' web template engine to manage its template inheritance. -->
+
+<!-- 'Index.html' is an extension of 'Base.html' -->
 {% extends 'base.html' %}
 
+<!-- Begin head -->
 {% block head %}
+
+<!-- Defining 'functions.js' as the script source file -->
 <script src="{{ url_for('static', filename = 'js/functions.js') }}"></script>
+
+<!-- End head -->
 {% endblock %}
 
 
 
 
-
+<!-- Begin body -->
 {% block body %}
+
+<!-- I created a div countainer for the entirety of the body, as I wanted to organize each element relative to each other,
+    without making direct changed to the body (incase I introduce new elements outside of this container later). -->
 <div style="text-align: center;">
+
+    <!-- Container that holds the webpage 'Header'. Not the actual HTML header portion, just the textbox at the top. -->
     <div class="Container" id="HeadBox">
+
+        <!-- Text within the container, raised from the bottom to center it vertically -->
         <h1 style="position: relative; bottom: 45%;"> Study Mode </h1>
     </div>
 
-    
+    <!-- Container for the timer -->
     <div class="Container" id="Timer">
         <h2>Timer</h2>
+
+        <!-- Canvas to host the timer couting down -->
         <canvas id="TimerCanv" width="500" height="100"></canvas>
             
+            <!-- Button to toggle studymode -->
             <button class="Container" id="TimerButton" type = "button" onclick = "toggleDimness()">Pause</button>
         </canvas>
         
@@ -28,4 +46,5 @@
     <p id="Tip"> Tip: Try putting on some relaxing music while you study! </p>
     
 </div>
+<!-- End body -->
 {% endblock %}

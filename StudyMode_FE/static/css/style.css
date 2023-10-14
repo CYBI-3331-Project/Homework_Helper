@@ -1,3 +1,4 @@
+/* Element types */
 body {
     background-color: #e2ebec;
     color: #060907;
@@ -22,11 +23,13 @@ p {
 
 }
 
+/* Class types */
 .Container{
     background-color: #C3D5CE;
     border-radius: 30px;
 }
 
+/* Element IDs */
 #HeadBox{
     position: relative;
     text-align: center;
