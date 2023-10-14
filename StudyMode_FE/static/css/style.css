@@ -33,7 +33,7 @@ p {
     width: 300px;
     height: 80px;
     left: 50%;
-    padding: 0%;
+    transform: translate(-150px, 0);
 }
 
 #Tip{
@@ -43,8 +43,20 @@ p {
 }
 
 #Timer{
-    text-align: left;
+    text-align: center;
     width: 500px;
-    height: 300px;
+    height: 200px;
     position: relative;
+    left: 50%;
+    transform: translate(-250px, 150px);
+}
+#TimerButton{
+    position: relative;
+    text-align: center;
+    height: 30px;
+    width: 125px;
+    border-width: 1px;
+    border-color: #a1c2b6;
+    font-family: cursive;
+    font-size: 20px;
 }
