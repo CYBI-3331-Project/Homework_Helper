@@ -1,18 +1,31 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<h1> Study Mode </h1>
+
+<div>
+    <div class="Container" id="HeadBox">
+        <h1 style="position: relative; bottom: 45%;"> Study Mode </h1>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename = 'js/functions.js') }}"></script>
 
 {% endblock %}
 
+
+
 {% block body %}
-<div class="Timer" style="align-items: center;">
-    <h1>Timer</h1>
-    <canvas id="TimerBody" width="500" height="50" style="border: 1px solid #000;">
+<div class="Container" id="Timer">
+    <h2>Timer</h2>
+    <canvas id="TimerBg" width="500" height="250"></canvas>
+        
+        
         
 
     </canvas>
-
-
+        
 </div>
+
+<input type = "button" onclick = "toggleDimness()" />
+<p id="Tip"> Tip: Try putting on some relaxing music while you study! </p>
 {% endblock %}

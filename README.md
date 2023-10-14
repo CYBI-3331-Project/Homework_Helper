@@ -1,9 +1,8 @@
 # Homework_Helper
 TODO:
-    Creat timer shape
+    Create timer elemet
     Write timer behavior
-    write website behavior
-    create timer buttons
+    write website behavior (timer stopped / started)
 
 Remember:
     Flask db management: SQLAlchemy
