@@ -1,6 +1,6 @@
 # Homework_Helper
 TODO:
-    Creat timer shape
+    Create timer shape
     Write timer behavior
     write website behavior
     create timer buttons
