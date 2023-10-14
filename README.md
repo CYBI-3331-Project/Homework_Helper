@@ -1,6 +1,6 @@
 # Homework_Helper
 TODO:
-    Create timer elemet
+    Creat timer element
     Write timer behavior
     write website behavior (timer stopped / started)
 
