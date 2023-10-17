@@ -1,3 +1,13 @@
+/* Fonts */
+@font-face{
+    font-family: 'Digital';
+    src: url("DigitalDismay.otf") format("opentype");
+    font-weight: normal;
+}
+.header{
+    font-family: Digital;
+}
+
 /* Element types */
 body {
     background-color: #e2ebec;
@@ -29,6 +39,14 @@ p {
     border-radius: 30px;
 }
 
+.TimerNumbers{
+    position: relative;
+    text-align: center;
+    font-family: 'Digital', cursive;
+    font-size: 100px;
+    
+}
+
 /* Element IDs */
 #HeadBox{
     position: relative;
@@ -45,7 +63,7 @@ p {
     text-align: center;
 }
 
-#Timer{
+#TimerContainer{
     text-align: center;
     width: 500px;
     height: 200px;
@@ -62,4 +80,13 @@ p {
     border-color: #a1c2b6;
     font-family: cursive;
     font-size: 20px;
+    transform: translateY(-10px);
+}
+
+#NumContainer{
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    left: 50%;
+    
 }

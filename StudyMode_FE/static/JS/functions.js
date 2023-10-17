@@ -30,8 +30,8 @@ function sayHello() {
             elements[i].style.backgroundColor = "#a8c2b8"
         }
 
-        //Change the text of the button from 'Pause' to 'Resume
-        document.getElementById("TimerButton").textContent = "Resume"
+        //Change the text of the button from 'Resume' to 'Pause'
+        document.getElementById("TimerButton").textContent = "Pause"
 
     }
     else //Otherwise, if screen is to be undimmed
@@ -49,7 +49,22 @@ function sayHello() {
             elements[i].style.backgroundColor = "#C3D5CE"
         }
 
-        //Change the text of the button from 'Pause' to 'Resume
-        document.getElementById("TimerButton").textContent = "Pause"
+        //Change the text of the button from 'Pause' to 'Resume'
+        document.getElementById("TimerButton").textContent = "Resume"
     }
  }
+
+ //Initialize the Study Mode Timer
+ function initTimer(studyTime){
+    timer = getElementById('TimerButton')
+    timer.textContent = studyTime
+
+    
+
+
+ }
+
+  //Pause/Resume the Study Mode Timer
+  function toggleTimer(){
+
+  }
