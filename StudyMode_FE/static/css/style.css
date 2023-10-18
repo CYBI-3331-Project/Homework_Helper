@@ -84,7 +84,7 @@ p {
 }
 
 #NumContainer{
-    display: flex;
+    display: inline-flex;
     flex-direction: row;
     text-align: center;
     left: 50%;

@@ -29,15 +29,21 @@
         <h1 style="position: relative; bottom: 45%;"> Study Mode </h1>
     </div>
 
-    <!-- Container for the timer -->
+    <!-- Container for the timer box-->
     <div class="Container" id="TimerContainer">
         <h2>Timer</h2>
 
         <div id="NumContainer">
-            <div class="TimerNumbers", id="Hours"> 0 </div>
-            <div class="TimerNumbers", id="Minutes"> 0 </div>
-            <div class="TimerNumbers", id="Seconds"> 0 </div>
+            <div class="TimerNumbers", id="Hours"> 00 </div>
+            <div class="TimerNumbers"> : </div>
+            <div class="TimerNumbers", id="Minutes"> 00 </div>
+            <div class="TimerNumbers"> : </div>
+            <div class="TimerNumbers", id="Seconds"> 00 </div>
         </div>
+
+        <!-- Took me an unreasonable amount of time to figure out how to center the numbers within the numcontainer. Ended up having to set the div to inline-flex.
+             Empty div is to end the inline -->
+        <div id="EasterEgg"></div>
         
         <!-- Button to toggle studymode -->
         <button class="Container" id="TimerButton" type = "button" onclick = "toggleDimness()">Start</button>
