@@ -55,16 +55,17 @@ function sayHello() {
  }
 
  //Initialize the Study Mode Timer
- function initTimer(studyTime){
-    timer = getElementById('TimerButton')
-    timer.textContent = studyTime
-
+ function initTimer(hours, minutes, seconds){
+    hourText = document.getElementById('Hours')
+    minuteText = document.getElementById('Minutes')
+    secondText = document.getElementById('Seconds')
+    hourText.textContent = hours
+    minuteText.textContent = minutes
+    secondText.textContent = seconds
     
-
-
  }
 
   //Pause/Resume the Study Mode Timer
   function toggleTimer(){
-
+    toggleDimness();
   }
