@@ -80,7 +80,7 @@ p {
     border-color: #a1c2b6;
     font-family: cursive;
     font-size: 20px;
-    transform: translateY(-10px);
+    transform: translateY(-40px);
 }
 
 #NumContainer{
@@ -88,5 +88,6 @@ p {
     flex-direction: row;
     text-align: center;
     left: 50%;
+    transform: translateY(-30px);
     
 }

@@ -7,6 +7,8 @@ app = Flask(__name__)
 def log_in():
     return render_template('log_in.html')
 
+
+#
 @app.route('/Create_your_account/')
 def create():
     return render_template('create.html')
@@ -24,4 +26,4 @@ def study_mode():
     return render_template('study_mode.html')
 
 if __name__ == "__main__":
-    app.run(host='192.168.1.142')
+    app.run(debug=True) #app.run(host='192.168.1.142')

@@ -64,8 +64,18 @@ function sayHello() {
     secondText.textContent = seconds
     
  }
+ 
+ //Start the timer
+ function startTimer(){
+    
+ }
 
-  //Pause/Resume the Study Mode Timer
-  function toggleTimer(){
+ //Pause the timer
+ function pauseTimer(){
+
+  }
+
+ //Pause/Resume the Study Mode Timer
+ function toggleTimer(){
     toggleDimness();
   }
