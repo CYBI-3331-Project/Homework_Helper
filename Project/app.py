@@ -24,4 +24,4 @@ def study_mode():
     return render_template('study_mode.html')
 
 if __name__ == "__main__":
-    app.run(host='192.168.1.142')
+    app.run(debug:True)
