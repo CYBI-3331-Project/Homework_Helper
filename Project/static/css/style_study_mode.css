@@ -1,0 +1,92 @@
+/* Fonts */
+@font-face{
+    font-family: 'Digital';
+    src: url("DigitalDismay.otf") format("opentype");
+    font-weight: normal;
+}
+.header{
+    font-family: Digital;
+}
+
+/* Element types */
+body {
+    background-color: #e2ebec;
+    color: #060907;
+    font-family: cursive;
+    text-align: center;
+}
+h1 {
+    color: #060907;
+    text-align: center;
+    padding-top: 50px;
+}
+h2 {
+    color: #060907;
+    text-size-adjust: 16;
+    text-align: center;
+
+}   
+
+p {
+    color: #060907;
+    text-align: center;
+
+}
+
+/* Class types */
+.Container{
+    background-color: #C3D5CE;
+    border-radius: 30px;
+}
+
+.TimerNumbers{
+    position: relative;
+    text-align: center;
+    font-family: 'Digital', cursive;
+    font-size: 100px;
+    
+}
+
+/* Element IDs */
+#HeadBox{
+    position: relative;
+    text-align: center;
+    width: 300px;
+    height: 80px;
+    left: 50%;
+    transform: translate(-150px, 0);
+}
+
+#Tip{
+    position:fixed;
+    bottom: 5px;
+    text-align: center;
+}
+
+#TimerContainer{
+    text-align: center;
+    width: 500px;
+    height: 200px;
+    position: relative;
+    left: 50%;
+    transform: translate(-250px, 150px);
+}
+#TimerButton{
+    position: relative;
+    text-align: center;
+    height: 30px;
+    width: 125px;
+    border-width: 1px;
+    border-color: #a1c2b6;
+    font-family: cursive;
+    font-size: 20px;
+    transform: translateY(-10px);
+}
+
+#NumContainer{
+    display: inline-flex;
+    flex-direction: row;
+    text-align: center;
+    left: 50%;
+    
+}

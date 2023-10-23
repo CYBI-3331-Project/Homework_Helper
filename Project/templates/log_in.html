@@ -1,0 +1,27 @@
+<!-- Python's 'Flask' module uses the 'Jinja' web template engine to manage its template inheritance. -->
+
+<!-- 'Index.html' is an extension of 'Base.html' -->
+{% extends 'base.html' %}
+
+<!-- Begin head -->
+{% block head %}
+<title>Login Page</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style_log_in.css') }}">
+{% endblock %}
+{% block body %}
+<br><br><br><br><br>
+<div class="box">
+<h1>Sign In</h1>
+<form action="log_in.php" method="post">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username"><br><br>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password"><br><br>
+    <input type="checkbox" id="remember" name="remember" value="Remember me">
+    <label for="remember">Remember me</label><br><br>
+    <button>Sign in</button>
+</form>
+<p>Not registered? <a href="{{ url_for('create') }}">Create an account</a></p>
+<p>Forgot your password? <a href="{{ url_for('forgotpw') }}">Click here</a></p>
+</div>
+{% endblock %}

@@ -1,0 +1,72 @@
+body {
+    background-color: #e9f7ec;/*285136285136*/
+    color: #c0e7cb;/*FFFFFF99 another greyFFFFFF*/
+    font-family: 'Figtree', sans-serif;
+    text-align: justify;
+}
+/*
+--text: #08160c;
+--background: #e9f7ec;
+--primary: #235c32;f09d99
+--secondary: #c0e7cb;
+--accent: #3c9f57;f09d99
+*/
+h1, h2, h3 {
+    color: #c0e7cb;
+    text-align: center;
+}
+a, .link {
+    color: #3c9f57;
+    text-decoration: none;
+}
+a:hover, .link:hover {
+    color: #f09d99;
+}
+button {
+    background-clip: border-box;
+    background-color: #1e4f2b;
+    color: #3c9f57;
+    border-color: #235c32;
+    border-width: 1px;
+    font-size: 125%;
+    border-radius: 5px;
+    cursor: pointer;
+}
+button:hover {
+    color: #f09d99;
+}
+.box {
+    width: 30%;
+    height: 50%;
+    text-align: left;
+    background-color: #235c32;/*lighter black 111113 */
+    border-radius: 5px;
+    padding: 15px;
+    margin: auto;
+}
+input[type="text"], textarea {
+    background-color: #e9f7ec;
+}
+input[type="password"], textarea {
+    background-color: #e9f7ec;
+}
+input[type="email"], textarea {
+    background-color: #e9f7ec;
+}
+input[type="tel"], textarea {
+    background-color: #e9f7ec;
+}
+input, select, textarea{
+    color: #08160c;
+}
+textarea:focus, input:focus {
+    color: #08160c;
+}
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.center {
+    text-align: center;
+}
