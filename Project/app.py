@@ -7,8 +7,6 @@ app = Flask(__name__)
 def log_in():
     return render_template('log_in.html')
 
-
-#
 @app.route('/Create_your_account/')
 def create():
     return render_template('create.html')
