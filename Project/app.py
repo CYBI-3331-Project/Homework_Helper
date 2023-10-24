@@ -19,7 +19,7 @@ def forgotpw():
 def homepage():
     return render_template('homepage.html')
 
-@app.route('/Homepage/Study_Mode/')
+@app.route('/Study_Mode/')
 def study_mode():
     return render_template('study_mode.html')
 

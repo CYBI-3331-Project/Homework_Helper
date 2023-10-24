@@ -15,7 +15,7 @@
 {% endblock %}
 
 
-{% block body_attrs %} onload="initTimer();" {% endblock %}
+{% block body_attrs %} onload="initTimer(0, 0, 5);" {% endblock %}
 
 <!-- Begin body -->
 {% block body %}
@@ -33,7 +33,7 @@
 
     <!-- Container for the timer box-->
     <div class="Container" id="TimerContainer">
-        <h2>Timer</h2>
+        <h2 id="timerTitle">Study time!</h2>
 
         <div id="NumContainer">
             <div class="TimerNumbers", id="Hours"> 00 </div>

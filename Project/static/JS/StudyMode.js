@@ -55,11 +55,20 @@ function sayHello() {
  }
 
  var hours = 0;
- var minutes = 15;
- var seconds = 3;
+ var minutes = 0;
+ var seconds = 1;
  var paused = true;
- //Initialize the Study Mode Timer
- function initTimer(){
+var studyTime = true;
+
+//Initializes the values of the timer
+ function initTimer(h, m, s){
+    hours = h;
+    minutes = m;
+    seconds = s;
+    setTimer();
+}
+ //Set the values of the Study Mode Timer within the number elements
+ function setTimer(){
     hourText = document.getElementById('Hours');
     minuteText = document.getElementById('Minutes');
     secondText = document.getElementById('Seconds');
@@ -113,25 +122,37 @@ function sayHello() {
         if(minutes > 0){
             minutes -= 1
             seconds = 59
+            setTimer();
         }
         else if(hours > 0){
             hours -= 1
             minutes = 59
             seconds = 59
+            setTimer();
         }
         else{
-            pauseTimer()
+            if(studyTime){
+                document.getElementById("timerTitle").textContent = "Break time!";
+                studyTime = false
+                initTimer(0, 0, 5)
+            }
+            else{
+                document.getElementById("timerTitle").textContent = "Study time!";
+                studyTime = true
+                initTimer(0, 0, 15)
+            }
         }
 
     }
-    else
-    seconds -= 1;
-    initTimer();
+    else{
+        seconds -= 1;
+        setTimer();
+    }
  }, 1000);
 }
  function startTimer(){
     paused = false;
-    initTimer();
+    setTimer();
     disableButton(1000)
  }
 
