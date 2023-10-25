@@ -20,7 +20,11 @@ th.delete{
 th.edit{
     border:1px solid white;  
 }
-
+.navbar {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+}
 tr:hover
 {
     color: pink

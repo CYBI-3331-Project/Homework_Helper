@@ -1,11 +1,11 @@
 <!-- Python's 'Flask' module uses the 'Jinja' web template engine to manage its template inheritance. -->
 
 <!-- 'Index.html' is an extension of 'Base.html' -->
-{% extends 'base.html' %}
+{% extends 'base_nav_bar.html' %}
 
 <!-- Begin head -->
 {% block head %}
-
+<title>Study Mode</title>
 <!-- Defining 'functions.js' as the script source file -->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style_study_mode.css') }}">
 
@@ -19,7 +19,15 @@
 
 <!-- Begin body -->
 {% block body %}
-
+<div class="navbar">
+<ul>
+    <li><a href="{{ url_for('homepage') }}">Home</a></li>
+    <li><a href="{{ url_for('assessments') }}">Assessments</a></li>
+    <li><a class="active" href="{{ url_for('study_mode') }}">Study Mode</a></li>
+    <li><a href="{{ url_for('monthly_calendar') }}">Monthly Calendar View</a></li>
+    <li><a href="#settings">Settings</a></li>
+</ul>
+</div>
 <!-- I created a div countainer for the entirety of the body, as I wanted to organize each element relative to each other,
     without making direct changed to the body (incase I introduce new elements outside of this container later). -->
 <div style="text-align: center;">

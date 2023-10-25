@@ -1,0 +1,17 @@
+<!-- This base file is essentially and exoskeleton for future HTML files -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Link to css file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_homepage.css') }}">
+    <!-- Below is where any HTML files that will use this base file are going to attatch themselves as an extension of 'base.html'-->
+
+    {% block head %}{% endblock %}
+</head>
+<body {% block body_attrs %}{% endblock %}>
+    {% block body %}{% endblock %}
+</body>
+</html>

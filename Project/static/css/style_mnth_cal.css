@@ -1,0 +1,138 @@
+/*Navigation bar styles*/
+.navbar {
+    position: fixed;
+    top: 23px;
+    left: 23px;    
+    width: 100%;
+    margin: auto;
+    padding-bottom: 50px;
+}
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+li {
+    float: left;
+}
+li a {
+    display: block;
+    text-align: center;
+    background-color: #285136;
+    color: #f09d99;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+li a:hover:not(.active) {
+    background-color: #f09d99;
+    color: #285136;
+  }
+.active {
+    color: #285136;
+    background-color: #f09d99;
+}
+/*End of navigation bar styles*/
+
+/* Color Theme
+--text: #08160c;
+--background: #e9f7ec;
+--primary: #235c32;
+--secondary: #c0e7cb;
+--accent: #3c9f57;f09d99
+dark theme: 
+--text: #e9f7ed;
+--background: #08160b;
+--primary: #a3dcb2;
+--secondary: #183f23;
+--accent: #60c37a;
+*/
+:root {
+    --primary-clr: #235c32;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Figtree', sans-serif;
+}
+
+body {
+    min-height: 110vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e9f7ec;
+}
+
+.container {
+    position: relative;
+    width: 1310px;
+    min-height: 615px;
+    margin: 0 auto;
+    padding: 5px;
+    color: #c0e7cb;
+    display: flex;
+    border-radius: 10px;
+    background-color: #235c32;
+}
+
+.left {
+    width: 60%;
+    padding: 20px;
+}
+
+.calendar {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    color: #235c32;
+    border-radius: 5px;
+    background-color: #e9f7ec;
+}
+
+.calendar .month {
+    width: 100%;
+    height: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 50px;
+    font-size: 1.2rem;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.calendar .month .prev,
+.calendar .month .next {
+    cursor: pointer;
+}
+.calendar .month .prev:hover,
+.calendar .month .next:hover {
+    color: var(--primary-clr);
+}
+
+.calendar .weekdays {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    font-size: 1rem;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.calendar .weekdays div {
+    width: 14.28%;
+    height: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
