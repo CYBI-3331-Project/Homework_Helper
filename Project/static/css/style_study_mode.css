@@ -26,14 +26,7 @@ h2 {
     text-align: center;
 
 }   
-.navbar {
-    position: static;
-    top: 5px;
-    left: 5px;    
-    width: 100%;
-    height: 50%;
-    margin: auto;
-}
+
 p {
     color: #060907;
     text-align: center;
@@ -44,6 +37,8 @@ p {
 .Container{
     background-color: #C3D5CE;
     border-radius: 30px;
+    
+
 }
 
 .TimerNumbers{

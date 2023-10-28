@@ -20,33 +20,61 @@ th.delete{
 th.edit{
     border:1px solid white;  
 }
-.navbar {
-    position: absolute;
-    top: 8px;
-    left: 8px;
-}
+
 tr:hover
 {
     color: pink
 }
 
-
-div{
-    text-align: center;
-}
-
-.center
-{
-    margin-left: auto;
-    margin-right: auto;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Figtree', sans-serif;
 }
 
 body {
-    background-color: #285136;
-    color: #FFFFFF;/*FFFFFF99 another grey*/
     font-family: 'Figtree', sans-serif;
-    text-align: justify;
-    padding: 150px;        /* To make box smaller */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 110vh;
+}
+
+.container {
+    position: relative;
+    width: 1310px;
+    min-height: 580px;
+    margin: 0 auto;
+    padding: 5px;
+    color: #e9f7ec;
+    display: flex;
+    border-radius: 10px;
+    background-color: #235c32;
+}
+.left {
+    width: 60%;
+    padding: 20px;
+}
+
+.calendar { /*the whole calendar section */
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    color: #08160c;
+    border-radius: 5px;
+    background-color: #e9f7ec;
+}
+
+.container .right {
+    position: relative;
+    width: 40%;
+    min-height: 100%;
+    padding: 20px 0;
 }
 
 a:visited

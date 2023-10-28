@@ -1,4 +1,4 @@
-{% extends 'test_base.html' %}
+{% extends 'base_homepage.html' %}
 
 {% block head %}
         <meta charset="UTF-8">
@@ -25,7 +25,7 @@
         <div class="calendar">
             <div class="month">
                 <i class="fa fa-angle-left prev"></i>
-                <div class="date">october 2023</div>
+                <div class="date"></div>
                 <i class="fa fa-angle-right next"></i>
             </div>
             <div class="weekdays">
@@ -38,15 +38,19 @@
                 <div>sat</div>
             </div>
             <div class="days">
-                <div class="day">1</div>
-                <div class="day">2</div>
-                <div class="day">3</div>
-                <div class="day">4</div>
-                <div class="day">5</div>
-                <div class="day">6</div>
+                <!--these are added with JS-->
             </div>
         </div>
     </div>
+    <div class="right">
+        <div class="today-date">
+            <div class="event-day"></div> <!--dummy dates-->
+            <div class="event-date"></div>
+        </div>
+        <div class="events"> 
+        <!--assignments inserted through JS-->
+        </div> 
+    </div>
 </div>
-<script src="script_calendar.js"></script>
+<script src="{{ url_for('static', filename = 'JS/script_calendar.js') }}"></script>
 {% endblock %}

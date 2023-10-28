@@ -1,13 +1,43 @@
-body {
-    background-color: #e9f7ec;/*285136*/
-    color: #c0e7cb;/*FFFFFF99 another grey*/
-    font-family: 'Figtree', sans-serif;
-    text-align: justify;
+/*Navigation bar styles*/
+.navbar {
+    position: absolute;
+    top: 23px;
+    left: 23px;    
+    width: 100%;
+    margin: auto;
+    padding-bottom: 50px;
 }
-/*
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+li {
+    float: left;
+}
+li a {
+    display: block;
+    text-align: center;
+    background-color: #285136;
+    color: #f09d99;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+li a:hover:not(.active) {
+    background-color: #f09d99;
+    color: #285136;
+  }
+.active {
+    color: #285136;
+    background-color: #f09d99;
+}
+/*End of navigation bar styles*/
+
+/* Color Theme
 --text: #08160c;
 --background: #e9f7ec;
---primary: #235c32;f09d99
+--primary: #235c32;
 --secondary: #c0e7cb;
 --accent: #3c9f57;f09d99
 dark theme: 
@@ -17,6 +47,17 @@ dark theme:
 --secondary: #183f23;
 --accent: #60c37a;
 */
+body {
+    background-color: #e9f7ec;/*285136*/
+    color: #c0e7cb;/*FFFFFF99 another grey*/
+    font-family: 'Figtree', sans-serif;
+    text-align: justify;
+    min-height: 110;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 header {
     color: #08160c;
     text-align: center;
@@ -61,40 +102,7 @@ h3 {
     color: #c0e7cb;
     text-align: center;
 }
-.navbar {
-    position: static;
-    top: 8px;
-    left: 8px;    
-    width: 100%;
-    height: 50%;
-    padding: 15px;
-    margin: auto;
-}
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-}
-li {
-    float: left;
-}
-li a {
-    display: block;
-    text-align: center;
-    background-color: #285136;
-    color: #f09d99;
-    padding: 14px 16px;
-    text-decoration: none;
-}
-li a:hover:not(.active) {
-    background-color: #f09d99;
-    color: #285136;
-  }
-.active {
-    color: #285136;
-    background-color: #f09d99;
-}
+
 button {
     background-clip: border-box;
     background-color: #235c32;
@@ -134,11 +142,7 @@ input, select, textarea{
 textarea:focus, input:focus {
     color: #08160c;
 }
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-}
+
 .week { /*can remove this to have days 
     cover whole screen
     can be an idea */
