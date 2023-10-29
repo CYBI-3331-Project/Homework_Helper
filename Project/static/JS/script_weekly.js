@@ -1,10 +1,50 @@
-const prevWeekButton = document.getElementById('prevWeek');
-const nextWeekButton = document.getElementById('nextWeek');
-const currentWeekRangeElem = document.getElementById('currentWeekRange');
-const daysContainer = document.querySelector('.days');
+const calendar = document.querySelector(".calendar"),
+  currentWeekRangeElem = document.getElementById('currentWeekRange'),
+  daysContainer = document.querySelector('.days'),
+  prev = document.querySelector(".prev"),
+  next = document.querySelector(".next"),
+  eventsContainer = document.querySelector(".events");
+
 
 let startOfWeek = new Date();
 startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+
+const eventsArr = [
+  {
+      day: 31,
+      month: 10,
+      year: 2023,
+      events: [
+          {
+              title: "HALLOWEEN party",
+              description: "At friends house",
+              time: "8:00 PM",
+          },
+          {
+              title: "Exam 1",
+              description: "Study chapters 1-5 for this exam",
+              time: "11:59 PM",
+          },
+      ],
+  },
+  {
+      day: 5,
+      month: 10,
+      year: 2023,
+      events: [
+          {
+              title: "Assessment 1",
+              description: "Study chapters 5-9 for this assessment",
+              time: "11:59 PM",
+          },
+          {
+              title: "Exam 1",
+              description: "Study chapters 1-5 for this exam",
+              time: "11:59 PM",
+          },
+      ],
+  },
+];
 
 function updateCalendar() {
   daysContainer.innerHTML = '';
@@ -28,12 +68,12 @@ function updateCalendar() {
   currentWeekRangeElem.textContent = `${startOfWeek.toDateString()} - ${endOfWeek.toDateString()}`;
 }
 
-prevWeekButton.addEventListener('click', () => {
+prev.addEventListener('click', () => {
   startOfWeek.setDate(startOfWeek.getDate() - 7);
   updateCalendar();
 });
 
-nextWeekButton.addEventListener('click', () => {
+next.addEventListener('click', () => {
   startOfWeek.setDate(startOfWeek.getDate() + 7);
   updateCalendar();
 });

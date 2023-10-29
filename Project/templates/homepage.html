@@ -12,51 +12,32 @@ referrerpolicy="no-referrer" />
 <title>Monthly Calendar</title>
 {% endblock %}
 {% block body %}
-<div class="navbar">
-<ul>
-    <li><a class="active" href="{{ url_for('homepage') }}">Home</a></li>
-    <li><a href="{{ url_for('assessments') }}">Assessments</a></li>
-    <li><a href="{{ url_for('study_mode') }}">Study Mode</a></li>
-    <li><a href="{{ url_for('monthly_calendar') }}">Monthly Calendar View</a></li>
-    <li><a href="#settings">Settings</a></li>
-</ul>
+<div class="navbar-body">
+    <div class="left">
+        <div class="navbar">
+            <ul>
+                <li><a class="active" href="{{ url_for('homepage') }}">Home</a></li>
+                <li><a href="{{ url_for('assessments') }}">Assessments</a></li>
+                <li><a href="{{ url_for('study_mode') }}">Study Mode</a></li>
+                <li><a href="{{ url_for('monthly_calendar') }}">Monthly Calendar View</a></li>
+                <li><a href="#settings">Settings</a></li>
+            </ul>
+        </div>
+    </div>
 </div>
-<div class="container-home">
-    <div class="middle">
-        <div class="calendar">
-            <div class="month">
-                <button id="prevWeek"><i class="fa fa-angle-left prev"></i></button> 
-                <span id="currentWeekRange"></span>
-                <button id="nextWeek"><i class="fa fa-angle-right prev"></i></button> 
+<div class="container-body">
+    <div class="container">
+        <div class="middle">
+            <div class="calendar">
+                <div class="month">
+                    <i class="fa fa-angle-left prev"></i>
+                    <span id="currentWeekRange"></span>
+                    <i class="fa fa-angle-right next"></i>
                 </div>
-            <div class="days"></div>
-
-            <!--
-            <div class="week"> previous attempt
-            <div class="day">
-                <h3>Monday</h3>
-                <div class="event">Meeting at 10am</div>
+                <div class="days">
+                    <!--these are added with JS-->
+                </div>
             </div>
-            <div class="day">
-                <h3>Tuesday</h3>
-            </div>
-            <div class="day">
-                <h3>Wednesday</h3>
-            </div>
-            <div class="day">
-                <h3>Thursday</h3>
-            </div>
-            <div class="day">
-                <h3>Friday</h3>
-            </div>
-            <div class="day">
-                <h3>Saturday</h3>
-            </div>
-            <div class="day">
-                <h3>Sunday</h3>
-                <div class="event">CYBI-3343 Homework 2.3 due at 11:59 PM</div>
-            </div>
-        -->
         </div>
     </div>
 </div>

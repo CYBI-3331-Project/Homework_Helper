@@ -1,11 +1,15 @@
 /*Navigation bar styles*/
-.navbar {
-    position: absolute;
-    top: 23px;
-    left: 23px;    
+.navbar-body {
     width: 100%;
+    position: fixed;
+    display: flex;
+    top: 0px;
+    padding: 0;
+}
+.navbar {
     margin: auto;
-    padding-bottom: 50px;
+    left: 0px;
+    position: relative;
 }
 ul {
     list-style-type: none;
@@ -66,11 +70,17 @@ body {
     background-color: #e9f7ec;
 }
 
+.container-body {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    position: fixed;
+    padding: 0px;
+    width: 100%;
+}
 .container {
-    position: relative;
     width: 1310px;
-    min-height: 580px;
-    margin: 0 auto;
+    min-height: 600px;
     padding: 5px;
     color: #e9f7ec;
     display: flex;
@@ -166,7 +176,8 @@ body {
 
 .calendar .days .prev-date,
 .calendar .days .next-date {
-    color: #B2BEB5 ash gray, /*days not part of month*/
+    color: #08160c28;/*color: #B2BEB5; days not part of month*/
+    background-color: #b2beb571;
 }
 
 .calendar .days .active { 
