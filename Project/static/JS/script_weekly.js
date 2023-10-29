@@ -1,117 +1,84 @@
-const date = new Date();
+const prevWeekButton = document.getElementById('prevWeek');
+const nextWeekButton = document.getElementById('nextWeek');
+const currentWeekRangeElem = document.getElementById('currentWeekRange');
+const daysContainer = document.querySelector('.days');
 
-function renderCalendar(lastdayofweek)
-  {
-  var lastofweek = lastdayofweek;
-  date.setDate(1);
+let startOfWeek = new Date();
+startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
 
-  const monthDays     = document.querySelector(".days");
-  var   lastDay       = new Date( date.getFullYear(), date.getMonth() + 1, 0).getDate();
-  const prevLastDay   = new Date( date.getFullYear(), date.getMonth(), 0 ).getDate();
-  const firstDayIndex = date.getDay();
-  const lastDayIndex  = new Date( date.getFullYear(), date.getMonth() + 1, 0 ).getDay();
-  const nextDays      = 7 - lastDayIndex - 1;
+function updateCalendar() {
+  daysContainer.innerHTML = '';
+  let days = [];
+  let endOfWeek = new Date(startOfWeek);
+  endOfWeek.setDate(endOfWeek.getDate() + 6);
 
-  const months = 
-    [ 'January', 'February', 'March', 'April', 'May', 'June'
-    , 'July', 'August', 'September', 'October', 'November', 'December'
-    ];
-
-  document.querySelector(".date h1").innerHTML = months[date.getMonth()];
-  document.querySelector(".date p").innerHTML  = new Date().toDateString();
-
-  let days  = '' 
-    , count = 0
-    ;
-  if (lastofweek+7 >= lastDay)
-    {
-    for (let x = firstDayIndex; x > 0; x--)
-      {
-      days      += `<div class="prev-date">${prevLastDay - x + 1}</div>`;
-      count      = count+1;
-      lastofweek = prevLastDay - x + 1;
-      lastDay    = lastofweek;
-      }
-    }
-
-  const nxtDay = 7 - count - 1;
-
-  if (lastofweek == undefined)
-    {
-    for (let i = 1; i <= nxtDay+1; i++)
-      {
-      if (i === new Date().getDate() && date.getMonth() === new Date().getMonth()) 
-        {
-        days += `<div class="today">${i}</div>`;
-        } 
-      else 
-        {
-        days += `<div>${i}</div>`;
-        lastDayOfWeek = i;
-        }
-      count = count+1;
-      monthDays.innerHTML = days;
-      }
-    }
-  else
-    {
-    if (lastofweek+1 > lastDay)
-      {
-      lastofweek = 0;
-      }   
-    var forCount = 0;
-
-    for (let i = lastofweek+1; i <= lastofweek+7; i++)
-      {
-      if(lastDay >= i && forCount <= nxtDay)
-        {
-        if (i === new Date().getDate() && date.getMonth() === new Date().getMonth())
-          {
-          days += `<div class="today">${i}</div>`;
-          } 
-        else 
-          {
-          days += `<div>${i}</div>`;
-          lastDayOfWeek = i;
-          }
-        count    = count+1;
-        forCount = forCount + 1;
-        monthDays.innerHTML = days;
-        }
-      } 
-    }
-
-  if (count < 7)
-    {
-    for (let j = 1; j <= nextDays; j++) 
-      {
-      days += `<div class="next-date">${j}</div>`;
-      monthDays.innerHTML = days;
-      }
-    }
+  for (let i = 0; i < 7; i++) {
+    const currentDate = new Date(startOfWeek);
+    currentDate.setDate(startOfWeek.getDate() + i);
+    days.push(currentDate.toDateString());
   }
-
-
-document.querySelector(".prev").addEventListener("click", () => 
-  {
-  date.setMonth(date.getMonth());
-  renderCalendar();
+  
+  days.forEach(day => {
+    const dayDiv = document.createElement('div');
+    dayDiv.classList.add('day');
+    dayDiv.textContent = day;
+    daysContainer.appendChild(dayDiv);
   });
 
-const lastDay = new Date( date.getFullYear(), date.getMonth() + 1, 0 ).getDate();
+  currentWeekRangeElem.textContent = `${startOfWeek.toDateString()} - ${endOfWeek.toDateString()}`;
+}
 
-document.querySelector(".next").addEventListener("click", () =>
-  {
-  if(lastDayOfWeek+7 > lastDay)
-    {
-    date.setMonth(date.getMonth()+1);
-    renderCalendar(lastDayOfWeek);
-    }
-  else
-    {
-    date.setMonth(date.getMonth());
-    renderCalendar(lastDayOfWeek);
-    }
+prevWeekButton.addEventListener('click', () => {
+  startOfWeek.setDate(startOfWeek.getDate() - 7);
+  updateCalendar();
+});
+
+nextWeekButton.addEventListener('click', () => {
+  startOfWeek.setDate(startOfWeek.getDate() + 7);
+  updateCalendar();
+});
+
+// Initialize the calendar on page load
+updateCalendar();
+
+//function to show events of that day
+//pulled from script_calendar.js
+function updateEvents(date) {
+  let events = "";
+  eventsArr.forEach((event) => {
+      //get events of active day only
+      if (
+          date == event.day &&
+          month + 1 == event.month &&
+          year == event.year
+      ) {
+          //show event on document
+          event.events.forEach((event) => {
+              events += `
+              <div class="event">
+                  <div class="title">
+                      <i class="fas fa-circle"></i>
+                      <h3 class="event-title">${event.title}</h3>
+                  </div>
+                  <div class="event-description">
+                      <span class="event-description">${event.description}</span>
+                  </div> 
+                  <div class="event-time">
+                      <span class="event-time">${event.time}</span>
+                  </div>
+              </div>
+              `;
+          });
+      }
   });
 
-renderCalendar();
+  //if nothing found
+
+  if ((events == "")) {
+      events = `<div class="no-event">
+              <h3>No Events</h3>
+          </div>`;
+  }
+  console.log(events);
+  eventsContainer.innerHTML = events;
+}

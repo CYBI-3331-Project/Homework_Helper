@@ -161,22 +161,22 @@ body {
 
 .calendar .days .day:not(.prev-date, .next-date):hover {
     color: #e9f7ec;
-    background-color: var(--primary-clr); /* whenever you hover over any day (part of the month*/
+    background-color: var(--primary-clr);  /*whenever you hover over any day (part of the month*/
 }
 
 .calendar .days .prev-date,
 .calendar .days .next-date {
-    color: #B2BEB5 /*ash gray, days not part of month*/
+    color: #B2BEB5 ash gray, /*days not part of month*/
 }
 
-.calendar .days .active { /**/
+.calendar .days .active { 
     position: relative;
     font-size: 2rem;
     color: #e9f7ec;
     background-color: var(--primary-clr);
 }
 
-.calendar .days .active::before { /**/
+.calendar .days .active::before { 
     content: "";
     position: absolute; 
     top: 0;
@@ -186,14 +186,14 @@ body {
     box-shadow: 0 0 10px 2px var(--primary-clr);
 }
 
-.calendar .days .today { /**/
+.calendar .days .today { 
     font-size: 2rem;
 }
 
-.calendar .days .event { /**/
+.calendar .days .event {
     position: relative;
 }
-.calendar .days .event::after { /**/
+.calendar .days .event::after { 
     content: "";
     position: absolute;
     bottom: 10%;
@@ -205,11 +205,11 @@ body {
     background-color: #3c9f57;
 }
 
-.calendar .days .day:hover.event::after { /**/
+.calendar .days .day:hover.event::after { 
     background-color: #e9f7ec;
 }
 
-.calendar .days .active.event::after { /**/
+.calendar .days .active.event::after { 
     background-color: #e9f7ec;
     bottom: 20%;
 }
