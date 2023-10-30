@@ -59,9 +59,9 @@ def assessments():
 def create_assessment():
     return render_template('create_assessment.html')
 
-@app.route('/Homepage/Monthly_Calendar')
-def monthly_calendar():
-    return render_template('monthly_calendar.html')
+@app.route('/Homepage/Weekly_View')
+def weekly_calendar():
+    return render_template('weekly_calendar.html')
 
 if __name__ == "__main__":
     app.run(debug=True) #app.run(host='192.168.1.142') to make searchable through IP

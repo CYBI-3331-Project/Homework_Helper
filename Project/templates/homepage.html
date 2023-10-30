@@ -1,15 +1,14 @@
 {% extends 'base_homepage.html' %}
 
-
 {% block head %}
-<meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" 
-integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" 
-crossorigin="anonymous" 
-referrerpolicy="no-referrer" />
-<title>Monthly Calendar</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" 
+        integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" 
+        crossorigin="anonymous" 
+        referrerpolicy="no-referrer" />
+        <title>Homepage</title>
 {% endblock %}
 {% block body %}
 <div class="navbar-body">
@@ -19,7 +18,6 @@ referrerpolicy="no-referrer" />
                 <li><a class="active" href="{{ url_for('homepage') }}">Home</a></li>
                 <li><a href="{{ url_for('assessments') }}">Assessments</a></li>
                 <li><a href="{{ url_for('study_mode') }}">Study Mode</a></li>
-                <li><a href="{{ url_for('monthly_calendar') }}">Monthly Calendar View</a></li>
                 <li><a href="#settings">Settings</a></li>
             </ul>
         </div>
@@ -27,19 +25,45 @@ referrerpolicy="no-referrer" />
 </div>
 <div class="container-body">
     <div class="container">
-        <div class="middle">
+        <div class="left">
             <div class="calendar">
                 <div class="month">
                     <i class="fa fa-angle-left prev"></i>
-                    <span id="currentWeekRange"></span>
+                    <div class="date"></div>
                     <i class="fa fa-angle-right next"></i>
+                </div>
+                <div class="weekdays">
+                    <div>sun</div>
+                    <div>mon</div>
+                    <div>tue</div>
+                    <div>wed</div>
+                    <div>thu</div>
+                    <div>fri</div>
+                    <div>sat</div>
                 </div>
                 <div class="days">
                     <!--these are added with JS-->
                 </div>
             </div>
         </div>
+        <div class="right">
+            <div class="today-date">
+                <div class="event-day"></div> 
+                <div class="event-date"></div>
+            </div>
+            <div class="events"> 
+            <!--assignments inserted through JS-->
+            </div> 
+            <div class="switch-view-body">
+                <div class="switch-view">
+                    <ul>
+                        <li><a class="active" href="{{ url_for('homepage') }}">Monthly Calendar View</a></li>
+                        <li><a href="{{ url_for('weekly_calendar')}}">Weekly Calendar View</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-<script src="{{ url_for('static', filename = 'JS/script_weekly.js') }}"></script>
+<script src="{{ url_for('static', filename = 'JS/script_calendar.js') }}"></script>
 {% endblock %}
