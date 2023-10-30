@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings Dashboard</title>
+  <style>
+    body {
+      background-color: #e9f7ec; /* Background color */
+      color: #c0e7cb; /* Font color */
+      font-family: 'Figtree', sans-serif;
+      text-align: center;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+    }
+
+    .settings-container {
+      text-align: center;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      background-color: white;
+    }
+
+    h2 {
+      color: #c0e7cb;
+    }
+
+    .settings-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .settings-item {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input[type="checkbox"] {
+      margin-right: 5px;
+    }
+
+    button {
+      padding: 10px;
+      background-color: #235c32; /* Button background color */
+      color: #FFFFFF; /* Button font color */
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #285136; /* Button hover background color */
+    }
+  </style>
+</head>
+<body>
+  <div class="settings-container">
+    <h2>Settings Dashboard</h2>
+
+    <ul class="settings-list">
+      <li class="settings-item">
+        <label for="logout">Log Out</label>
+        <button id="logout">Log Out</button>
+      </li>
+
+      <li class="settings-item">
+        <label for="notifications">Notifications</label>
+        <input type="checkbox" id="notifications" checked> Enable Notifications
+      </li>
+
+      <li class="settings-item">
+        <label for="reminders">Reminder Alerts</label>
+        <input type="checkbox" id="reminders" checked> Enable Reminder Alerts
+      </li>
+    </ul>
+  </div>
+
+  <script>
+    // You can add JavaScript functionality here, e.g., to handle button clicks
+    document.getElementById('logout').addEventListener('click', function() {
+      alert('Logging out...');
+      // Additional logic for logout can be added here
+    });
+  </script>
+</body>
+</html>
+
