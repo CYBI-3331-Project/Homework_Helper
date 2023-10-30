@@ -49,14 +49,14 @@ const eventsArr = [
         ],
     },
     {
-        day: 5,
+        day: 31,
         month: 10,
         year: 2023,
         events: [
             {
-                title: "Assessment 1",
-                description: "Study chapters 5-9 for this assessment",
-                time: "11:59 PM",
+                title: "HALLOWEEN Party",
+                description: "Will be at friends house",
+                time: "08:00 PM",
             },
             {
                 title: "Exam 1",
