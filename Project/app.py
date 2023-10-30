@@ -31,8 +31,6 @@ with app.app_context():
     #LoginCredentials.__table__.drop(db.engine)
     pass
 
-
-# Route for the default landing page
 @app.route('/')
 def log_in():
     return render_template('log_in.html')
@@ -65,6 +63,9 @@ def create_assessment():
 def weekly_calendar():
     return render_template('weekly_calendar.html')
 
+@app.route('/Homepage/Settings')
+def Settings():
+    return render_template('settings.html')
+
 if __name__ == "__main__":
     app.run(debug=True) #app.run(host='192.168.1.142') to make searchable through IP
-                        #I don't believe this option works if we are not on the same network
