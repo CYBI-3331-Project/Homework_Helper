@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title> Create Assignment</title>
+        <link href="assignments_def.css" type="text/css" rel="stylesheet" \ >
+    </head>
+
+<body>
+    
+    <!--- <form> --->   <!--FOR DATABASE-->
+        <div> <!--All in box-->
+            <br />     <!--BREAK-->
+            <!--ASSIGNMENT TITLE-->
+            <h3> Assignment title:  
+            <br />
+            <input type= "text" name="title" size="30" maxlenght="50" /> <!--Input-->
+            </h3>
+
+            <h3> Description (Optional):                 <!--MAKE DESCRIPTION LIKE A BOX-->
+            <br />
+            <textarea name="description" cols="60" rows="10"> </textarea> <!--Input as a box-->
+            </h3>
+
+            <h3>Due Date:
+            <br />
+            <input type="date" name="date" />  <!--Input-->
+            </h3>
+
+            <!--PRIORITY LEVEL BY BUTTONS-->
+            <h3>Priority Level
+            <br />
+            <input type="radio" name="priority" value="high" /> <!--Button input-->
+            High  
+            <input type="radio" name="priority" value="medium" /> <!--Button input-->
+            Medium  
+            <input type="radio" name="priority" value="low" /> <!--Button input-->
+            Low
+            </h3>
+
+        
+            <input class= "submit_button" type="submit" name="submit" value="Submit" />   <!--Submit button-->
+
+        </div>
+
+    <!---  </form>  ---> 
+
+    </body>
+
+
+</html>
