@@ -1,3 +1,4 @@
+// DOM element references for various calendar components
 const calendar = document.querySelector(".calendar"),
     date = document.querySelector(".date"),
     daysContainer = document.querySelector(".days"),
@@ -7,6 +8,7 @@ const calendar = document.querySelector(".calendar"),
     eventDate = document.querySelector(".event-date");
     eventsContainer = document.querySelector(".events");
 
+// Initialize variables related to current date
 let today = new Date();
 let dayIndex = today.getDay(); // to determine the current day of the week (0 = Sunday, 6 = Saturday)
 let activeDay = today.getDate();
@@ -70,7 +72,7 @@ const eventsArr = [
 //getEvents();
 //console.log(eventsArr)
 
-//function to add days
+//function to display calendar
 function initCalendar() {
     const firstDayOfWeek = new Date(year, month, activeDay - dayIndex);
     const lastDayOfWeek = new Date(year, month, activeDay + (6 - dayIndex));
@@ -123,11 +125,10 @@ function initCalendar() {
     daysContainer.innerHTML = days;
     addListener();
 }
-
+// Initialize the calendar on page load
 initCalendar();
 
-//prev month
-
+//prev week logic
 function prevWeek() {
     activeDay -= 7;
     if (activeDay <= 0) {
@@ -142,8 +143,7 @@ function prevWeek() {
     initCalendar();
 }
 
-//next month
-
+//next week logic
 function nextWeek() {
     const lastDay = new Date(year, month + 1, 0);
     activeDay += 7;
@@ -158,13 +158,11 @@ function nextWeek() {
     initCalendar();
 }
 
-//add eventlistenner on prev and next
-
+//add eventlistenner on prev and next buttons
 prev.addEventListener("click", prevWeek);
 next.addEventListener("click", nextWeek);
 
 //create function to add listenor on days after rendered
-
 function addListener() {
     const days = document.querySelectorAll(".day");
     days.forEach((day) => {
@@ -228,7 +226,6 @@ function addListener() {
 }
 
 //show active days events and date to right
-
 function getActiveDay(date) {
     const day = new Date(year, month, date);
     const dayName = day.toString().split(" ")[0];
@@ -279,8 +276,8 @@ function updateEvents(date) {
 }
 
 //everything below
-//just something from chat gpt to give us an idea
 // This function will fetch events from the Flask backend
+//work in progress
 function fetchEvents() {
     fetch('/get_events')
     .then(response => response.json())

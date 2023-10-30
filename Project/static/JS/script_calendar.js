@@ -1,3 +1,4 @@
+// DOM element references for various calendar components
 const calendar = document.querySelector(".calendar"),
     date = document.querySelector(".date"),
     daysContainer = document.querySelector(".days"),
@@ -7,6 +8,7 @@ const calendar = document.querySelector(".calendar"),
     eventDate = document.querySelector(".event-date");
     eventsContainer = document.querySelector(".events");
 
+// Initialize variables related to current date
 let today = new Date();
 let activeDay;
 let month = today.getMonth();
@@ -69,7 +71,7 @@ const eventsArr = [
 //getEvents();
 //console.log(eventsArr)
 
-//function to add days
+//function to display calendar
 function initCalendar() {
     //to get prev month days and current month all days and rem next days
     const firstDay = new Date(year, month, 1);
@@ -146,11 +148,10 @@ function initCalendar() {
     //add listener after calendar initialized
     addListener();
 }
-
+// Initialize the calendar on page load
 initCalendar();
 
-//prev month
-
+//prev month logic
 function prevMonth() {
     month--;
     if (month < 0) {
@@ -160,8 +161,7 @@ function prevMonth() {
     initCalendar();
 }
 
-//next month
-
+//next month logic
 function nextMonth() {
     month++;
     if (month > 11) {
@@ -171,13 +171,11 @@ function nextMonth() {
     initCalendar();
 }
 
-//add eventlistenner on prev and next
-
+//add eventlistenner on prev and next buttons
 prev.addEventListener("click", prevMonth);
 next.addEventListener("click", nextMonth);
 
 //create function to add listenor on days after rendered
-
 function addListener() {
     const days = document.querySelectorAll(".day");
     days.forEach((day) => {
@@ -250,7 +248,6 @@ function getActiveDay(date) {
 }
 
 //function to show events of that day
-
 function updateEvents(date) {
     let events = "";
     eventsArr.forEach((event) => {
@@ -292,8 +289,8 @@ function updateEvents(date) {
 }
 
 //everything below
-//just something from chat gpt to give us an idea
 // This function will fetch events from the Flask backend
+//work in progress
 function fetchEvents() {
     fetch('/get_events')
     .then(response => response.json())
