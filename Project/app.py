@@ -1,8 +1,10 @@
 from flask import Flask, render_template, Response
 from datetime import datetime
 
+# Create a Flask web server from the Flask app
 app = Flask(__name__)
 
+# Route for the default landing page
 @app.route('/')
 def log_in():
     return render_template('log_in.html')
