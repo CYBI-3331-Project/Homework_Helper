@@ -12,18 +12,26 @@
 <br><br><br><br><br>
 <div class="box">
 <h1>Create a account</h1>
-<form action="newacct.php" method="post">
-    <div class="center">
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username"><br><br>
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email"><br><br>
-    <label for="phone">Phone number:</label>
-    <input type="tel" id="phone" name="phone"><br><br>
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password"><br><br>
-</div>
-<button>Create an Account</button>
+<form action="/create_account" method="post">
+    
+    <!--Uses the SECRET_KEY to lock this page behind said key, to prevent CSRF attacks.-->
+    {{ form.hidden_tag() }}
+
+    <!--Elements created through jinja-->
+    {{ form.username.label }}
+    {{ form.username }}
+    <div class="spacer"></div>
+    {{ form.email.label }}
+    {{ form.email }}
+    <div class="spacer"></div>
+    {{ form.phone.label }}
+    {{ form.phone }}
+    <div class="spacer"></div>
+    {{ form.password.label }}
+    {{ form.password }}
+    <div class="spacer"></div>
+    {{ form.submit(class="button") }}
+
 </form>
 </div>
 {% endblock %}
