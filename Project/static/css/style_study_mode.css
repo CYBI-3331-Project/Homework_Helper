@@ -1,10 +1,10 @@
 /* Fonts */
 @font-face{
-    font-family: 'Figtree', sans-serif;;
+    font-family: 'Digital', sans-serif;;
     src: url("DigitalDismay.otf") format("opentype");
     font-weight: normal;
 }
-.header{
+.header{    
     font-family: Digital;
 }
 
@@ -34,6 +34,8 @@ p {
 }
 
 /* Class types */
+
+
 .Container{
     background-color: #C3D5CE;
     border-radius: 30px;
@@ -45,6 +47,7 @@ p {
     position: relative;
     text-align: center;
     font-family: 'Digital', cursive;
+    color: #060907;
     font-size: 100px;
     
 }
@@ -56,12 +59,14 @@ p {
     width: 300px;
     height: 80px;
     left: 50%;
+    bottom: 40%;
     transform: translate(-150px, 0);
 }
 
 #Tip{
     position:fixed;
     bottom: 5px;
+    left: 10px;
     text-align: center;
 }
 
@@ -71,7 +76,7 @@ p {
     height: 200px;
     position: relative;
     left: 50%;
-    transform: translate(-250px, 150px);
+    transform: translate(-250px, 15%);
 }
 #TimerButton{
     position: relative;
