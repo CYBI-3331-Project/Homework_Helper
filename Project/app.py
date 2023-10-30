@@ -1,36 +1,10 @@
 from flask import Flask, render_template, Response
 from datetime import datetime
-from flask_sqlalchemy import SQLAlchemy
-from pathlib import Path
 
+# Create a Flask web server from the Flask app
 app = Flask(__name__)
 
-#Configuring the Database location
-app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{Path(__file__).parent / 'Databases/userAccounts.db'}"
-db = SQLAlchemy(app)
-
-#Creating a table class
-class  LoginCredentials(db.Model):
-    user_ID = db.Column(db.Integer, primary_key=True)
-    user_Name = db.Column()
-    pass_hash = db.Column()
-
-
-
-#Creates a context to manage the database
-with app.app_context():
-    #Creates all tables from the table classes
-    #db.create_all()
-
-    #Drops all tables
-    #db.drop_all()
-
-    #LoginCredentials.__table__.create(db.engine)
-
-    #Drops one specific table
-    #LoginCredentials.__table__.drop(db.engine)
-    pass
-
+# Route for the default landing page
 @app.route('/')
 def log_in():
     return render_template('log_in.html')
@@ -65,3 +39,4 @@ def weekly_calendar():
 
 if __name__ == "__main__":
     app.run(debug=True) #app.run(host='192.168.1.142') to make searchable through IP
+                        #I don't believe this option works if we are not on the same network
