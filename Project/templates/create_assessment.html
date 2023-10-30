@@ -6,6 +6,18 @@
         <link href="assignments_def.css" type="text/css" rel="stylesheet" \ >
 {% endblock %}
 {% block body %}
+<div class="navbar-body">
+    <div class="left">
+        <div class="navbar">
+            <ul>
+                <li><a href="{{ url_for('homepage') }}">Home</a></li>
+                <li><a class="active" href="{{ url_for('assignment_dash') }}">Assessments</a></li>
+                <li><a href="{{ url_for('study_mode') }}">Study Mode</a></li>
+                <li><a href="{{ url_for('settings') }}">Settings</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
     <!--- <form> --->
         <div>
             <br />

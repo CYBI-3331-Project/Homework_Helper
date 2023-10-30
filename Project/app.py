@@ -35,11 +35,11 @@ with app.app_context():
 def log_in():
     return render_template('log_in.html')
 
-@app.route('/Create_your_account/')
+@app.route('/Create_your_account')
 def create():
     return render_template('create_acct.html')
 
-@app.route('/Forgot_Password/')
+@app.route('/Forgot_Password')
 def forgotpw():
     return render_template('forgotpw.html')
 
@@ -51,11 +51,11 @@ def homepage():
 def study_mode():
     return render_template('study_mode.html')
 
-@app.route('/Homepage/Assessments')
-def assessments():
+@app.route('/Homepage/Assignment_dash')
+def assignment_dash():
     return render_template('assignment_dash.html')
 
-@app.route('/Homepage/Assessments/Create_Assessment')
+@app.route('/Homepage/Assignment_dash/Create_Assessment')
 def create_assessment():
     return render_template('create_assessment.html')
 
@@ -64,7 +64,7 @@ def weekly_calendar():
     return render_template('weekly_calendar.html')
 
 @app.route('/Homepage/Settings')
-def Settings():
+def settings():
     return render_template('settings.html')
 
 if __name__ == "__main__":
