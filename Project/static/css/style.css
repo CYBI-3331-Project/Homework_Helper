@@ -232,7 +232,7 @@ body {
 .container .right {
     position: relative;
     width: 40%;
-    min-height: 100%;
+    height: 100%;
     padding: 20px 0;
 }
 
@@ -352,4 +352,11 @@ body {
     color: #e9f7ec;
     display: flex;
     border-radius: 10px;
+}
+
+.switch-view-body {
+    height: 10%;
+    padding: 10px;
+    width: 40%;
+    position: relative;
 }
