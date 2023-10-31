@@ -1,8 +1,8 @@
 # Dependencies
-##python modules:
+## python modules:
 		Flask
 		Flask-SQLAlchemy
 		argon2-cffi
 		flask-wtf
-##Others:
+## Others:
 		SQLite3
