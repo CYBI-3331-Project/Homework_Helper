@@ -1,9 +1,9 @@
 # Dependencies
 ### python modules:
-		Flask
-		Flask-SQLAlchemy
-		argon2-cffi
-		flask-wtf
+		Flask (pip install Flask)
+		Flask-SQLAlchemy (pip install Flask-SQLAlchemy
+		argon2-cffi (pip install argon2-cffi
+		flask-wtf (pip install flask-wtf
 ### Others:
 		SQLite3
 
