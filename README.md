@@ -10,6 +10,7 @@
 
 # TODO:
 	Restrict pages to logged-in users
+ 	Polish the salt generator to prevent collisions
  	Update the backend to store assignments created by the user
   	Update the Monthly and Weekly Calendar to pull assignments
    	details from the backend and have it automatically formatted. 
