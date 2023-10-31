@@ -92,23 +92,33 @@ with app.app_context():
 #Handles the backend of the login page
 @app.route('/', methods=['POST', 'GET'])
 def log_in():
+    # Initializes values to None 
     username = None
     password = None
     passHash = None
     salt = None
+
+    # Specifies the form class to use
     form = LoginForm()
 
-    #Validation
+    #Checks if the submit button has been pressed
     if form.validate_on_submit():
+        # Queries the database to see if the username exists
         user = UserCredentials.query.filter_by(user_Name=form.username.data).first()
+        # if user exists
         if user is not None:
+            # The salt and hash associated with the user's profile are taken from the database
             salt = user.pass_salt
             userHash = user.pass_hash
-
+            # A new hash is generated with the password entered into the login form, using the same salt that is within the database
             passHash = generateHash(form.password.data, salt)
+            # The newly generated hash is compared to the hash within the database
             if passHash == userHash:
+                # If the hashes matched, the user is logged in and redirected to the home page
                 return redirect(url_for('homepage'))
+            #Otherwise, the user is not redirected and the form is cleared
             else:
+                #SQL injection easter egg
                 if form.password.data.lower() == "'or 1 = 1":
                     flash("Nice try.")
                 else:
@@ -119,10 +129,12 @@ def log_in():
             else:
                 flash("Error: the information you entered does not match our records.")
 
+        #Clearing the form data after it has been submitted
         username = form.username.data
         form.username.data = ''
         password = form.password.data
         form.password.data = ''
+    # Re-rendering the login page after a failed login attempt
     return render_template('log_in.html', form=form, username = username, salt = salt, passHash = passHash)
 
 
@@ -137,21 +149,32 @@ def Register():
     salt = generateSalt()
     form = RegisterForm()
 
-    #Validation
+    # Checks if the submit button has been pressed
     if form.validate_on_submit():
+        # Queries the database to see if the email already exists in the database
         user = UserCredentials.query.filter_by(user_Email=form.email.data).first()
         if user is None:
+            # If no user exists with the email entered, checks to see if the phone number exists in the database
             user = UserCredentials.query.filter_by(user_Phone=form.phone.data).first()
             if user is None:
+                # If no user exists with the phone nunmber entered, A hash is generated from the user's password with a random salt
                 passHash = generateHash(form.password.data, salt)
+                # A database object is created with the user's information
                 user = UserCredentials(user_Name = form.username.data, user_Email = form.email.data, user_Phone = form.phone.data, pass_salt = salt, pass_hash = passHash)
+                # The newly created user object is added to a database session, and committed as an entry to the user_credentials table
                 db.session.add(user)
                 db.session.commit()
+                # The user is logged in and redirected to the homepage
                 return redirect(url_for('homepage'))
+            
+            # If the phone number that was entered is associated with an existing user account, the user is instead brought back to the registration page
             else:
                 flash("Error: Phone number already in use.")
+        # If the email that was entered is associated with an existing user account, the user is instead brought back to the registration page
         else:
             flash("Error: Email already in use.")
+
+        #Clearing the form data after it has been submitted
         username = form.username.data
         form.username.data = ''
         email = form.email.data
@@ -160,6 +183,8 @@ def Register():
         form.phone.data = ''
         password = form.password.data
         form.password.data = ''
+
+     # Re-rendering the account creation page after an unsuccessful submission
     return render_template('create_acct.html', form=form, username = username, email = email, phone = phone, salt = salt, passHash = passHash)
 
        
@@ -193,7 +218,5 @@ def settings():
     return render_template('settings.html')
 
 if __name__ == "__main__":
-    app.run(debug=True) #app.run(host='192.168.1.142') to make searchable through IP
+    app.run(debug=True) #app.run(host='192.168.1.142') to make searchable through IP    
                         #I don't believe this option works if we are not on the same network
-
-

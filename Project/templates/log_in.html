@@ -6,6 +6,8 @@
 <!-- Begin head -->
 {% block head %}
 <title>Login Page</title>
+
+<!-- Linking the stylesheet -->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style_log_in.css') }}">
 {% endblock %}
 {% block body %}
@@ -13,6 +15,7 @@
 <div class="box">
 <h1>Sign In</h1>
 
+<!-- Creating a form  with jinja formatting-->
 <form action="/" method="post">
     
     <!--Uses the SECRET_KEY to lock this page behind said key, to prevent CSRF attacks.-->
@@ -36,6 +39,7 @@
 <p>Forgot your password? <a href="{{ url_for('forgotpw') }}">Click here</a></p>
 </div>
 
+<!-- Handling flash messages -->
 {% for message in get_flashed_messages() %}
 <div class="alert" role="alert" style="text-align: center; color: black; font-size: 25px;">{{ message }}</div>
 {% endfor %}

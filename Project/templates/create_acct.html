@@ -12,6 +12,8 @@
 <br><br><br><br><br>
 <div class="box">
 <h1>Create a account</h1>
+
+<!-- Creating a form  with jinja formatting-->
 <form action="/create_account" method="post">
     
     <!--Uses the SECRET_KEY to lock this page behind said key, to prevent CSRF attacks.-->
@@ -35,6 +37,7 @@
 </form>
 </div>
 
+<!-- Handling flash messages -->
 {% for message in get_flashed_messages() %}
 <div class="alert" role="alert" style="text-align: center; color: black; font-size: 25px;">{{ message }}</div>
 {% endfor %}
