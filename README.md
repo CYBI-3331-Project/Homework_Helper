@@ -10,4 +10,10 @@
 
 # TODO:
 	Restrict pages to logged-in users
- 	
+ 	Update the backend to store assignments created by the user
+  	Update the Monthly and Weekly Calendar to pull assignments
+   	details from the backend and have it automatically formatted. 
+    	Assignment details such as: 
+     		Assignment Title
+       		(Optional?) Description
+	 	Due Date (Time, Date, Month, Year)
