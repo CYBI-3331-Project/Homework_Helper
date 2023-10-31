@@ -1,0 +1,55 @@
+{% extends 'base_homepage.html' %}
+
+
+{% block head %}
+        <title>Create Assessments</title>
+        <link href="assignments_def.css" type="text/css" rel="stylesheet" \ >
+{% endblock %}
+{% block body %}
+<div class="navbar-body">
+    <div class="left">
+        <div class="navbar">
+            <ul>
+                <li><a href="{{ url_for('homepage') }}">Home</a></li>
+                <li><a class="active" href="{{ url_for('assignment_dash') }}">Assessments</a></li>
+                <li><a href="{{ url_for('study_mode') }}">Study Mode</a></li>
+                <li><a href="{{ url_for('settings') }}">Settings</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    <!--- <form> --->
+        <div>
+            <br />
+            <h3> Assignment title:
+            <br />
+            <input type= "text" name="title" size="30" maxlenght="50" />
+            </h3>
+
+            <h3> Description (Optional):                 <!--MAKE DESCRIPTION LIKE A BOX-->
+            <br />
+            <textarea name="description" cols="60" rows="10"> </textarea>
+            </h3>
+
+            <h3>Due Date:
+            <br />
+            <input type="date" name="date" />
+            </h3>
+
+            <h3>Priority Level
+            <br />
+            <input type="radio" name="priority" value="high" /> 
+            High  
+            <input type="radio" name="priority" value="medium" /> 
+            Medium  
+            <input type="radio" name="priority" value="low" /> 
+            Low
+            </h3>
+
+        
+            <input class= "submit_button" type="submit" name="submit" value="Submit" />   <!--Submit button-->
+
+        </div>
+
+    <!---  </form>  ---> 
+{% endblock %}

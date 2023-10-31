@@ -1,0 +1,44 @@
+{% extends 'base_homepage.html' %}
+
+{% block head %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings Dashboard</title>
+{% endblock %}
+{% block body %}
+<div class="navbar-body">
+  <div class="left">
+      <div class="navbar">
+          <ul>
+              <li><a href="{{ url_for('homepage') }}">Home</a></li>
+              <li><a href="{{ url_for('assignment_dash') }}">Assessments</a></li>
+              <li><a href="{{ url_for('study_mode') }}">Study Mode</a></li>
+              <li><a class="active" href="{{ url_for('settings') }}">Settings</a></li>
+          </ul>
+      </div>
+  </div>
+</div>
+<div class="container-home">
+    <div class="container-home">
+  <h2>Settings Dashboard</h2><br>
+      <label for="notifications">Notifications</label>
+      <input type="checkbox" id="notifications" checked> Enable Notifications
+    </li><br><br>
+      <label for="reminders">Reminder Alerts</label>
+      <input type="checkbox" id="reminders" checked> Enable Reminder Alerts
+    </li><br><br>
+      <button id="logout">Log Out</button>
+    </li>
+  </ul>
+  </div>
+</div>
+</div>
+<script>
+  // You can add JavaScript functionality here, e.g., to handle button clicks
+  document.getElementById('logout').addEventListener('click', function() {
+    alert('Logging out...');
+    // Additional logic for logout can be added here
+  });
+</script>
+{% endblock %}
+

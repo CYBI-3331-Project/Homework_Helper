@@ -1,0 +1,119 @@
+{% extends 'base_homepage.html' %}
+
+{% block head %}
+    <title> Homework Helper</title>
+    <link href="assignment_dash.css" type="text/css" rel="stylesheet" \>     
+{% endblock %}
+{% block body %}
+<div class="navbar-body">
+    <div class="left">
+        <div class="navbar">
+            <ul>
+                <li><a href="{{ url_for('homepage') }}">Home</a></li>
+                <li><a class="active" href="{{ url_for('assignment_dash') }}">Assessments</a></li>
+                <li><a href="{{ url_for('study_mode') }}">Study Mode</a></li>
+                <li><a href="{{ url_for('settings') }}">Settings</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="container-body">
+    <div class="container-home">
+        <h1 style="text-align: center;"> Assignment Dashboard</h1>
+        <p style="font-size: 20px;" >
+            <a href= "{{ url_for('create_assessment') }}"> Create a new assignment</a>
+        </p>
+        <input class= "del_button" type="button" name="delete" value="Delete" />   <!--Delete button-->
+
+<!--Tables Structure-->
+
+        <div>
+            <h3 class="high"> High Priotity </h3>
+            <table class="center">
+                <tr>  <!-- Headings of the table-->
+                    <th class="name"> Name </th>
+                    <th class="delete"> Delete </th>
+                    <th class="edit"> Edit </th>
+                </tr>
+                <tr>
+                    <td>Homework 5</td>
+                    <td style="text-align: center;"> <input type="radio" name="delete" value="delete" /> 
+                        </td> <!--Delete button-->
+                    <td style="text-align: center;">Edit</td> <!--Edit Link-->
+                </tr>  
+                <tr>
+                    <td>Team Project</td>
+                    <td style="text-align: center;"> <input type="radio" name="delete" value="delete" /> 
+                        </td> <!--Delete button-->
+                    <td style="text-align: center;">Edit</td> <!--Edit Link-->
+                </tr>
+                <tr>
+                    <td></td>
+                    <td style="text-align: center;"> <input type="radio" name="delete" value="delete" /> 
+                        </td> <!--Delete button-->
+                    <td style="text-align: center;">Edit</td> <!--Edit Link-->
+                </tr>
+            </table>
+        </div>
+<!--MEDIUM PRIORITY  //Same structure as the one above//-->
+        <div>
+            <h3 class="center"> Medium Priotity </h3>
+            <table class="center">
+                <tr>
+                    <th class="name"> Name </th>
+                    <th class="delete"> Delete </th>
+                    <th class="edit"> Edit </th>
+                </tr>
+                <tr>
+                    <td>Test</td>
+                    <td style="text-align: center;"> <input type="radio" name="delete" value="delete" /> 
+                        </td>
+                    <td style="text-align: center;">Edit</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td style="text-align: center;"> <input type="radio" name="delete" value="delete" /> 
+                        </td>
+                    <td style="text-align: center;">Edit</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td style="text-align: center;"> <input type="radio" name="delete" value="delete" /> 
+                        </td>
+                    <td style="text-align: center;">Edit</td>
+                </tr>
+
+            </table>
+        </div>
+<!--LOWER PRIORITY-->
+        <div>
+            <h3 class="center"> Lower Priotity </h3>
+            <table class="center">
+                <tr>
+                    <th class="name"> Name </th>
+                    <th class="delete"> Delete </th>
+                    <th class="edit"> Edit </th>
+                </tr>
+                <tr>
+                    <td>Sleep</td>
+                    <td style="text-align: center;"> <input type="radio" name="delete" value="delete" /> 
+                        </td>
+                    <td style="text-align: center;">Edit</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td style="text-align: center;"> <input type="radio" name="delete" value="delete" /> 
+                        </td>
+                    <td style="text-align: center;">Edit</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td style="text-align: center;"> <input type="radio" name="delete" value="delete" /> 
+                        </td>
+                    <td style="text-align: center;">Edit</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

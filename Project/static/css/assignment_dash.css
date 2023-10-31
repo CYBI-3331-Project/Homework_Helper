@@ -1,0 +1,82 @@
+table
+{
+    border:2px solid white;
+    width:30%;
+}
+
+th,td,tr{
+    border:1px solid white;
+}
+
+th.name{
+    border:1px solid white;
+    text-align:center;
+}
+
+th.delete{
+    border:1px solid white;
+}
+
+th.edit{
+    border:1px solid white;  
+}
+
+tr:hover
+{
+    color: pink
+}
+
+
+div{
+    text-align: center;
+}
+
+.center
+{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body {
+    background-color: #285136;
+    color: #FFFFFF;/*FFFFFF99 another grey*/
+    font-family: 'Figtree', sans-serif;
+    text-align: justify;
+    padding: 150px;        /* To make box smaller */
+}
+
+a:visited
+{
+    color: white;
+    /*background-color: white;*/
+    text-decoration: none;
+
+}
+
+a:link{
+    color: white;
+    text-decoration: none;
+
+}
+
+a:hover {
+    color: pink;
+    background-color: transparent;
+    text-decoration: underline;
+}
+
+a:active{
+    color: white;
+    text-decoration: none;
+
+}
+
+input.del_button{
+    background-color: #285136;
+    color: #FFFFFF;/*FFFFFF99 another grey*/
+    font-size: 20px;
+    height: 30px;
+    width: 100px;
+    text-align: center;
+  
+}

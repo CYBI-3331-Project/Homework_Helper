@@ -1,0 +1,72 @@
+<!-- Python's 'Flask' module uses the 'Jinja' web template engine to manage its template inheritance. -->
+
+<!-- 'Index.html' is an extension of 'Base.html' -->
+{% extends 'base_homepage.html' %}
+
+<!-- Begin head -->
+{% block head %}
+<title>Study Mode</title>
+<!-- Defining 'functions.js' as the script source file -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style_study_mode.css') }}">
+
+<script src="{{ url_for('static', filename = 'js/studymode.js') }}"> var hrs = 15 </script>
+
+<!-- End head -->
+{% endblock %}
+
+
+{% block body_attrs %} onload="initTimer(0, 0, 5);" {% endblock %}
+
+<!-- Begin body -->
+{% block body %}
+<div class="navbar-body">
+    <div class="left">
+        <div class="navbar">
+            <ul>
+                <li><a href="{{ url_for('homepage') }}">Home</a></li>
+                <li><a href="{{ url_for('assignment_dash') }}">Assessments</a></li>
+                <li><a class="active" href="{{ url_for('study_mode') }}">Study Mode</a></li>
+                <li><a href="{{ url_for('settings') }}">Settings</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- I created a div countainer for the entirety of the body because I wanted to organize each element relative to each other,
+    without making direct changes to the body (incase I introduce new elements outside of this container later). -->
+    <div class="container-home">
+    <div class="middle">
+    <!-- Container that holds the webpage 'Header'. Not the actual HTML header portion, just the textbox at the top. -->
+    <div class="Container" id="HeadBox">
+
+        <!-- Text within the container, raised from the bottom to center it vertically -->
+        <h1 style="position: relative; bottom: 45%;"> Study Mode </h1>
+    </div>
+
+    <!-- Container for the timer box-->
+    <div class="Container" id="TimerContainer">
+        <h2 id="timerTitle">Study time!</h2>
+
+        <div id="NumContainer">
+            <div class="TimerNumbers", id="Hours"> 00 </div>
+            <div class="TimerNumbers"> : </div>
+            <div class="TimerNumbers", id="Minutes"> 00 </div>
+            <div class="TimerNumbers"> : </div>
+            <div class="TimerNumbers", id="Seconds"> 00 </div>
+        </div>
+
+        <!-- Took me an unreasonable amount of time to figure out how to center the numbers within the numcontainer. Ended up having to set the div to inline-flex.
+             Empty div is to end the inline -->
+        <div id="EasterEgg"></div>
+        
+        <!-- Button to toggle studymode -->
+        <button class="Container" id="TimerButton" type = "button" onclick = "toggleTimer()">Start</button>
+
+        
+        </div>
+        </div>
+
+    <p id="Tip"> Tip: Try putting on some relaxing music while you study! </p>
+    
+</div>
+<!-- End body -->
+{% endblock %}
