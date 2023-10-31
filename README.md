@@ -6,3 +6,8 @@
 		flask-wtf
 ### Others:
 		SQLite3
+
+
+#### TODO:
+	Restrict pages to logged-in users
+ 	
