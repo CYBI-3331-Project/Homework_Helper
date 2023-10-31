@@ -73,3 +73,16 @@ ul {
 .spacer{
     padding-bottom: 15px;
 }
+#submitButton{
+    width: 90px;
+    height: 25px;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #08160c;
+    border-width: 1px;
+    text-align: center;
+    background-color: #2b6e3d;
+    
+
+}

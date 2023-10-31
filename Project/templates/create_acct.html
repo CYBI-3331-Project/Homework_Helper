@@ -30,8 +30,12 @@
     {{ form.password.label }}
     {{ form.password }}
     <div class="spacer"></div>
-    {{ form.submit(class="button") }}
+    {{ form.submit(id="submitButton") }}
 
 </form>
 </div>
+
+{% for message in get_flashed_messages() %}
+<div class="alert" role="alert" style="text-align: center; color: black; font-size: 25px;">{{ message }}</div>
+{% endfor %}
 {% endblock %}

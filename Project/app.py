@@ -31,6 +31,8 @@ def generateHash(passw, salt):
 
     passHasher = PasswordHasher()
     pass_hash = passHasher.hash(passw, salt=salt)
+    
+    #Verifies that the password matches with the hash
     if(passHasher.verify(pass_hash, passw)):
         print('Password successfully verified')
         return pass_hash
@@ -106,6 +108,11 @@ def Register():
                 user = UserCredentials(user_Name = form.username.data, user_Email = form.email.data, user_Phone = form.phone.data, pass_salt = salt, pass_hash = passHash)
                 db.session.add(user)
                 db.session.commit()
+                return redirect(url_for('homepage'))
+            else:
+                flash("Error: Phone number already in use.")
+        else:
+            flash("Error: Email already in use.")
         username = form.username.data
         form.username.data = ''
         email = form.email.data
@@ -114,9 +121,6 @@ def Register():
         form.phone.data = ''
         password = form.password.data
         form.password.data = ''
-        flash("Account created")
-        return redirect(url_for('homepage'))
-
     return render_template('create_acct.html', form=form, username = username, email = email, phone = phone, salt = salt, passHash = passHash)
 
        
