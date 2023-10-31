@@ -5,7 +5,7 @@
 		argon2-cffi 		pip install argon2-cffi
 		flask-wtf 		pip install flask-wtf
 ### Others:
-		SQLite3
+		SQLite3			https://www.sqlite.org/download.html
 
 
 #### TODO:
