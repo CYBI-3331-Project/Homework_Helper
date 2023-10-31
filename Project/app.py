@@ -1,3 +1,4 @@
+import string
 from flask import Flask, render_template, Response, flash, redirect, url_for
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy #pip install Flask-SQLAlchemy
@@ -58,7 +59,7 @@ class  UserCredentials(db.Model):
     def __repr__(self):
         return '<Name %r>' % self.user_Name
 
-#Create a form class
+#Create a registration form class
 class RegisterForm (FlaskForm):
     username = StringField("Name: ", validators=[data_required()])
     email = EmailField("Email: ", validators=[data_required()])
@@ -66,6 +67,11 @@ class RegisterForm (FlaskForm):
     password = StringField("Password: ", validators=[data_required()])
     submit = SubmitField("Register")
 
+#Create a login form class
+class LoginForm (FlaskForm):
+    username = StringField("Name: ", validators=[data_required()])
+    password = StringField("Password: ", validators=[data_required()])
+    submit = SubmitField("Log in")
 
 
 #Creates a context to manage the database
@@ -83,11 +89,44 @@ with app.app_context():
     pass
 
 
-# Route for the default landing page
+#Handles the backend of the login page
 @app.route('/', methods=['POST', 'GET'])
 def log_in():
-    return render_template('log_in.html')
+    username = None
+    password = None
+    passHash = None
+    salt = None
+    form = LoginForm()
 
+    #Validation
+    if form.validate_on_submit():
+        user = UserCredentials.query.filter_by(user_Name=form.username.data).first()
+        if user is not None:
+            salt = user.pass_salt
+            userHash = user.pass_hash
+
+            passHash = generateHash(form.password.data, salt)
+            if passHash == userHash:
+                return redirect(url_for('homepage'))
+            else:
+                if form.password.data.lower() == "'or 1 = 1":
+                    flash("Nice try.")
+                else:
+                    flash("Error: the information you entered does not match our records.")
+        else:
+            if form.password.data.lower() == "'or 1 = 1":
+                    flash("Nice try.")
+            else:
+                flash("Error: the information you entered does not match our records.")
+
+        username = form.username.data
+        form.username.data = ''
+        password = form.password.data
+        form.password.data = ''
+    return render_template('log_in.html', form=form, username = username, salt = salt, passHash = passHash)
+
+
+#Handles the backend of the account creation page
 @app.route('/create_account',  methods=['POST', 'GET'])
 def Register():
     username = None

@@ -12,16 +12,31 @@
 <br><br><br><br><br>
 <div class="box">
 <h1>Sign In</h1>
-<form action="log_in.php" method="post">
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username"><br><br>
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password"><br><br>
-    <input type="checkbox" id="remember" name="remember" value="Remember me">
-    <label for="remember">Remember me</label><br><br>
-    <button>Sign in</button>
+
+<form action="/" method="post">
+    
+    <!--Uses the SECRET_KEY to lock this page behind said key, to prevent CSRF attacks.-->
+    {{ form.hidden_tag() }}
+
+    <!--Elements created through jinja-->
+    {{ form.username.label }}
+    {{ form.username }}
+    <div class="spacer"></div>
+    {{ form.password.label }}
+    {{ form.password }}
+    <div class="spacer"></div>
+    {{ form.submit(id="submitButton") }}
+
 </form>
+<!--<input type="checkbox" id="remember" name="remember" value="Remember me">
+    <label for="remember">Remember me</label><br><br> -->
+
+
 <p>Not registered? <a href="{{ url_for('Register') }}">Create an account</a></p>
 <p>Forgot your password? <a href="{{ url_for('forgotpw') }}">Click here</a></p>
 </div>
+
+{% for message in get_flashed_messages() %}
+<div class="alert" role="alert" style="text-align: center; color: black; font-size: 25px;">{{ message }}</div>
+{% endfor %}
 {% endblock %}
