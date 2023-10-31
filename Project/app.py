@@ -1,5 +1,5 @@
 import string
-from flask import Flask, render_template, Response, flash, redirect, url_for
+from flask import Flask, render_template, Response, flash, redirect, url_for, session
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy #pip install Flask-SQLAlchemy
 from pathlib import Path
@@ -8,7 +8,6 @@ from flask_wtf import FlaskForm         #pip install flask-wtf
 from wtforms import StringField, IntegerField, SubmitField, EmailField, TelField
 from wtforms.validators import data_required
 import os, time
-
 
 app = Flask(__name__)
 
@@ -21,7 +20,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{Path(__file__).parent / 'Da
 #Initialize the database
 db = SQLAlchemy(app)
 
-#================Functions
+#==================Functions
 
 #Salt generator for password hashes
 def generateSalt():
@@ -58,6 +57,16 @@ class  UserCredentials(db.Model):
     #Creating a string
     def __repr__(self):
         return '<Name %r>' % self.user_Name
+    
+#Creating a model for user preferences
+# class  UserCredentials(db.Model):
+#     user_ID = db.Column(db.Integer, primary_key=True)
+#     user_Name = db.Column(db.String(50),nullable=False)
+
+
+#     #Creating a string    
+#     def __repr__(self):
+#         return '<Name %r>' % self.user_Name
 
 #Create a registration form class
 class RegisterForm (FlaskForm):
@@ -73,10 +82,11 @@ class LoginForm (FlaskForm):
     password = StringField("Password: ", validators=[data_required()])
     submit = SubmitField("Log in")
 
+#==================App Context
 
 #Creates a context to manage the database
 with app.app_context():
-    #Adds all of the models as tables to the database
+    #Adds tables out of all the modles in the database, unless they already exist
     #db.create_all()
 
     #Drops all tables from the database
@@ -88,6 +98,7 @@ with app.app_context():
     #LoginCredentials.__table__.drop(db.engine)
     pass
 
+#==================App routes
 
 #Handles the backend of the login page
 @app.route('/', methods=['POST', 'GET'])
@@ -114,6 +125,7 @@ def log_in():
             passHash = generateHash(form.password.data, salt)
             # The newly generated hash is compared to the hash within the database
             if passHash == userHash:
+                session
                 # If the hashes matched, the user is logged in and redirected to the home page
                 return redirect(url_for('homepage'))
             #Otherwise, the user is not redirected and the form is cleared
@@ -185,6 +197,7 @@ def Register():
         form.password.data = ''
 
      # Re-rendering the account creation page after an unsuccessful submission
+    
     return render_template('create_acct.html', form=form, username = username, email = email, phone = phone, salt = salt, passHash = passHash)
 
        
@@ -217,6 +230,7 @@ def weekly_calendar():
 def settings():
     return render_template('settings.html')
 
+#==================Main Function
 if __name__ == "__main__":
     app.run(debug=True) #app.run(host='192.168.1.142') to make searchable through IP    
                         #I don't believe this option works if we are not on the same network
