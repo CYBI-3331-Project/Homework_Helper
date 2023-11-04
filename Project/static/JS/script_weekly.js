@@ -137,7 +137,7 @@ function prevWeek() {
             month = 11;
             year--;
         }
-        const prevLastDay = new Date(year, month, 0);
+        const prevLastDay = new Date(year, month + 1, 0);
         activeDay += prevLastDay.getDate();
     }
     initCalendar();
@@ -147,16 +147,28 @@ function prevWeek() {
 function nextWeek() {
     const lastDay = new Date(year, month + 1, 0);
     activeDay += 7;
+
     if (activeDay > lastDay.getDate()) {
-        activeDay -= lastDay.getDate();
-        month++;
-        if (month > 11) {
-            month = 0;
+        const daysInCurrentMonth = lastDay.getDate();
+        const daysRemainingInCurrentMonth = daysInCurrentMonth - activeDay + 7;
+        
+        if (month === 11) {
             year++;
+            month = 0;
+        } else {
+            if (activeDay > daysInCurrentMonth) {
+                month++;
+                activeDay = daysRemainingInCurrentMonth;
+            } else {
+                activeDay += 7;
+            }
         }
     }
+
     initCalendar();
 }
+
+
 
 //add eventlistenner on prev and next buttons
 prev.addEventListener("click", prevWeek);
@@ -179,48 +191,6 @@ function addListener() {
             days.forEach((day) => {
                 day.classList.remove("active");
             });
-
-            //if prev month day clicked goto prev month and add active
-
-            if (e.target.classList.contains("prev-date")) {
-                prevWeek();
-
-                setTimeout(() => {
-                    //select all days of that month
-                    const days = document.querySelectorAll(".day");
-
-                    //after going to prev month add active to clicked
-                    days.forEach((day) => {
-                        if (
-                            !day.classList.contains("prev-date") &&
-                            day.innerHTML == e.target.innerHTML
-                        ) {
-                            day.classList.add("active");
-                        }
-                    });
-                }, 100);
-                //same with next month days
-            } else if (e.target.classList.contains("next-date")) {
-                nextWeek();
-
-                setTimeout(() => {
-                    //select all days of that month
-                    const days = document.querySelectorAll(".day");
-
-                    //after going to next month add active to clicked
-                    days.forEach((day) => {
-                        if (
-                            !day.classList.contains("next-date") &&
-                            day.innerHTML == e.target.innerHTML
-                        ) {
-                            day.classList.add("active");
-                        }
-                    });
-                }, 100);
-            } else {
-                //remaining current month days
-                e.target.classList.add("active");
-            }
         });
     });
 }

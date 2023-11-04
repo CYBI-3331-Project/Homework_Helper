@@ -1,4 +1,6 @@
 // DOM element references for various calendar components
+//document.querySelector searches through html/css(?) to find classes named what's
+//in the parenthesis
 const calendar = document.querySelector(".calendar"),
     date = document.querySelector(".date"),
     daysContainer = document.querySelector(".days"),
@@ -9,10 +11,10 @@ const calendar = document.querySelector(".calendar"),
     eventsContainer = document.querySelector(".events");
 
 // Initialize variables related to current date
-let today = new Date();
-let activeDay;
-let month = today.getMonth();
-let year = today.getFullYear();
+let today = new Date(); //todays date
+let activeDay; //empty variable
+let month = today.getMonth(); //gets month from today variable (0-11)
+let year = today.getFullYear(); //gets year from today variable
 
 const months = [
     "January",
@@ -96,7 +98,7 @@ function initCalendar() {
 
     //current month days
 
-    for (let i = 1; i <= lastDate; i++) {
+    for (let i = 1; i <= lastDate; i++) {//1st day of month, increment by 1 until <= last day of month
 
         //check if event present on current day
 
@@ -108,32 +110,33 @@ function initCalendar() {
                 eventObj.year == year
             ) {
                 //if event found
-                event = true;
+                event = true;//if day and month and year from eventsArr 
+                //(list of events top of code) match days in month, event = true
             }
         });
         //if day is today add class today
-        if ( 
+        if ( //simply gets todays date (day, month, year
           i == new Date().getDate() && 
           year == new Date().getFullYear() && 
           month == new Date().getMonth()
         ) {
 
           activeDay = i;
-          getActiveDay(i);
-          updateEvents(i);
-          //if event found also add event class
+          getActiveDay(i);//calls function with i variable (todays date), updates right side with selected days date (active day)
+          updateEvents(i);//calls function with i variable (todays date), updates right side with selected days events (if there is any)
+          //if event found also add event class, only for current day (not selected/active day, literally todays date irl)
           if (event) {
-            days += `<div class="day today active event" >${i}</div>`;
+            days += `<div class="day today active event" >${i}</div>`;//if today (irl today) is selected/active also has an event, updates days displays on calendar
           } else {
-            days += `<div class="day today active" >${i}</div>`;
+            days += `<div class="day today active" >${i}</div>`;//if today (irl today) is selected/active, updates days display on calendar
           }
         }
         //add remaining as it is
         else {
             if (event) {
-                days += `<div class="day event" >${i}</div>`;
+                days += `<div class="day event" >${i}</div>`;//
               } else {
-                days += `<div class="day" >${i}</div>`;
+                days += `<div class="day" >${i}</div>`;//
               }        
             }
         }
