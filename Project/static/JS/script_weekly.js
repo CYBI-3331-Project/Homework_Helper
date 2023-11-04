@@ -137,7 +137,7 @@ function prevWeek() {
             month = 11;
             year--;
         }
-        const prevLastDay = new Date(year, month + 1, 0);
+        const prevLastDay = new Date(year, month, 0);
         activeDay += prevLastDay.getDate();
     }
     initCalendar();
@@ -149,22 +149,13 @@ function nextWeek() {
     activeDay += 7;
 
     if (activeDay > lastDay.getDate()) {
-        const daysInCurrentMonth = lastDay.getDate();
-        const daysRemainingInCurrentMonth = daysInCurrentMonth - activeDay + 7;
-        
-        if (month === 11) {
-            year++;
+        activeDay -= lastDay.getDate();
+        month++;
+        if (month > 11) {
             month = 0;
-        } else {
-            if (activeDay > daysInCurrentMonth) {
-                month++;
-                activeDay = daysRemainingInCurrentMonth;
-            } else {
-                activeDay += 7;
+            year++;
             }
         }
-    }
-
     initCalendar();
 }
 
