@@ -14,6 +14,7 @@ let dayIndex = today.getDay(); // to determine the current day of the week (0 = 
 let activeDay = today.getDate();
 let month = today.getMonth();
 let year = today.getFullYear();
+let lastdayofweek;
 
 const months = [
     "January",
@@ -73,9 +74,13 @@ const eventsArr = [
 //console.log(eventsArr)
 
 //function to display calendar
-function initCalendar() {
+function initCalendar(activeDay) {
     const firstDayOfWeek = new Date(year, month, activeDay - dayIndex);
     const lastDayOfWeek = new Date(year, month, activeDay + (6 - dayIndex));
+    lastdayofweek = lastDayOfWeek;
+
+    // Determine the month for the start and end dates
+
 
     // Update the displayed date range at the top of the calendar
     date.innerHTML = `${firstDayOfWeek.getDate()} ${months[firstDayOfWeek.getMonth()]}
@@ -99,7 +104,12 @@ function initCalendar() {
                 event = true;
             }
         });
-
+//bug somewhere here I believe, if week includes previous or next month
+//let's say october 29th to november 4th, when click on 
+//it will show top of calendar October 29th - November 4th
+//however when click on october 29th, 30th, and 31st, it will
+//populate the right hand side with november 29th, 30th, and 31st
+//
         if (
             currentDay.getDate() == new Date().getDate() &&
             currentDay.getFullYear() == new Date().getFullYear() &&
@@ -125,41 +135,50 @@ function initCalendar() {
     daysContainer.innerHTML = days;
     addListener();
 }
+
+
+
 // Initialize the calendar on page load
-initCalendar();
+initCalendar(activeDay);
 
 //prev week logic
+// Function to navigate to the previous week
 function prevWeek() {
-    activeDay -= 7;
-    if (activeDay <= 0) {
-        month--;
-        if (month < 0) {
-            month = 11;
-            year--;
-        }
-        const prevLastDay = new Date(year, month, 0);
-        activeDay += prevLastDay.getDate();
+    const prevSunday = new Date(lastdayofweek);
+    prevSunday.setDate(prevSunday.getDate() - 7);
+
+    while (prevSunday.getDay() !== 0) {
+        // Move to the previous Sunday
+        prevSunday.setDate(prevSunday.getDate() - 1);
     }
-    initCalendar();
-}
 
-//next week logic
+    if (prevSunday.getMonth() !== month) {
+        month = prevSunday.getMonth();
+        year = prevSunday.getFullYear();
+    }
+
+    initCalendar(prevSunday.getDate());
+}
+//bug, if currently saturday, all next/prev weeks loaded 
+//start on monday instead of sunday
+
+// Function to navigate to the next week
 function nextWeek() {
-    const lastDay = new Date(year, month + 1, 0);
-    activeDay += 7;
+    const nextSunday = new Date(lastdayofweek);
+    nextSunday.setDate(nextSunday.getDate() + 1);
 
-    if (activeDay > lastDay.getDate()) {
-        activeDay -= lastDay.getDate();
-        month++;
-        if (month > 11) {
-            month = 0;
-            year++;
-            }
-        }
-    initCalendar();
+    while (nextSunday.getDay() !== 0) {
+        // Move to the next Sunday
+        nextSunday.setDate(nextSunday.getDate() + 1);
+    }
+
+    if (nextSunday.getMonth() !== month) {
+        month = nextSunday.getMonth();
+        year = nextSunday.getFullYear();
+    }
+
+    initCalendar(nextSunday.getDate());
 }
-
-
 
 //add eventlistenner on prev and next buttons
 prev.addEventListener("click", prevWeek);
@@ -182,6 +201,50 @@ function addListener() {
             days.forEach((day) => {
                 day.classList.remove("active");
             });
+            e.target.classList.add("active");
+
+
+            //if prev month day clicked goto prev month and add active
+
+            if (e.target.classList.contains("prev-date")) {
+                prevMonth();
+
+                setTimeout(() => {
+                    //select all days of that month
+                    const days = document.querySelectorAll(".day");
+
+                    //after going to prev month add active to clicked
+                    days.forEach((day) => {
+                        if (
+                            !day.classList.contains("prev-date") &&
+                            day.innerHTML == e.target.innerHTML
+                        ) {
+                            day.classList.add("active");
+                        }
+                    });
+                }, 100);
+                //same with next month days
+            } else if (e.target.classList.contains("next-date")) {
+                nextMonth();
+
+                setTimeout(() => {
+                    //select all days of that month
+                    const days = document.querySelectorAll(".day");
+
+                    //after going to next month add active to clicked
+                    days.forEach((day) => {
+                        if (
+                            !day.classList.contains("next-date") &&
+                            day.innerHTML == e.target.innerHTML
+                        ) {
+                            day.classList.add("active");
+                        }
+                    });
+                }, 100);
+            } else {
+                //remaining current month days
+                e.target.classList.add("active");
+            }
         });
     });
 }
@@ -190,9 +253,12 @@ function addListener() {
 function getActiveDay(date) {
     const day = new Date(year, month, date);
     const dayName = day.toString().split(" ")[0];
+    const activeMonth = day.getMonth(); // Get the month from the selected day
+    const activeYear = day.getFullYear(); // Get the year from the selected day
     eventDay.innerHTML = dayName;
-    eventDate.innerHTML = date + " " + months[month] + " " + year;
+    eventDate.innerHTML = date + " " + months[activeMonth] + " " + activeYear; // Use the activeMonth and activeYear
 }
+
 
 //function to show events of that day
 

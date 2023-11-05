@@ -81,6 +81,8 @@ body {
 }
 .container {
     width: 1310px;
+    max-width: 1400px;
+    height: auto;
     max-height: 630px;
     padding: 5px;
     color: #e9f7ec;
@@ -97,7 +99,8 @@ body {
 .calendar { /*the whole calendar section */
     position: relative;
     width: 100%;
-    height: 100%;
+    height: auto;
+    min-height: 500px;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -130,7 +133,7 @@ body {
 
 .calendar .weekdays { /*how the weekdays are formatted*/
     width: 100%;
-    height: 80px;
+    height: auto;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -142,7 +145,7 @@ body {
 
 .weekdays div {
     width: 14.28%;
-    height: 100;
+    height: auto;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -157,11 +160,12 @@ body {
     font-size: 1.25rem;
     font-weight: 500;
     margin-bottom: 20px;
+    height: auto;
 }
 
 .calendar .days .day{ /*customization of each individual day*/
     width: 14.28%;
-    height: 80px;
+    height: 70px;
     display: flex;
     align-items: center;
     justify-content: center; 
