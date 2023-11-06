@@ -21,4 +21,5 @@
 - Assignment details such as 
 	 - Assignment Title
 	 - (Optional?) Description
+	 - Priority Level
 	 - Due Date (Time, Date, Month, Year)
