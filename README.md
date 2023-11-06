@@ -11,6 +11,7 @@
 
 # TODO
 - Restrict pages to logged-in users
+- Enforce a password policy
 - Save user preferences
 - Password confirmation box in registration page
 - Polish the salt generator to prevent collisions
