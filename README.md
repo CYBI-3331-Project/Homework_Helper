@@ -10,7 +10,7 @@
 
 
 # TODO
-- Restrict pages to logged-in users
+- Restrict pages to logged-in users (Manage sessions)
 - Enforce a password policy
 - Save user preferences
 - Password confirmation box in registration page
