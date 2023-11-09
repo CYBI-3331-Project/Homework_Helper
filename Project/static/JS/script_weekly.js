@@ -15,6 +15,9 @@ let activeDay = today.getDate();
 let month = today.getMonth();
 let year = today.getFullYear();
 let lastdayofweek;
+let firstdayofweek;
+let prevSunday;
+let nextSunday;
 
 const months = [
     "January",
@@ -69,6 +72,14 @@ const eventsArr = [
         ],
     },
 ];
+// An array of keys
+var keys = [0, 1, 2, 3, 4, 5, 6];
+    
+// An array of values
+var values = [];
+    
+// Object created
+var obj = {};
 //const eventsArr = []; this'll be when automating events
 //getEvents();
 //console.log(eventsArr)
@@ -78,7 +89,7 @@ function initCalendar(activeDay) {
     const firstDayOfWeek = new Date(year, month, activeDay - dayIndex);
     const lastDayOfWeek = new Date(year, month, activeDay + (6 - dayIndex));
     lastdayofweek = lastDayOfWeek;
-
+    firstdayofweek = firstDayOfWeek;
     // Determine the month for the start and end dates
 
 
@@ -93,6 +104,15 @@ function initCalendar(activeDay) {
     for (let i = 0; i < 7; i++) {
         const currentDay = new Date(firstDayOfWeek);
         currentDay.setDate(firstDayOfWeek.getDate() + i);
+        console.log('Inside for statement of init calendar: ', currentDay);
+        //for(var i = 0; i < keys.length; i++){
+          //  obj[keys[i]] = values[i];
+        //}
+         //add days to list, pick from list, bam boom
+        // Printing object
+        //for (var key of Object.keys(obj)) {
+          //  document.write(key + " => " + obj[key] + "</br>")
+        //}
 
         let event = false;
         eventsArr.forEach((eventObj) => {
@@ -144,8 +164,8 @@ initCalendar(activeDay);
 //prev week logic
 // Function to navigate to the previous week
 function prevWeek() {
-    const prevSunday = new Date(lastdayofweek);
-    prevSunday.setDate(prevSunday.getDate() - 7);
+    prevSunday = new Date(firstdayofweek);
+    prevSunday.setDate(prevSunday.getDate() - 1);
 
     while (prevSunday.getDay() !== 0) {
         // Move to the previous Sunday
@@ -156,7 +176,7 @@ function prevWeek() {
         month = prevSunday.getMonth();
         year = prevSunday.getFullYear();
     }
-
+    dayIndex = prevSunday.getDay();
     initCalendar(prevSunday.getDate());
 }
 //bug, if currently saturday, all next/prev weeks loaded 
@@ -164,8 +184,8 @@ function prevWeek() {
 
 // Function to navigate to the next week
 function nextWeek() {
-    const nextSunday = new Date(lastdayofweek);
-    nextSunday.setDate(nextSunday.getDate() + 1);
+    nextSunday = new Date(lastdayofweek);
+    nextSunday.setDate(nextSunday.getDate()+ 1);
 
     while (nextSunday.getDay() !== 0) {
         // Move to the next Sunday
@@ -176,7 +196,7 @@ function nextWeek() {
         month = nextSunday.getMonth();
         year = nextSunday.getFullYear();
     }
-
+    dayIndex = nextSunday.getDay();
     initCalendar(nextSunday.getDate());
 }
 
