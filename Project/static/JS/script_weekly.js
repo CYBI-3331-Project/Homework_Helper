@@ -1,4 +1,6 @@
 // DOM element references for various calendar components
+//document.querySelector searches through html/css(?) to find classes named what's
+//in the parenthesis
 const calendar = document.querySelector(".calendar"),
     date = document.querySelector(".date"),
     daysContainer = document.querySelector(".days"),
@@ -9,15 +11,15 @@ const calendar = document.querySelector(".calendar"),
     eventsContainer = document.querySelector(".events");
 
 // Initialize variables related to current date
-let today = new Date();
+let today = new Date();//todays date
 let dayIndex = today.getDay(); // to determine the current day of the week (0 = Sunday, 6 = Saturday)
-let activeDay = today.getDate();
-let month = today.getMonth();
-let year = today.getFullYear();
-let lastdayofweek;
-let firstdayofweek;
-let prevSunday;
-let nextSunday;
+let activeDay = today.getDate();//determine current day of month, 0-31
+let month = today.getMonth();//determine current month, 0-11
+let year = today.getFullYear();//determine current year, regular '2023'
+let lastdayofweek;//empty global variable which allows next nav
+let firstdayofweek;//empty global variable which allows prev nav
+//let prevSunday;had these global before, used in prev/next nav
+//let nextSunday;think we can leave it commented
 
 const months = [
     "January",
@@ -36,6 +38,8 @@ const months = [
 
 //default events array
 //this is where events from db should be organized
+//have to figure out how to have this automated once db for
+//assessments is up and pull from db, possible solution more down
 const eventsArr = [
     {
         day: 26,
@@ -72,32 +76,39 @@ const eventsArr = [
         ],
     },
 ];
+
+    //work in progress//
 // An array of keys
 var keys = [0, 1, 2, 3, 4, 5, 6];
-    
+    //work in progress//
 // An array of values
 var values = [];
     
 // Object created
 var obj = {};
+    //work in progress//
+
 //const eventsArr = []; this'll be when automating events
-//getEvents();
+//getEvents(); could be a solution
 //console.log(eventsArr)
 
 //function to display calendar
 function initCalendar(activeDay) {
+//if active day is 9th of month, dayindex is 4 (thursday of current week)
+//9-4 = 5 (sunday of week)
     const firstDayOfWeek = new Date(year, month, activeDay - dayIndex);
+//9 + (6-4) = 11, last day of week (saturday)
     const lastDayOfWeek = new Date(year, month, activeDay + (6 - dayIndex));
+//global variables used in prev/next nav
+//simply stealing the first/last of week
     lastdayofweek = lastDayOfWeek;
     firstdayofweek = firstDayOfWeek;
-    // Determine the month for the start and end dates
 
-
-    // Update the displayed date range at the top of the calendar
+//Update the displayed date range at the top of the calendar
     date.innerHTML = `${firstDayOfWeek.getDate()} ${months[firstDayOfWeek.getMonth()]}
     ${firstDayOfWeek.getFullYear()} - ${lastDayOfWeek.getDate()} 
     ${months[lastDayOfWeek.getMonth()]} ${lastDayOfWeek.getFullYear()}`;
-
+//adding days on dom
     let days = "";
 
     // Display days for the current week
@@ -105,6 +116,10 @@ function initCalendar(activeDay) {
         const currentDay = new Date(firstDayOfWeek);
         currentDay.setDate(firstDayOfWeek.getDate() + i);
         console.log('Inside for statement of init calendar: ', currentDay);
+        //this just proof, when you run weekly calendar, page inspect
+        //console, shows that days being rendered are correct, even
+        //if month changes, just after it's rendered, that's the problem
+        //work in progress
         //for(var i = 0; i < keys.length; i++){
           //  obj[keys[i]] = values[i];
         //}
@@ -113,7 +128,9 @@ function initCalendar(activeDay) {
         //for (var key of Object.keys(obj)) {
           //  document.write(key + " => " + obj[key] + "</br>")
         //}
+        //work in progress
 
+        //check if event present on current day
         let event = false;
         eventsArr.forEach((eventObj) => {
             if (
@@ -121,77 +138,74 @@ function initCalendar(activeDay) {
                 eventObj.month == currentDay.getMonth() + 1 &&
                 eventObj.year == currentDay.getFullYear()
             ) {
-                event = true;
-            }
+                //if event found
+                event = true;//if day and month and year from eventsArr 
+            } //(list of events top of code) match days in month, event = true
+
         });
-//bug somewhere here I believe, if week includes previous or next month
-//let's say october 29th to november 4th, when click on 
-//it will show top of calendar October 29th - November 4th
-//however when click on october 29th, 30th, and 31st, it will
-//populate the right hand side with november 29th, 30th, and 31st
-//
-        if (
+        //if day is today add class today
+        if ( //simply gets todays date (day, month, year
             currentDay.getDate() == new Date().getDate() &&
             currentDay.getFullYear() == new Date().getFullYear() &&
             currentDay.getMonth() == new Date().getMonth()
         ) {
             activeDay = currentDay.getDate();
-            getActiveDay(currentDay.getDate());
-            updateEvents(currentDay.getDate());
+            getActiveDay(currentDay.getDate());//calls function todays date (1-31), updates right side with todays date (active day)
+            updateEvents(currentDay.getDate());//calls function with todays date (1-31), updates right side with todays date events (if there is any)
+//if event found also add event class, only for current day (not selected/active day, literally todays date irl)
             if (event) {
                 days += `<div class="day today active event" >${currentDay.getDate()}</div>`;
-            } else {
+            } else {//above/below is only for todays (IRL) date, on boot will run bottom, if event runs top
                 days += `<div class="day today active" >${currentDay.getDate()}</div>`;
             }
         } else {
             if (event) {
                 days += `<div class="day event" >${currentDay.getDate()}</div>`;
-            } else {
+            } else {//for every other day, event top no event bottom
                 days += `<div class="day" >${currentDay.getDate()}</div>`;
             }
         }
     }
 
     daysContainer.innerHTML = days;
+//add listener after calendar initialized
     addListener();
 }
-
-
 
 // Initialize the calendar on page load
 initCalendar(activeDay);
 
-//prev week logic
 // Function to navigate to the previous week
 function prevWeek() {
-    prevSunday = new Date(firstdayofweek);
+//firstdayofweek var is sunday (see initcal function)
+    var prevSunday = new Date(firstdayofweek);
     prevSunday.setDate(prevSunday.getDate() - 1);
-
-    while (prevSunday.getDay() !== 0) {
+//goes back one day (saturday)
+    while (prevSunday.getDay() !== 0) {//while Day(0-6)!=0 (sunday), decrement
         // Move to the previous Sunday
         prevSunday.setDate(prevSunday.getDate() - 1);
     }
-
+//if prevsunday month!=currentmonth, change current month/year to prev
+//sunday month
     if (prevSunday.getMonth() !== month) {
         month = prevSunday.getMonth();
         year = prevSunday.getFullYear();
     }
+//resets dayIndex to 0 so first/lastdayofweek variables don't do subtract anything
     dayIndex = prevSunday.getDay();
+    //calls calendar with sundays date, (0-31)
     initCalendar(prevSunday.getDate());
 }
-//bug, if currently saturday, all next/prev weeks loaded 
-//start on monday instead of sunday
-
 // Function to navigate to the next week
 function nextWeek() {
-    nextSunday = new Date(lastdayofweek);
+    var nextSunday = new Date(lastdayofweek);
     nextSunday.setDate(nextSunday.getDate()+ 1);
 
     while (nextSunday.getDay() !== 0) {
         // Move to the next Sunday
         nextSunday.setDate(nextSunday.getDate() + 1);
     }
-
+//notes same as prevWeek function
     if (nextSunday.getMonth() !== month) {
         month = nextSunday.getMonth();
         year = nextSunday.getFullYear();
@@ -206,21 +220,24 @@ next.addEventListener("click", nextWeek);
 
 //create function to add listenor on days after rendered
 function addListener() {
+    //select all elements with the class "day"
     const days = document.querySelectorAll(".day");
+    //iterate over each day element and add a click event listener
     days.forEach((day) => {
         day.addEventListener("click", (e) => {
-            //set current day as active day
+            //set current day as active day if clicked
             activeDay = Number(e.target.innerHTML);
 
-            //call active day after click
+            //call getActiveDay to update right with activeDay s day
             getActiveDay(e.target.innerHTML);
+            //update events for the newly selected day
             updateEvents(Number(e.target.innerHTML));
 
-            //remove active from already active day
-
+            //remove active from  previously active day
             days.forEach((day) => {
                 day.classList.remove("active");
             });
+            //add active class to clicked day
             e.target.classList.add("active");
 
 
