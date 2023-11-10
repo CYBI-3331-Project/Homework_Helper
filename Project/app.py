@@ -7,6 +7,7 @@ from argon2 import PasswordHasher       #pip install argon2-cffi
 from flask_wtf import FlaskForm         #pip install flask-wtf
 from wtforms import StringField, IntegerField, SubmitField, EmailField, TelField
 from wtforms.validators import data_required
+from flask import jsonify
 import os, time
 
 app = Flask(__name__)
@@ -221,6 +222,29 @@ def assignment_dash():
 @app.route('/Homepage/Assignment_dash/Create_Assessment')
 def create_assessment():
     return render_template('create_assessment.html')
+
+@app.route('/Homepage/get_events',  methods=['GET'])
+def get_events_route():
+    # Replace this with your actual code to fetch events from the database
+    events = {
+                "day": 10,
+                "month": 11,
+                "year": 2023,
+                "events": [
+                    {
+                        "title": "Project Demo",
+                        "description": "With Dr. Zhang at ",
+                        "time": "9:20 AM",
+                    },
+                    {
+                        "title": "Exam 1",
+                        "description": "Study chapters 1-5 for this exam",
+                        "time": "11:59 PM",
+                    },
+                ],
+            },
+            # ... additional events
+    return jsonify(events)
 
 @app.route('/Homepage/Weekly_View')
 def weekly_calendar():

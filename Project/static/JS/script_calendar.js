@@ -5,10 +5,11 @@ const calendar = document.querySelector(".calendar"),
     date = document.querySelector(".date"),
     daysContainer = document.querySelector(".days"),
     prev = document.querySelector(".prev"),
-    next = document.querySelector(".next"),
-    eventDay = document.querySelector(".event-day"),
-    eventDate = document.querySelector(".event-date");
-    eventsContainer = document.querySelector(".events");
+    next = document.querySelector(".next");
+
+eventDay = document.querySelector(".event-day");
+eventDate = document.querySelector(".event-date");
+eventsContainer = document.querySelector(".events");
 
 // Initialize variables related to current date
 let today = new Date(); //todays date
@@ -33,45 +34,33 @@ const months = [
 
 //default events array
 //this is where events from db should be organized
-const eventsArr = [
-    {
-        day: 26,
-        month: 10,
-        year: 2023,
-        events: [
-            {
-                title: "Assessment 1",
-                description: "Study chapters 5-9 for this assessment",
-                time: "11:59 PM",
-            },
-            {
-                title: "Exam 1",
-                description: "Study chapters 1-5 for this exam",
-                time: "11:59 PM",
-            },
-        ],
-    },
-    {
-        day: 5,
-        month: 10,
-        year: 2023,
-        events: [
-            {
-                title: "Assessment 1",
-                description: "Study chapters 5-9 for this assessment",
-                time: "11:59 PM",
-            },
-            {
-                title: "Exam 1",
-                description: "Study chapters 1-5 for this exam",
-                time: "11:59 PM",
-            },
-        ],
-    },
-];
-//const eventsArr = []; this'll be when automating events
-//getEvents();
-//console.log(eventsArr)
+// Function to fetch events from the Flask backend
+function fetchEvents() {
+    fetch('/Homepage/get_events')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            eventsArr = data;
+            initCalendar(activeDay);
+        })
+        .catch(error => {
+            console.error("Error fetching events: ", error);
+        });
+}
+
+
+// Call fetchEvents on page load to get events
+document.addEventListener("DOMContentLoaded", function() {
+    fetchEvents();
+});
+
+eventsArr = []; //this'll be when automating events
+fetchEvents(); 
+console.log(eventsArr)
 
 //function to display calendar
 function initCalendar() {
@@ -290,27 +279,5 @@ function updateEvents(date) {
     console.log(events);
     eventsContainer.innerHTML = events;
 }
-
-//everything below
-// This function will fetch events from the Flask backend
-//work in progress
-function fetchEvents() {
-    fetch('/get_events')
-    .then(response => response.json())
-    .then(data => {
-        // Once data is fetched, update the eventsArr with this data
-        eventsArr = data;
-        // Re-initialize the calendar with the new events data
-        initCalendar();
-    })
-    .catch(error => {
-        console.error("Error fetching events: ", error);
-    });
-}
-
-// Call fetchEvents on page load to get events
-document.addEventListener("DOMContentLoaded", function() {
-    fetchEvents();
-});
 
 
