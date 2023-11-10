@@ -18,6 +18,8 @@ let month = today.getMonth();//determine current month, 0-11
 let year = today.getFullYear();//determine current year, regular '2023'
 let lastdayofweek;//empty global variable which allows next nav
 let firstdayofweek;//empty global variable which allows prev nav
+let activeMonth = 0;
+let increment = false;
 //let prevSunday;had these global before, used in prev/next nav
 //let nextSunday;think we can leave it commented
 
@@ -109,6 +111,8 @@ function initCalendar(activeDay) {
     ${firstDayOfWeek.getFullYear()} - ${lastDayOfWeek.getDate()} 
     ${months[lastDayOfWeek.getMonth()]} ${lastDayOfWeek.getFullYear()}`;
 //adding days on dom
+
+    activeMonth = firstDayOfWeek.getMonth();
     let days = "";
 
     // Display days for the current week
@@ -177,6 +181,7 @@ initCalendar(activeDay);
 
 // Function to navigate to the previous week
 function prevWeek() {
+    increment = false;
 //firstdayofweek var is sunday (see initcal function)
     var prevSunday = new Date(firstdayofweek);
     prevSunday.setDate(prevSunday.getDate() - 1);
@@ -198,6 +203,7 @@ function prevWeek() {
 }
 // Function to navigate to the next week
 function nextWeek() {
+    increment = false;
     var nextSunday = new Date(lastdayofweek);
     nextSunday.setDate(nextSunday.getDate()+ 1);
 
@@ -227,6 +233,19 @@ function addListener() {
         day.addEventListener("click", (e) => {
             //set current day as active day if clicked
             activeDay = Number(e.target.innerHTML);
+
+            if(lastdayofweek.getDate() < 7){
+                if(activeDay < 7){
+                    console.log('Last day: ', lastdayofweek.getDate())
+                    increment = true
+                }
+                else{
+                    increment = false
+                }
+            }
+            
+
+
 
             //call getActiveDay to update right with activeDay s day
             getActiveDay(e.target.innerHTML);
@@ -287,13 +306,19 @@ function addListener() {
 }
 
 //show active days events and date to right
-function getActiveDay(date) {
-    const day = new Date(year, month, date);
-    const dayName = day.toString().split(" ")[0];
-    const activeMonth = day.getMonth(); // Get the month from the selected day
-    const activeYear = day.getFullYear(); // Get the year from the selected day
+function getActiveDay(day) {
+    const date = new Date(year, month, day);
+    const dayName = date.toString().split(" ")[0];
+    //const activeMonth = date.getMonth(); // Get the month from the selected day
+    const activeYear = date.getFullYear(); // Get the year from the selected day
     eventDay.innerHTML = dayName;
-    eventDate.innerHTML = date + " " + months[activeMonth] + " " + activeYear; // Use the activeMonth and activeYear
+    if(increment){
+        monthDisplay = activeMonth + 1
+    }
+    else{
+        monthDisplay = activeMonth
+    }
+    eventDate.innerHTML = day + " " + months[monthDisplay] + " " + activeYear; // Use the activeMonth and activeYear
 }
 
 
