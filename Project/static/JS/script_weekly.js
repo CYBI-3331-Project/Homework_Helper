@@ -13,13 +13,14 @@ eventsContainer = document.querySelector(".events");
 
 // Initialize variables related to current date
 let today = new Date();//todays date
+console.log('today: ', today);
 let dayIndex = today.getDay(); // to determine the current day of the week (0 = Sunday, 6 = Saturday)
 let activeDay = today.getDate();//determine current day of month, 0-31
 let month = today.getMonth();//determine current month, 0-11
 let year = today.getFullYear();//determine current year, regular '2023'
 let lastdayofweek;//empty global variable which allows next nav
 let firstdayofweek;//empty global variable which allows prev nav
-let activeMonth = 0;
+let activeMonth;
 let increment = false;
 //let prevSunday;had these global before, used in prev/next nav
 //let nextSunday;think we can leave it commented
@@ -285,12 +286,15 @@ function getActiveDay(day) {
     const date = new Date(year, month, day);
     const dayName = date.toString().split(" ")[0];
     //const activeMonth = date.getMonth(); // Get the month from the selected day
-    const activeYear = date.getFullYear(); // Get the year from the selected day
+    var activeYear = date.getFullYear(); // Get the year from the selected day
     eventDay.innerHTML = dayName;
     if(increment){
         monthDisplay = activeMonth + 1
-    }
-    else{
+        if (monthDisplay > 11) {
+            monthDisplay = 0;
+            activeYear++;
+        }
+    } else {
         monthDisplay = activeMonth
     }
     eventDate.innerHTML = day + " " + months[monthDisplay] + " " + activeYear; // Use the activeMonth and activeYear
