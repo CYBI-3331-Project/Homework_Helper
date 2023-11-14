@@ -1,0 +1,38 @@
+body {
+    background-color: #c5e0cc;
+}
+h1{
+    position:static;
+    padding-top: 5%;
+    padding-bottom: 15%;
+}
+.spacer{
+    padding-bottom: 15px;   
+}
+#submitButton{
+    width: 90px;
+    height: 25px;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #08160c;
+    border-width: 1px;
+    text-align: center;
+    background-color: #4e835c;
+    
+
+}
+.box {
+    width: 450px;
+    height: 500px;
+    text-align: left;
+    background-color: #4e835c;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 0;
+}
+.alert{
+    text-align: center;
+    color: black;
+    font-size: 25px;
+}

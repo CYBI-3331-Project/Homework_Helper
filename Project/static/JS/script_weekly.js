@@ -71,7 +71,7 @@ eventsArr = []; //this'll be when automating events
 fetchEvents(); 
 console.log(eventsArr)
 
-//function to display calendar
+//function to display calendar ============================================================================================================================================
 function initCalendar(activeDay) {
 //if active day is 9th of month, dayindex is 4 (thursday of current week)
 //9-4 = 5 (sunday of week)
@@ -124,24 +124,23 @@ function initCalendar(activeDay) {
 
         });
         //if day is today add class today
-        if ( //simply gets todays date (day, month, year
-            currentDay.getDate() == new Date().getDate() &&
-            currentDay.getFullYear() == new Date().getFullYear() &&
-            currentDay.getMonth() == new Date().getMonth()
-        ) {
+        if (currentDay.getDate() == new Date().getDate() && currentDay.getFullYear() == new Date().getFullYear() && currentDay.getMonth() == new Date().getMonth()){
             activeDay = currentDay.getDate();
             getActiveDay(currentDay.getDate());//calls function todays date (1-31), updates right side with todays date (active day)
             updateEvents(currentDay.getDate());//calls function with todays date (1-31), updates right side with todays date events (if there is any)
 //if event found also add event class, only for current day (not selected/active day, literally todays date irl)
             if (event) {
                 days += `<div class="day today active event" >${currentDay.getDate()}</div>`;
-            } else {//above/below is only for todays (IRL) date, on boot will run bottom, if event runs top
+            }
+            else {//above/below is only for todays (IRL) date, on boot will run bottom, if event runs top
                 days += `<div class="day today active" >${currentDay.getDate()}</div>`;
             }
-        } else {
+        }
+        else {
             if (event) {
                 days += `<div class="day event" >${currentDay.getDate()}</div>`;
-            } else {//for every other day, event top no event bottom
+            }
+            else {//for every other day, event top no event bottom
                 days += `<div class="day" >${currentDay.getDate()}</div>`;
             }
         }
@@ -152,6 +151,7 @@ function initCalendar(activeDay) {
     addListener();
 }
 
+//============================================================================================================================================
 // Initialize the calendar on page load
 initCalendar(activeDay);
 

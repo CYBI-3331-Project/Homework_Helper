@@ -3,7 +3,7 @@
 
 {% block head %}
         <title>Create Assessments</title>
-        <link href="assignments_def.css" type="text/css" rel="stylesheet" \ >
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/create_assessment.css') }}">
 {% endblock %}
 {% block body %}
 <div class="navbar-body">
@@ -18,38 +18,42 @@
         </div>
     </div>
 </div>
-    <!--- <form> --->
-        <div>
-            <br />
-            <h3> Assignment title:
-            <br />
-            <input type= "text" name="title" size="30" maxlenght="50" />
-            </h3>
 
-            <h3> Description (Optional):                 <!--MAKE DESCRIPTION LIKE A BOX-->
-            <br />
-            <textarea name="description" cols="60" rows="10"> </textarea>
-            </h3>
+<!-- Creating a form  with jinja formatting-->
+<div, style="text-align: center;">
+    <h1>Create an Assessment</h1>
+    <div class="box">
+        <form action="/Homepage/Assignment_dash/Create_Assessment" method="post">
+            
+            <!--Uses the SECRET_KEY to lock this page behind said key, to prevent CSRF attacks.-->
+            {{ form.hidden_tag() }}
 
-            <h3>Due Date:
-            <br />
-            <input type="date" name="date" />
-            </h3>
+            <!--Elements created through jinja-->
+            {{ form.title.label }}
+            <div class="spacer"></div>
+            {{ form.title }}
+            <div class="spacer"></div>
+            {{ form.description.label }}
+            <div class="spacer"></div>
+            {{ form.description(style='height: 150px; width: 100%; resize: none; limit: 300') }}
+            <div class="spacer"></div>
+            {{ form.date.label }}
+            <div class="spacer"></div>
+            {{ form.date }}
+            <div class="spacer"></div>
+            {{ form.priority.label }}
+            <div class="spacer"></div>
+            {{ form.priority }}
+            <div class="spacer"></div>
+            <div class="spacer"></div>
+            {{ form.submit(id="submitButton") }}
 
-            <h3>Priority Level
-            <br />
-            <input type="radio" name="priority" value="high" /> 
-            High  
-            <input type="radio" name="priority" value="medium" /> 
-            Medium  
-            <input type="radio" name="priority" value="low" /> 
-            Low
-            </h3>
+        </form>
+    </div>
+</div>
 
-        
-            <input class= "submit_button" type="submit" name="submit" value="Submit" />   <!--Submit button-->
-
-        </div>
-
-    <!---  </form>  ---> 
+<!-- Handling flash messages -->
+{% for message in get_flashed_messages() %}
+<div class="alert" role="alert" style="text-align: center; color: black; font-size: 25px;">{{ message }}</div>
+{% endfor %}
 {% endblock %}

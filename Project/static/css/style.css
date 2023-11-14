@@ -16,6 +16,7 @@ ul {
     margin: 0;
     padding: 0;
     overflow: hidden;
+    width: max-content;
 }
 li {
     float: left;
