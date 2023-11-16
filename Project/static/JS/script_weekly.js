@@ -21,6 +21,7 @@ let year = today.getFullYear();//determine current year, regular '2023'
 let lastdayofweek;//empty global variable which allows next nav
 let firstdayofweek;//empty global variable which allows prev nav
 let activeMonth;
+let monthDisplay = '';
 let increment = false;
 //let prevSunday;had these global before, used in prev/next nav
 //let nextSunday;think we can leave it commented
@@ -112,18 +113,18 @@ function initCalendar(activeDay) {
         //work in progress
 
         //check if event present on current day
-        let event = false;
-        eventsArr.forEach((eventObj) => {
-            if (
-                eventObj.day == currentDay.getDate() &&
-                eventObj.month == currentDay.getMonth() + 1 &&
-                eventObj.year == currentDay.getFullYear()
-            ) {
-                //if event found
-                event = true;//if day and month and year from eventsArr 
-            } //(list of events top of code) match days in month, event = true
 
-        });
+
+
+
+        let event = false;
+        if(eventsArr[i]){
+            console.log("EventsArr exists: ", eventsArr[i])
+            if(eventsArr[i][0] == currentDay.getDate() && eventsArr[i][1] == currentDay.getMonth() + 1 && eventsArr[i][2] == currentDay.getFullYear()){
+                event = true
+            }
+
+        }
         //if day is today add class today
         if (currentDay.getDate() == new Date().getDate() && currentDay.getFullYear() == new Date().getFullYear() && currentDay.getMonth() == new Date().getMonth()){
             activeDay = currentDay.getDate();
@@ -302,36 +303,33 @@ function getActiveDay(day) {
 
 
 //function to show events of that day
-
 function updateEvents(date) {
     let events = "";
-    eventsArr.forEach((event) => {
-        //get events of active day only
-        if (
-            date == event.day &&
-            month + 1 == event.month &&
-            year == event.year
-        ) {
-            //show event on document
-            event.events.forEach((event) => {
-                events += `
-                <div class="event">
-                    <div class="title">
-                        <i class="fas fa-circle"></i>
-                        <h3 class="event-title">${event.title}</h3>
+    if(eventsArr){
+        for(i = 0; i < 7; i++){
+            if(eventsArr[i]){
+                if(eventsArr[i][0] == date && eventsArr[i][1] == monthDisplay + 1 && eventsArr[i][2] == year){
+                    console.log("Event found on day ", date)
+                    //show event on document
+                    events += `
+                    <div class="event">
+                        <div class="title">
+                            <i class="fas fa-circle"></i>
+                            <h3 class="event-title">${eventsArr[i][3]}</h3>
+                        </div>
+                        <div class="event-description">
+                            <span class="event-description">${eventsArr[i][4]}</span>
+                        </div> 
+                        <div class="event-time">
+                            <span class="event-time">${'notATime'}</span>
+                        </div>
                     </div>
-                    <div class="event-description">
-                        <span class="event-description">${event.description}</span>
-                    </div> 
-                    <div class="event-time">
-                        <span class="event-time">${event.time}</span>
-                    </div>
-                </div>
-                `;
-            });
+                    `;
+                }
+            }
         }
-    });
-
+        
+    }
     //if nothing found
 
     if ((events == "")) {

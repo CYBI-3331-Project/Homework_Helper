@@ -22,6 +22,7 @@
                 <li><a href="{{ url_for('assignment_dash') }}">Assessments</a></li>
                 <li><a href="{{ url_for('study_mode') }}">Study Mode</a></li>
                 <li><a href="{{ url_for('settings') }}">Settings</a></li>
+                <li><a href="{{ url_for('log_out') }}">Log Out</a></li>
             </ul>
         </div>
     </div>
@@ -29,7 +30,13 @@
 <!--Navigation bar end-->
 
 <!-- Main content section -->
+
+<!-- Calendar contianer -->
 <div class="container-body">
+    <!-- Flash message handler -->
+    {% for message in get_flashed_messages() %}
+    <div class="alert" role="alert" style="top: -15%;">{{ message }}</div>
+    {% endfor %}
     <div class="container">
         <!-- Left side: Calendar view section -->
         <div class="left">
@@ -77,6 +84,7 @@
         </div>
     </div>
 </div>
+
 <!-- Link to the JavaScript file for calendar functionalities -->
 <script src="{{ url_for('static', filename = 'JS/script_calendar.js') }}"></script>
 {% endblock %}

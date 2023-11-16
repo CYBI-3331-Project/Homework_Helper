@@ -12,7 +12,7 @@ import os, time
 
 app = Flask(__name__)
 
-#Secret key to prevent CSRF
+#Secret key to prevent CSRF, cryptographically signs session cookies
 app.config['SECRET_KEY'] = 'insecurePassword'
 
 #Configuring the Database location
@@ -21,7 +21,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{Path(__file__).parent / 'Da
 #Initialize the database
 db = SQLAlchemy(app)
 
-#======================================================Functions
+
+
+#====================================================== Functions
 
 # Salt generator for password hashes
 def generateSalt():
@@ -56,7 +58,7 @@ def stripChars(input: string, strip: string):
 
 
 
-#================================================== Classes
+#============================================== Classes
 #======================================================== Databases
 
 #Creating a model for user credentials
@@ -118,7 +120,7 @@ class AssessmentForm (FlaskForm):
 
 
 
-#======================================================App Context
+#====================================================== App Context
 
 #Creates a context to manage the database
 with app.app_context():
@@ -137,8 +139,8 @@ with app.app_context():
 
 
 
-#======================================================App routes
-#===============================================Default/Login
+#============================================== App routes
+#====================================================== Default/Login
 #Handles the backend of the login page
 @app.route('/', methods=['POST', 'GET'])
 def log_in():
@@ -164,7 +166,8 @@ def log_in():
             passHash = generateHash(form.password.data, salt)
             # The newly generated hash is compared to the hash within the database
             if passHash == userHash:
-                session
+                session['username'] = user.user_Name
+                session['user_id'] = user.user_ID
                 # If the hashes matched, the user is logged in and redirected to the home page
                 return redirect(url_for('homepage'))
             #Otherwise, the user is not redirected and the form is cleared
@@ -189,7 +192,7 @@ def log_in():
     return render_template('log_in.html', form=form, username = username, salt = salt, passHash = passHash)
 
 
-#=============================================== account creation
+#====================================================== Account creation
 @app.route('/create_account',  methods=['POST', 'GET'])
 def Register():
     username = None
@@ -212,9 +215,12 @@ def Register():
                 passHash = generateHash(form.password.data, salt)
                 # A database object is created with the user's information
                 user = UserCredentials(user_Name = form.username.data, user_Email = form.email.data, user_Phone = form.phone.data, pass_salt = salt, pass_hash = passHash)
+                session['username'] = user.user_Name
+                
                 # The newly created user object is added to a database session, and committed as an entry to the user_credentials table
                 db.session.add(user)
                 db.session.commit()
+                session['user_id'] = (UserCredentials.query.filter_by(user_Name = form.username.data).first()).user_ID
                 # The user is logged in and redirected to the homepage
                 return redirect(url_for('homepage'))
             
@@ -241,101 +247,132 @@ def Register():
 
        
 
-#=============================================== Forgot Password
+#====================================================== Forgot Password
 @app.route('/Forgot_Password')
 def forgotpw():
     return render_template('forgotpw.html')
 
-#=============================================== Homepage
+#====================================================== Homepage
 @app.route('/Homepage')
 def homepage():
-    return render_template('homepage.html')
+    if session.get('username'):
+        greeting = "Hello, " + session['username'] + '.'
+        flash(greeting)
+        return render_template('homepage.html')
+    else:
+        return redirect(url_for('log_in'))
 
-#=============================================== Study Mode
+
+
+#====================================================== Study Mode
 @app.route('/Homepage/Study_Mode')
 def study_mode():
     return render_template('study_mode.html')
 
-#=============================================== Assignment Dashboard
+#====================================================== Assignment Dashboard
 @app.route('/Homepage/Assignment_dash')
 def assignment_dash():
-    return render_template('assignment_dash.html')
+    if session.get('username'):
+        return render_template('assignment_dash.html')
+    else:
+        return redirect(url_for('log_in'))
+    
 
-#=============================================== Create assessment #===============================================#===============================================
+#====================================================== Create assessment #===============================================#===============================================
 @app.route('/Homepage/Assignment_dash/Create_Assessment',  methods=['POST', 'GET'])
 def create_assessment():
-    # Initializes values to None 
-    title = None
-    description = None
-    date = None
-    submit = None
-    priority = None
-    maxChars = 500
+    if session.get('username'):
+        # Initializes values to None 
+        title = None
+        description = None
+        date = None
+        submit = None
+        priority = None
+        maxChars = 500
 
-    # Specifies the form class to use
-    form = AssessmentForm()
+        # Specifies the form class to use
+        form = AssessmentForm()
 
-    #Checks if the submit button has been pressed
-    if form.validate_on_submit():
-        if(len(form.description.data) > maxChars):
-            errorMsg = "Error: Max description length is", maxChars, "characters. Character count: ", len(form.description.data)
-            flash(stripChars(str(errorMsg), "',()"))
-        assignment = Assignments(user_ID=1, title=form.title.data, description=form.description.data, date_Due=form.date.data, priority=form.priority.data)
-        flash("Done")
+        #Checks if the submit button has been pressed
+        if form.validate_on_submit():
+            if(len(form.description.data) > maxChars):
+                errorMsg = "Error: Max description length is", maxChars, "characters. Character count: ", len(form.description.data)
+                flash(stripChars(str(errorMsg), "',()"))
+            else:
+                assignment = Assignments(user_ID=session['user_id'], title=form.title.data, description=form.description.data, date_Due=form.date.data, priority=form.priority.data)
+                db.session.add(assignment)
+                db.session.commit()
+                flash("Assignment added to DB")
 
-        #Clearing the form data after it has been submitted
-    title = form.title.data
-    form.title.data = ''
-    description = form.description.data
-    form.description.data = ''
-    date = form.date.data
-    form.date.data = ''
-    submit = form.submit.data
-    form.submit.data = ''
-    priority = form.priority.data
-    form.priority.data = ''
-    # Re-rendering the login page after a failed login attempt
-    return render_template('create_assessment.html', title=title, description=description, date=date, submit=submit, priority=priority, form=form)
+            
+
+            #Clearing the form data after it has been submitted
+        title = form.title.data
+        form.title.data = ''
+        description = form.description.data
+        form.description.data = ''
+        date = form.date.data
+        form.date.data = ''
+        submit = form.submit.data
+        form.submit.data = ''
+        priority = form.priority.data
+        form.priority.data = ''
+        # Re-rendering the login page after a failed login attempt
+        return render_template('create_assessment.html', title=title, description=description, date=date, submit=submit, priority=priority, form=form)
+    else:
+        return redirect(url_for('log_in'))
 
 
-#=============================================== Get Events
+#====================================================== Get Events
 @app.route('/Homepage/get_events',  methods=['GET'])
 def get_events_route():
     # Replace this with your actual code to fetch events from the database
-    events = {
-                "day": 10,
-                "month": 11,
-                "year": 2023,
-                "events": [
-                    {
-                        "title": "Project Demo",
-                        "description": "With Dr. Zhang at ",
-                        "time": "9:20 AM",
-                    },
-                    {
-                        "title": "Exam 1",
-                        "description": "Study chapters 1-5 for this exam",
-                        "time": "11:59 PM",
-                    },
-                ],
-            },
-            # ... additional events
+    userAssignments = Assignments.query.filter_by(user_ID= session['user_id']).all()
+    events = []
+    print("userAssignments: ", userAssignments)
+    for assignment in userAssignments:
+        date =str(assignment.date_Due).split('-')
+        day = date[2][:2]
+        month = date[1]
+        year = date[0]
+        print(assignment.title)
+        print('Day: ', day, 'Month: ', month, 'Year: ', year)
+
+        events.append([day, month, year, assignment.title, assignment.description])
+    print(events)
+    # "title": assignment.title,
+    # "description": assignment.description,
     return jsonify(events)
 
-#=============================================== Calendar
+#====================================================== Calendar
 @app.route('/Homepage/Weekly_View')
 def weekly_calendar():
-    return render_template('weekly_calendar.html')
+    if session.get('username'):
+        return render_template('weekly_calendar.html')
+    else:
+        return redirect(url_for('log_in'))
 
-#=============================================== Settings
+#====================================================== Settings
 @app.route('/Homepage/Settings')
 def settings():
-    return render_template('settings.html')
+    if session.get('username'):
+        return render_template('settings.html')
+    else:
+        return redirect(url_for('log_in'))
+
+    
+
+#====================================================== Log out
+@app.route('/logout')
+def log_out():
+    if session.get('username'):
+        session.pop('username')
+    return redirect(url_for('log_in'))
 
 
 
 
-#=============================================== Main
+#====================================================== Main
 if __name__ == "__main__":
     app.run(debug=True) #app.run(host='192.168.1.142') to make searchable through IP    
                         #I don't believe this option works if we are not on the same network
