@@ -98,22 +98,6 @@ function initCalendar(activeDay) {
     for (let i = 0; i < 7; i++) {
         const currentDay = new Date(firstDayOfWeek);
         currentDay.setDate(firstDayOfWeek.getDate() + i);
-        //this just proof, when you run weekly calendar, page inspect
-        //console, shows that days being rendered are correct, even
-        //if month changes, just after it's rendered, that's the problem
-        //work in progress
-        //for(var i = 0; i < keys.length; i++){
-          //  obj[keys[i]] = values[i];
-        //}
-         //add days to list, pick from list, bam boom
-        // Printing object
-        //for (var key of Object.keys(obj)) {
-          //  document.write(key + " => " + obj[key] + "</br>")
-        //}
-        //work in progress
-
-        //check if event present on current day
-
 
 
 

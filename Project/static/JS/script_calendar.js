@@ -88,34 +88,19 @@ function initCalendar() {
 
     //current month days
 
-    for (let i = 0; i < lastDate; i++) {//1st day of month, increment by 1 until <= last day of month
+    for (let i = 1; i <= lastDate; i++) {//1st day of month, increment by 1 until <= last day of month
 
         //check if event present on current day
 
         let event = false; 
         if(eventsArr[i]){
-            console.log("EventsArr exists: ", eventsArr[i])
             if(eventsArr[i][0] == day && eventsArr[i][1] == month + 1 && eventsArr[i][2] == year){
                 event = true
             }
 
         }
-
-        // eventsArr.forEach((eventObj) => {
-        //     console.log(i, ": ",eventObj)
-        //     if (
-        //         eventObj[i][0] == day &&
-        //         eventObj[i][1] == month + 1 &&
-        //         eventObj[i][2] == year
-        //     ) {
-        //         //if event found
-        //         event = true;//if day and month and year from eventsArr 
-        //         //(list of events top of code) match days in month, event = true
-        //     }
-        // });
-        //if day is today add class today
         if ( //simply gets todays date (day, month, year
-          i == new Date().getDate() + 1 && 
+          i == new Date().getDate() && 
           year == new Date().getFullYear() && 
           month == new Date().getMonth()
         ) {
@@ -125,17 +110,17 @@ function initCalendar() {
           updateEvents(i);//calls function with i variable (todays date), updates right side with selected days events (if there is any)
           //if event found also add event class, only for current day (not selected/active day, literally todays date irl)
           if (event) {
-            days += `<div class="day today active event" >${i + 1}</div>`;//if today (irl today) is selected/active also has an event, updates days displays on calendar
+            days += `<div class="day today active event" >${i}</div>`;//if today (irl today) is selected/active also has an event, updates days displays on calendar
           } else {
-            days += `<div class="day today active" >${i + 1}</div>`;//if today (irl today) is selected/active, updates days display on calendar
+            days += `<div class="day today active" >${i}</div>`;//if today (irl today) is selected/active, updates days display on calendar
           }
         }
         //add remaining as it is
         else {
             if (event) {
-                days += `<div class="day event" >${i + 1}</div>`;//
+                days += `<div class="day event" >${i}</div>`;//
               } else {
-                days += `<div class="day" >${i + 1}</div>`;//
+                days += `<div class="day" >${i}</div>`;//
               }        
             }
         }
