@@ -215,11 +215,11 @@ body {
     position: absolute;
     bottom: 10%;
     left: 50%;
-    width: 75%;
+    width: 85%;
     height: 6px;
     border-radius: 30px;
     transform: translateX(-50%);
-    background-color: #3c9f57;
+    background: linear-gradient(to right, #3c9f57 0%, #3c9f57 25%, yellow 25%, yellow 50%, orange 50%, orange 75%, red 75%, red 100%);
 }
 
 .calendar .days .day:hover.event::after { 
@@ -292,6 +292,7 @@ body {
     padding: 0 20px;
     padding-left: 50px;
     color: #e9f7ec;
+    /*background-color:rgba(255,0,0,0.3); change the background color on the right*/
 }
 
 .events .event .title {
