@@ -46,7 +46,7 @@ function fetchEvents() {
         })
         .then(data => {
             eventsArr = data;
-            initCalendar(activeDay);
+            initCalendar();
         })
         .catch(error => {
             console.error("Error fetching events: ", error);
@@ -61,8 +61,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
 eventsArr = []; //this'll be when automating events
 fetchEvents(); 
-console.log(eventsArr)
-
 //function to display calendar
 function initCalendar() {
     //to get prev month days and current month all days and rem next days
@@ -87,15 +85,16 @@ function initCalendar() {
     }
 
     //current month days
-
+    var l = 0;
     for (let i = 1; i <= lastDate; i++) {//1st day of month, increment by 1 until <= last day of month
 
         //check if event present on current day
 
         let event = false; 
-        if(eventsArr[i]){
-            if(eventsArr[i][0] == day && eventsArr[i][1] == month + 1 && eventsArr[i][2] == year){
+        if(eventsArr[l]){
+            if(eventsArr[l][0] == i && eventsArr[l][1] == month + 1 && eventsArr[l][2] == year){
                 event = true
+                l = l + 1;
             }
 
         }
@@ -104,7 +103,6 @@ function initCalendar() {
           year == new Date().getFullYear() && 
           month == new Date().getMonth()
         ) {
-
           activeDay = i;
           getActiveDay(i);//calls function with i variable (todays date), updates right side with selected days date (active day)
           updateEvents(i);//calls function with i variable (todays date), updates right side with selected days events (if there is any)

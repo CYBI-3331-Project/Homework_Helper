@@ -215,11 +215,11 @@ body {
     position: absolute;
     bottom: 10%;
     left: 50%;
-    width: 85%;
+    width: 75%;
     height: 6px;
     border-radius: 30px;
     transform: translateX(-50%);
-    background: linear-gradient(to right, #3c9f57 0%, #3c9f57 25%, yellow 25%, yellow 50%, orange 50%, orange 75%, red 75%, red 100%);
+    background: #3c9f57;
 }
 
 .calendar .days .day:hover.event::after { 
