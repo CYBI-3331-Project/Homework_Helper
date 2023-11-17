@@ -93,7 +93,6 @@ function initCalendar() {
         //check if event present on current day
 
         let event = false; 
-        console.log(eventsArr)
         if(eventsArr[i]){
             console.log("EventsArr exists: ", eventsArr[i])
             if(eventsArr[i][0] == day && eventsArr[i][1] == month + 1 && eventsArr[i][2] == year){
@@ -268,9 +267,6 @@ function updateEvents(date) {
                         <div class="event-description">
                             <span class="event-description">${eventsArr[i][4]}</span>
                         </div> 
-                        <div class="event-time">
-                            <span class="event-time">${'notATime'}</span>
-                        </div>
                     </div>
                     `;
                 }

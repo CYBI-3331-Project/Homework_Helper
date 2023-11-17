@@ -90,8 +90,8 @@ class  Assignments(db.Model):
     title = db.Column(db.String(50), nullable=False)
     description = db.Column(db.String(300), nullable=True)
     date_Created = db.Column(db.DateTime, default=datetime.utcnow)
-    date_Due = db.Column(db.DateTime, nullable=True)
-    priority = db.Column(db.Integer, nullable=True)
+    date_Due = db.Column(db.DateTime, nullable=False)
+    priority = db.Column(db.Integer, nullable=False)
 
 
 #======================================================== Forms
@@ -125,10 +125,10 @@ class AssessmentForm (FlaskForm):
 #Creates a context to manage the database
 with app.app_context():
     #Drops all tables from the database
-    #db.drop_all()
+    # db.drop_all()
 
     #Adds tables out of all the modles in the database, unless they already exist
-    #db.create_all()
+    #  db.create_all()
 
     #LoginCredentials.__table__.create(db.engine)
 
@@ -338,7 +338,7 @@ def get_events_route():
         print(assignment.title)
         print('Day: ', day, 'Month: ', month, 'Year: ', year)
 
-        events.append([day, month, year, assignment.title, assignment.description])
+        events.append([day, month, year, assignment.title, assignment.description, assignment.priority])
     print(events)
     # "title": assignment.title,
     # "description": assignment.description,

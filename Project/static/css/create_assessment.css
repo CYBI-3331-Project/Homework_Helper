@@ -19,12 +19,10 @@ h1{
     border-width: 1px;
     text-align: center;
     background-color: #4e835c;
-    
-
 }
 .box {
     width: 450px;
-    height: 500px;
+    height: 475px;
     text-align: left;
     background-color: #4e835c;
     border-radius: 5px;
