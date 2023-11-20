@@ -10,16 +10,7 @@
 
 
 # TODO
-- Restrict pages to logged-in users (Manage sessions)
-- Enforce a password policy
 - Save user preferences
+- Enforce a password policy
 - Password confirmation box in registration page
 - Polish the salt generator to prevent collisions
-- Update the backend to store assignments created by the user
-- Update the Monthly and Weekly Calendar to pull assignments
-- details from the backend and have it automatically formatted. 
-- Assignment details such as 
-	 - Assignment Title
-	 - (Optional?) Description
-	 - Priority Level
-	 - Due Date (Time, Date, Month, Year)
