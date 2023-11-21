@@ -302,6 +302,9 @@ function updateEvents(date) {
                         <div class="event-description">
                             <span class="event-description">${eventsArr[i][4]}</span>
                         </div> 
+                        <div class="event-time">
+                            <span class="event-time">${eventsArr[i][5]}</span>
+                        </div> 
                     </div>
                     `;
                 }
