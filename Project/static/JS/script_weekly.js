@@ -93,19 +93,17 @@ function initCalendar(activeDay) {
 
     activeMonth = firstDayOfWeek.getMonth();
     let days = "";
-
+    var l = 0;
     // Display days for the current week
     for (let i = 0; i < 7; i++) {
         const currentDay = new Date(firstDayOfWeek);
         currentDay.setDate(firstDayOfWeek.getDate() + i);
-
-
-
         let event = false;
-        if(eventsArr[i]){
+        if(eventsArr[l]){
             console.log("EventsArr exists: ", eventsArr[i])
-            if(eventsArr[i][0] == currentDay.getDate() && eventsArr[i][1] == currentDay.getMonth() + 1 && eventsArr[i][2] == currentDay.getFullYear()){
+            if(eventsArr[l][0] == currentDay.getDate() && eventsArr[l][1] == currentDay.getMonth() + 1 && eventsArr[l][2] == currentDay.getFullYear()){
                 event = true
+                l = l + 1;
             }
 
         }
