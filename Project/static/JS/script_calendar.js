@@ -93,6 +93,7 @@ function initCalendar() {
     //prev month days
 
     for (let x = day; x > 0; x--) {
+        console.log('days: ', days);
         days += `<div class="day prev-date">${prevDays - x + 1}</div>`;
     }
 
@@ -212,6 +213,8 @@ function addListener() {
                             day.innerHTML == e.target.innerHTML
                         ) {
                             day.classList.add("active");
+                            getActiveDay(e.target.innerHTML);
+                            updateEvents(Number(e.target.innerHTML));
                         }
                     });
                 }, 100);
@@ -230,6 +233,8 @@ function addListener() {
                             day.innerHTML == e.target.innerHTML
                         ) {
                             day.classList.add("active");
+                            getActiveDay(e.target.innerHTML);
+                            updateEvents(Number(e.target.innerHTML));
                         }
                     });
                 }, 100);
@@ -266,6 +271,9 @@ function updateEvents(date) {
                         </div>
                         <div class="event-description">
                             <span class="event-description">${eventsArr[i][4]}</span>
+                        </div> 
+                        <div class="event-time">
+                            <span class="event-time">${eventsArr[i][5]}</span>
                         </div> 
                     </div>
                     `;
