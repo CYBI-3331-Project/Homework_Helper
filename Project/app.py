@@ -6,8 +6,9 @@ from pathlib import Path
 from argon2 import PasswordHasher       #pip install argon2-cffi
 from flask_wtf import FlaskForm         #pip install flask-wtf
 from wtforms import StringField, IntegerField, SubmitField, EmailField, TelField, DateField, TextAreaField, RadioField
-from wtforms.validators import data_required
+from wtforms.validators import data_required, ValidationError
 from flask import jsonify
+from password_strength import PasswordPolicy, PasswordStats
 import os, time
 
 app = Flask(__name__)
@@ -20,6 +21,12 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{Path(__file__).parent / 'Da
 
 #Initialize the database
 db = SQLAlchemy(app)
+
+# Setting default password policy
+passLen = 9
+passCase = 1
+passNum = 1
+passSpec = 1
 
 
 
@@ -37,7 +44,6 @@ def generateHash(passw, salt):
     
     #Verifies that the password matches with the hash
     if(passHasher.verify(pass_hash, passw)):
-        print('Password successfully verified')
         return pass_hash
     else:
         print('Password verification error')
@@ -54,7 +60,34 @@ def stripChars(input: string, strip: string):
             
     return begStr
 
+# Custom WTForms validator to check password complexity 
+def validatePassword(form, field):
+    uppers = sum(1 for c in field.data if c.isupper())
+    digits = sum(1 for c in field.data if c.isdigit())
+    specials = 0
+    for c in field.data:
+        if ord(c) >= 32 and ord(c) <= 47:
+            specials += 1
+        elif ord(c) >= 58 and ord(c) <= 64:
+            specials += 1
+        elif ord(c) >= 91 and ord(c) <= 96:
+            specials += 1
+        elif ord(c) >= 123 and ord(c) <= 126:
+            specials += 1
+    if len(field.data) < passLen:
+        print('len error')
+        raise ValidationError('Password must contian at least 9 characters')
+    elif uppers < passCase:
+        print('case error')
+        raise ValidationError('Password must contain at least 1 upper-case character')
+    elif digits < passNum:
+        print('num error')
+        raise ValidationError('Password must contain at least 1 number')
+    elif specials < passSpec:
+        print('spec error')
+        raise ValidationError('Password must contain at least 1 special character')
     
+
 
 
 
@@ -101,9 +134,9 @@ class RegisterForm (FlaskForm):
     username = StringField("Name: ", validators=[data_required()])
     email = EmailField("Email: ", validators=[data_required()])
     phone = TelField("Phone: ")
-    password = StringField("Password: ", validators=[data_required()])
+    password = StringField("Password: ", validators=[data_required(), validatePassword])
     submit = SubmitField("Register")
-
+    
 #Create a login form class
 class LoginForm (FlaskForm):
     username = StringField("Name: ", validators=[data_required()])
@@ -267,7 +300,11 @@ def homepage():
 #====================================================== Study Mode
 @app.route('/Homepage/Study_Mode')
 def study_mode():
-    return render_template('study_mode.html')
+    if session.get('username'):
+        return render_template('study_mode.html')
+    else:
+        return redirect(url_for('log_in'))
+    
 
 #====================================================== Assignment Dashboard
 @app.route('/Homepage/Assignment_dash')
@@ -326,20 +363,15 @@ def create_assessment():
 #====================================================== Get Events
 @app.route('/Homepage/get_events',  methods=['GET'])
 def get_events_route():
-    # Replace this with your actual code to fetch events from the database
     userAssignments = Assignments.query.filter_by(user_ID= session['user_id']).all()
     events = []
-    print("userAssignments: ", userAssignments)
     for assignment in userAssignments:
         date =str(assignment.date_Due).split('-')
         day = date[2][:2]
         month = date[1]
         year = date[0]
-        print(assignment.title)
-        print('Day: ', day, 'Month: ', month, 'Year: ', year)
 
         events.append([day, month, year, assignment.title, assignment.description, assignment.priority])
-    print(events)
     # "title": assignment.title,
     # "description": assignment.description,
     return jsonify(events)

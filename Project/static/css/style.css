@@ -371,3 +371,6 @@ body {
     color: black;
     font-size: 25px;
 }
+.formError{
+    color: red;
+}

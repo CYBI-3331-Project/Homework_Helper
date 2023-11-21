@@ -31,6 +31,10 @@
     <div class="spacer"></div>
     {{ form.password.label }}
     {{ form.password(type="password") }}
+    <br>
+    {% for error in form.password.errors %}
+    <span class="formError">{{ error }}</span>
+    {% endfor %}
     <div class="spacer"></div>
     {{ form.submit(id="submitButton") }}
 

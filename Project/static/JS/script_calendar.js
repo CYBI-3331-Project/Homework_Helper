@@ -18,6 +18,7 @@ let month = today.getMonth(); //gets month from today variable (0-11)
 let year = today.getFullYear(); //gets year from today variable
 let lastDate = ''
 
+
 const months = [
     "January",
     "February",
@@ -71,6 +72,17 @@ function initCalendar() {
     lastDate = lastDay.getDate();
     const day = firstDay.getDay();
     const nextDays = 7 - lastDay.getDay() - 1;
+    let eventIndex = 0
+
+    //Calculate total number of events present
+    if(eventsArr[0]){
+        eventsArr.forEach(existingEvent => {
+            console.log(eventIndex, ': ', eventsArr)
+            eventIndex++;
+        });
+    }
+    console.log("Total events present: ", eventIndex)
+
 
     //update date top of calendar
     date.innerHTML = months[month] + " " + year;
@@ -92,12 +104,18 @@ function initCalendar() {
 
         let event = false; 
         if(eventsArr[l]){
+            console.log("Comparing event day: ", eventsArr[l][0], "  to calendar day: ", i)
             if(eventsArr[l][0] == i && eventsArr[l][1] == month + 1 && eventsArr[l][2] == year){
                 event = true
+                console.log("Event found on day ", i, ": ", eventsArr[l])
                 l = l + 1;
             }
-
+            else{
+                if(i == lastDate)
+                console.log("Event not found in calendar: ", eventsArr[l])
+            }
         }
+
         if ( //simply gets todays date (day, month, year
           i == new Date().getDate() && 
           year == new Date().getFullYear() && 
@@ -239,7 +257,6 @@ function updateEvents(date) {
         for(i = 0; i < lastDate; i++){
             if(eventsArr[i]){
                 if(eventsArr[i][0] == date && eventsArr[i][1] == month + 1 && eventsArr[i][2] == year){
-                    console.log("Event found on day ", date)
                     //show event on document
                     events += `
                     <div class="event">

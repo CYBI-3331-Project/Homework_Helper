@@ -83,6 +83,9 @@ ul {
     border-width: 1px;
     text-align: center;
     background-color: #2b6e3d;
-    
+}
 
+.formError{
+    position: absolute;
+    color: rgb(221 51 12);
 }
