@@ -319,7 +319,6 @@ body {
 .events .event .event-time {
     font-size: 1rem;
     font-weight: 400;
-    color: #f09d99;
     pointer-events: none;
 }
 

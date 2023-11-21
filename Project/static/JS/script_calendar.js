@@ -93,7 +93,6 @@ function initCalendar() {
     //prev month days
 
     for (let x = day; x > 0; x--) {
-        console.log('days: ', days);
         days += `<div class="day prev-date">${prevDays - x + 1}</div>`;
     }
 
@@ -271,8 +270,17 @@ function updateEvents(date) {
                         </div>
                         <div class="event-description">
                             <span class="event-description">${eventsArr[i][4]}</span>
-                        </div> 
-                        <div class="event-time">
+                        </div>`;
+                    var color = '';
+                    if (eventsArr[i] [5] === 'Low') {
+                        color = 'yellow';
+                    } else if (eventsArr[i] [5] === 'Medium') {
+                        color = 'orange';
+                    } else if (eventsArr[i] [5] === 'High'){
+                        color = 'red';
+                    } //if N/A it'll just be the same color as the event=descripon and title
+                    events += `
+                        <div class="event-time" style="color: ${color};">
                             <span class="event-time">${eventsArr[i][5]}</span>
                         </div> 
                     </div>
