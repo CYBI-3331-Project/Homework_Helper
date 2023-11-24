@@ -47,6 +47,10 @@ function fetchEvents() {
         })
         .then(data => {
             eventsArr = data;
+            // Call the function with the sample data
+            sortEventsByDay(eventsArr);
+            // Log the sorted events
+            console.log('eventsArr: ', eventsArr);
             initCalendar();
         })
         .catch(error => {
@@ -59,6 +63,23 @@ function fetchEvents() {
 document.addEventListener("DOMContentLoaded", function() {
     fetchEvents();
 });
+
+// Function to sort eventsArr by day, month, and year
+function sortEventsByDay(events) {
+    // Array to store indices where month or year changes
+    events.sort((a, b) => {
+        // Compare year first
+        if (a[2] !== b[2]) {
+            return a[2] - b[2];
+        }
+        // If years are the same, compare month
+        if (a[1] !== b[1]) {
+            return a[1] - b[1];
+        }
+        // If years and months are the same, compare day
+        return a[0] - b[0];
+    });
+}
 
 eventsArr = []; //this'll be when automating events
 fetchEvents(); 
@@ -77,11 +98,9 @@ function initCalendar() {
     //Calculate total number of events present
     if(eventsArr[0]){
         eventsArr.forEach(existingEvent => {
-            console.log(eventIndex, ': ', eventsArr)
             eventIndex++;
         });
     }
-    console.log("Total events present: ", eventIndex)
 
 
     //update date top of calendar
@@ -103,16 +122,34 @@ function initCalendar() {
         //check if event present on current day
 
         let event = false; 
-        if(eventsArr[l]){
-            console.log("Comparing event day: ", eventsArr[l][0], "  to calendar day: ", i)
-            if(eventsArr[l][0] == i && eventsArr[l][1] == month + 1 && eventsArr[l][2] == year){
-                event = true
-                console.log("Event found on day ", i, ": ", eventsArr[l])
+        if (eventsArr[l]) {
+            if (eventsArr[l][2] < year) {
+                while (eventsArr[l][2] < year) {
+                    l = l + 1;
+                }//january of next year event not showing
+            } else if (eventsArr[l][1] < month + 1) {
+                while (eventsArr[l][1] < month + 1) {
+                    l = l + 1;
+                }
+            }
+            if (eventsArr[l][0] == i && eventsArr[l][1] == month + 1 && eventsArr[l][2] == year) {
+                event = true;
+                // Handle multiple events on the same day
+                if (eventsArr[l + 1] && eventsArr[l][0] == eventsArr[l + 1][0]) {
+                    while (eventsArr[l + 1] && eventsArr[l][0] == eventsArr[l + 1][0]) {
+                        // Process or log the additional events as needed
+                        console.log('Additional event on day ', i, ': ', eventsArr[l + 1]);
+                        // Increment l to move to the next event
+                        l = l + 1;
+                    }
+                }
+                // Increment l to move to the next day
                 l = l + 1;
             }
-            else{
-                if(i == lastDate)
-                console.log("Event not found in calendar: ", eventsArr[l])
+            else {
+                if(i == lastDate) {
+                    console.log("Event not found in calendar: ", eventsArr[l]);
+                }
             }
         }
 
@@ -152,7 +189,6 @@ function initCalendar() {
     addListener();
 }
 // Initialize the calendar on page load
-initCalendar();
 
 //prev month logic
 function prevMonth() {
@@ -298,8 +334,5 @@ function updateEvents(date) {
                 <h3>No Events</h3>
             </div>`;
     }
-    console.log(events);
     eventsContainer.innerHTML = events;
 }
-
-
