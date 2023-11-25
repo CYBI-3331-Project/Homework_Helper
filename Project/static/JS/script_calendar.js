@@ -122,36 +122,41 @@ function initCalendar() {
         //check if event present on current day
 
         let event = false; 
-        if (eventsArr[l]) {
-            if (eventsArr[l][2] < year) {
-                while (eventsArr[l][2] < year) {
-                    l = l + 1;
-                }
-            } else if (eventsArr[l][1] < month + 1) {
-                while (eventsArr[l][1] < month + 1) {
-                    l = l + 1;
-                }
-            }
-            if (eventsArr[l][0] == i && eventsArr[l][1] == month + 1 && eventsArr[l][2] == year) {
-                event = true;
-                // Handle multiple events on the same day
-                if (eventsArr[l + 1] && eventsArr[l][0] == eventsArr[l + 1][0]) {
-                    while (eventsArr[l + 1] && eventsArr[l][0] == eventsArr[l + 1][0]) {
-                        // Process or log the additional events as needed
-                        console.log('Additional event on day ', i, ': ', eventsArr[l + 1]);
-                        // Increment l to move to the next event
+        try {
+            if (eventsArr[l]) {
+                if (eventsArr[l][2] < year) {
+                    while (eventsArr[l][2] < year) {
+                        l = l + 1;
+                    }
+                } else if (eventsArr[l][1] < month + 1) {
+                    while (eventsArr[l][1] < month + 1) {
                         l = l + 1;
                     }
                 }
-                // Increment l to move to the next day
-                l = l + 1;
-            }
-            else {
-                if(i == lastDate) {
-                    console.log("Event not found in calendar: ", eventsArr[l]);
+                if (eventsArr[l][0] == i && eventsArr[l][1] == month + 1 && eventsArr[l][2] == year) {
+                    event = true;
+                    // Handle multiple events on the same day
+                    if (eventsArr[l + 1] && eventsArr[l][0] == eventsArr[l + 1][0]) {
+                        while (eventsArr[l + 1] && eventsArr[l][0] == eventsArr[l + 1][0]) {
+                            // Process or log the additional events as needed
+                            console.log('Additional event on day ', i, ': ', eventsArr[l + 1]);
+                            // Increment l to move to the next event
+                            l = l + 1;
+                        }
+                    }
+                    // Increment l to move to the next day
+                    l = l + 1;
+                }
+                else {
+                    if(i == lastDate) {
+                        console.log("Event not found in calendar: ", eventsArr[l]);
+                    }
                 }
             }
+        } catch (error) {
+            console.log('do nothin');
         }
+
 
         if ( //simply gets todays date (day, month, year
           i == new Date().getDate() && 

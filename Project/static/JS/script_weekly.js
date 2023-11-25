@@ -21,6 +21,7 @@ let lastdayofweek;//empty global variable which allows next nav
 let firstdayofweek;//empty global variable which allows prev nav
 let activeMonth;
 let monthDisplay = '';
+let activeYear = '';
 let increment = false;
 //let prevSunday;had these global before, used in prev/next nav
 //let nextSunday;think we can leave it commented
@@ -295,7 +296,7 @@ function getActiveDay(day) {
     const date = new Date(year, month, day);
     const dayName = date.toString().split(" ")[0];
     //const activeMonth = date.getMonth(); // Get the month from the selected day
-    var activeYear = date.getFullYear(); // Get the year from the selected day
+    activeYear = date.getFullYear(); // Get the year from the selected day
     eventDay.innerHTML = dayName;
     if(increment){
         monthDisplay = activeMonth + 1
@@ -311,12 +312,12 @@ function getActiveDay(day) {
 
 
 //function to show events of that day
-function updateEvents(date) {
+function updateEvents(y) {
     let events = "";
     if(eventsArr){
         for(let i = 0; i < eventsArr.length; i++){
             if(eventsArr[i]){
-                if(eventsArr[i][0] == date && eventsArr[i][1] == monthDisplay + 1 && eventsArr[i][2] == year) {
+                if(eventsArr[i][0] == y && eventsArr[i][1] == monthDisplay + 1 && eventsArr[i][2] == activeYear) {
                     //show event on document
                     events += `
                     <div class="event">
