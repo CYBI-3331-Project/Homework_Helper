@@ -126,7 +126,7 @@ function initCalendar() {
             if (eventsArr[l][2] < year) {
                 while (eventsArr[l][2] < year) {
                     l = l + 1;
-                }//january of next year event not showing
+                }
             } else if (eventsArr[l][1] < month + 1) {
                 while (eventsArr[l][1] < month + 1) {
                     l = l + 1;

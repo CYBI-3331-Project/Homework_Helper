@@ -13,7 +13,6 @@ eventsContainer = document.querySelector(".events");
 
 // Initialize variables related to current date
 let today = new Date();//todays date
-console.log('today: ', today);
 let dayIndex = today.getDay(); // to determine the current day of the week (0 = Sunday, 6 = Saturday)
 let activeDay = today.getDate();//determine current day of month, 0-31
 let month = today.getMonth();//determine current month, 0-11
@@ -56,6 +55,10 @@ function fetchEvents() {
         })
         .then(data => {
             eventsArr = data;
+            // Call the function with the sample data
+            sortEventsByDay(eventsArr);
+            // Log the sorted events
+            console.log('full eventsArr: ', eventsArr);
             initCalendar(activeDay);
         })
         .catch(error => {
@@ -69,9 +72,25 @@ document.addEventListener("DOMContentLoaded", function() {
     fetchEvents();
 });
 
+// Function to sort eventsArr by day, month, and year
+function sortEventsByDay(events) {
+    // Array to store indices where month or year changes
+    events.sort((a, b) => {
+        // Compare year first
+        if (a[2] !== b[2]) {
+            return a[2] - b[2];
+        }
+        // If years are the same, compare month
+        if (a[1] !== b[1]) {
+            return a[1] - b[1];
+        }
+        // If years and months are the same, compare day
+        return a[0] - b[0];
+    });
+}
+
 eventsArr = []; //this'll be when automating events
 fetchEvents(); 
-console.log(eventsArr)
 
 //function to display calendar ============================================================================================================================================
 function initCalendar(activeDay) {
@@ -93,20 +112,28 @@ function initCalendar(activeDay) {
 
     activeMonth = firstDayOfWeek.getMonth();
     let days = "";
-    var l = 0;
     // Display days for the current week
     for (let i = 0; i < 7; i++) {
         const currentDay = new Date(firstDayOfWeek);
         currentDay.setDate(firstDayOfWeek.getDate() + i);
         let event = false;
-        if(eventsArr[l]){
-            console.log("EventsArr exists: ", eventsArr[i])
-            if(eventsArr[l][0] == currentDay.getDate() && eventsArr[l][1] == currentDay.getMonth() + 1 && eventsArr[l][2] == currentDay.getFullYear()){
-                event = true
-                l = l + 1;
+        for (let x = 0; x < eventsArr.length; x++) {
+            try {
+                if (
+                    eventsArr[x][0] == currentDay.getDate() &&
+                    eventsArr[x][1] == currentDay.getMonth() + 1 &&
+                    eventsArr[x][2] == currentDay.getFullYear()
+                ) {
+                    event = true;
+                    console.log('event found at: ', currentDay.getDate(), ': ', eventsArr[x]);
+                    console.log('x: ', x);
+                    // Handle multiple events on the same day if needed
+                }
+            } catch (error) {
+                console.log('Error checking for events: ', error);
             }
-
         }
+                        
         //if day is today add class today
         if (currentDay.getDate() == new Date().getDate() && currentDay.getFullYear() == new Date().getFullYear() && currentDay.getMonth() == new Date().getMonth()){
             activeDay = currentDay.getDate();
@@ -137,7 +164,6 @@ function initCalendar(activeDay) {
 
 //============================================================================================================================================
 // Initialize the calendar on page load
-initCalendar(activeDay);
 
 // Function to navigate to the previous week
 function prevWeek() {
@@ -288,10 +314,9 @@ function getActiveDay(day) {
 function updateEvents(date) {
     let events = "";
     if(eventsArr){
-        for(i = 0; i < 7; i++){
+        for(let i = 0; i < eventsArr.length; i++){
             if(eventsArr[i]){
-                if(eventsArr[i][0] == date && eventsArr[i][1] == monthDisplay + 1 && eventsArr[i][2] == year){
-                    console.log("Event found on day ", date)
+                if(eventsArr[i][0] == date && eventsArr[i][1] == monthDisplay + 1 && eventsArr[i][2] == year) {
                     //show event on document
                     events += `
                     <div class="event">
@@ -328,7 +353,6 @@ function updateEvents(date) {
                 <h3>No Events</h3>
             </div>`;
     }
-    console.log(events);
     eventsContainer.innerHTML = events;
 }
 
