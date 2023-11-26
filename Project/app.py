@@ -152,10 +152,11 @@ class AssessmentForm (FlaskForm):
     submit = SubmitField("Submit")
 
 class SettingForm(FlaskForm):
-    new_phone = TelField("New phone: ")
-    new_username = StringField("New username:", validators=[data_required()])
-    new_email = EmailField("New email: ", validators=[data_required()])
-    submit = SubmitField("Apply Changes")
+    new_phone = TelField("New Phone: ")
+    new_username = StringField("New Username:", validators=[data_required()])
+    new_email = EmailField("New Email: ", validators=[data_required()])
+    new_password = StringField("New Password: ", validators=[data_required(), validatePassword])
+    submit = SubmitField("Apply")
 
 #====================================================== App Context
 
@@ -398,6 +399,7 @@ def settings():
     new_phone = None
     new_password = None
     user_ID = None
+    salt = None
     id = None
     
 
@@ -407,6 +409,7 @@ def settings():
         user = UserCredentials.query.filter_by(user_Name=session['username']).first()
         # Check if the user is found in the database
         id = user.user_ID
+        salt = user.pass_salt
         name_to_update = UserCredentials.query.get_or_404(id)
         form = SettingForm()
         if form.validate_on_submit(): 
@@ -433,9 +436,11 @@ def settings():
                 name_to_update.user_Name = form.new_username.data
                 name_to_update.user_Email = form.new_email.data
                 name_to_update.user_Phone = form.new_phone.data
+                name_to_update.pass_hash = generateHash(form.new_password.data, salt)
+                flash(generateHash(form.new_password.data, salt))
             try: 
                 db.session.commit()
-                flash("User Updated Successfully!")
+                flash("User Information Updated Successfully!")
                 # Re-query the user after committing changes
                 name_to_update = UserCredentials.query.get_or_404(id)
                 print(f"Session username: {session.get('username')}")
@@ -445,7 +450,7 @@ def settings():
                         form=form, 
                         name_to_update = name_to_update, id=id)
             except: 
-                flash("Error!")
+                flash("Error! There was an error updating your information. Please try again!")
                 return render_template("settings.html", 
                         form=form,
                         name_to_update = name_to_update, id=id)
@@ -453,6 +458,16 @@ def settings():
             flash("Update User...")
             name_to_update = UserCredentials.query.get_or_404(id)
             print('form.errors: ', form.errors)
+            print(f"Session username: {session.get('username')}")
+            print(f"User ID: {id}")
+            new_username = form.new_username.data
+            form.new_username.data = ''
+            new_email = form.new_email.data
+            form.new_email.data = ''
+            new_phone = form.new_phone.data
+            form.new_phone.data = ''
+            new_password = form.new_password.data
+            form.new_password.data = ''
             #Clearing the form data after it has been submitted
             return render_template("settings.html", 
                             form=form,
