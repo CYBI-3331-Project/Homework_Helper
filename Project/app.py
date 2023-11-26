@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy #pip install Flask-SQLAlchemy
 from pathlib import Path
 from argon2 import PasswordHasher       #pip install argon2-cffi
 from flask_wtf import FlaskForm         #pip install flask-wtf
-from wtforms import StringField, IntegerField, SubmitField, EmailField, TelField, DateField, TextAreaField, RadioField
+from wtforms import StringField, IntegerField, SubmitField, EmailField, TelField, DateField, TextAreaField, RadioField, BooleanField 
 from wtforms.validators import data_required, ValidationError
 from flask import jsonify
 from password_strength import PasswordPolicy, PasswordStats
@@ -151,7 +151,11 @@ class AssessmentForm (FlaskForm):
     priority = RadioField("Priority",  choices=['N/A', 'Low', 'Medium', 'High'], validators=[data_required()])
     submit = SubmitField("Submit")
 
-
+class SettingForm(FlaskForm):
+    new_phone = TelField("New phone: ")
+    new_username = StringField("New username:", validators=[data_required()])
+    new_email = EmailField("New email: ", validators=[data_required()])
+    submit = SubmitField("Apply Changes")
 
 #====================================================== App Context
 
@@ -223,7 +227,6 @@ def log_in():
         form.password.data = ''
     # Re-rendering the login page after a failed login attempt
     return render_template('log_in.html', form=form, username = username, salt = salt, passHash = passHash)
-
 
 #====================================================== Account creation
 @app.route('/create_account',  methods=['POST', 'GET'])
@@ -385,14 +388,78 @@ def weekly_calendar():
         return redirect(url_for('log_in'))
 
 #====================================================== Settings
-@app.route('/Homepage/Settings')
+# ... (other routes)
+
+@app.route('/Homepage/Settings', methods=['POST', 'GET'])
 def settings():
+    # Initializes values to None 
+    new_username = None
+    new_email = None
+    new_phone = None
+    new_password = None
+    user_ID = None
+    id = None
+    
+
+    # Specifies the form class to use
     if session.get('username'):
-        return render_template('settings.html')
+        # Query the user's information from the database
+        user = UserCredentials.query.filter_by(user_Name=session['username']).first()
+        # Check if the user is found in the database
+        id = user.user_ID
+        name_to_update = UserCredentials.query.get_or_404(id)
+        form = SettingForm()
+        if form.validate_on_submit(): 
+            # Check if the new username is empty or equals the current username
+            if not form.new_username.data:
+                flash("Error: New username cannot be empty")
+            # Check if the new username is already taken
+            elif form.new_username.data != user.user_Name and UserCredentials.query.filter_by(user_Name=form.new_username.data).first():
+                flash("Error: New username is already taken.")
+            # Check if the new email is empty or equals the current email
+            elif not form.new_email.data:
+                flash("Error: New email cannot be empty")
+            # Check if the new email is already taken
+            elif form.new_email.data != user.user_Email and UserCredentials.query.filter_by(user_Email=form.new_email.data).first():
+                flash("Error: New email is already taken.")
+            # Check if the new phone number is empty or equals the current phone number
+            elif form.new_phone.data and (not form.new_phone.data.isdigit()):
+                flash("Error: New phone number cannot be empty and must contain non-numeric characters.")
+            # Check if the new phone number is already taken
+            elif form.new_phone.data != user.user_Phone and UserCredentials.query.filter_by(user_Phone=form.new_phone.data).first():
+                flash("Error: New phone number is already taken.")
+            else:
+                # Update user information
+                name_to_update.user_Name = form.new_username.data
+                name_to_update.user_Email = form.new_email.data
+                name_to_update.user_Phone = form.new_phone.data
+            try: 
+                db.session.commit()
+                flash("User Updated Successfully!")
+                # Re-query the user after committing changes
+                name_to_update = UserCredentials.query.get_or_404(id)
+                print(f"Session username: {session.get('username')}")
+                print(f"User ID: {id}")
+
+                return render_template("settings.html", 
+                        form=form, 
+                        name_to_update = name_to_update, id=id)
+            except: 
+                flash("Error!")
+                return render_template("settings.html", 
+                        form=form,
+                        name_to_update = name_to_update, id=id)
+        else: 
+            flash("Update User...")
+            name_to_update = UserCredentials.query.get_or_404(id)
+            print('form.errors: ', form.errors)
+            #Clearing the form data after it has been submitted
+            return render_template("settings.html", 
+                            form=form,
+                            name_to_update = name_to_update, 
+                            id = id)
     else:
         return redirect(url_for('log_in'))
-
-    
 
 #====================================================== Log out
 @app.route('/logout')

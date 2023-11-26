@@ -2,7 +2,7 @@
 
 {% block head %}
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/create_assessment.css') }}">
   <title>Settings Dashboard</title>
 {% endblock %}
 {% block body %}
@@ -19,27 +19,55 @@
       </div>
   </div>
 </div>
-<div class="container-home">
-    <div class="container-home">
-  <h2>Settings Dashboard</h2><br>
-      <label for="notifications">Notifications</label>
-      <input type="checkbox" id="notifications" checked> Enable Notifications
-    </li><br><br>
-      <label for="reminders">Reminder Alerts</label>
-      <input type="checkbox" id="reminders" checked> Enable Reminder Alerts
-    </li><br><br>
-      <button id="logout">Log Out</button>
-    </li>
-  </ul>
+<!-- Creating a form  with jinja formatting-->
+<div class="container-body">
+  <h1>Settings</h1>
+  <div class="container">
+    <div class="box2-container">
+      <div class="box2">        
+        <!--Elements created through jinja-->
+        <div class="header"> 
+          <span class="label">Username: </span>
+          <span class="value">{{ name_to_update.user_Name }}</span>
+        </div>
+        <div class="header"> 
+          <span class="label">User ID: </span>
+          <span class="value">{{ name_to_update.user_ID }}</span>
+        </div>
+        <div class="header"> 
+          <span class="label">Email: </span>
+          <span class="value">{{ name_to_update.user_Email }}</span>
+        </div>
+        <div class="header"> 
+          <span class="label">Phone Number: </span>
+          <span class="value">{{ name_to_update.user_Phone }}</span>
+        </div>
+      </div>
+      <div class="box2">        
+        <!--Elements created through jinja-->
+        <form action="/Homepage/Settings" method="POST">
+          {{ form.hidden_tag() }}
+          <div class="form">
+            <span class="value">{{ form.new_username.label(class="form-label") }}</span>
+            <span class="value">{{ form.new_username(class="form-control", value=name_to_update.user_Name) }}</br></span>
+          </div>
+          <div class="form">
+            <span class="value">{{ form.new_email.label(class="form-label") }}</span>
+            <span class="value">{{ form.new_email(class="form-control", value=name_to_update.user_Email)}}</br></span>
+          </div>
+          <div class="form">
+            <span class="value">{{ form.new_phone.label(class="form-label") }}</span>
+            <span class="value">{{ form.new_phone(class="form-control", value=name_to_update.user_Phone)}}</br></span>
+          </div>
+          {{ form.submit(id="submitButton") }}
+        </form>
+      </div>
+    </div>
   </div>
-</div>
-</div>
-<script>
-  // You can add JavaScript functionality here, e.g., to handle button clicks
-  document.getElementById('logout').addEventListener('click', function() {
-    alert('Logging out...');
-    // Additional logic for logout can be added here
-  });
-</script>
-{% endblock %}
+  </div>
+{% for message in get_flashed_messages() %}
+<div class="alert" role="alert" style="color: black; font-size: 25px;">{{ message }}</div>
+{% endfor %}
 
+<!-- Handling flash messages -->
+{% endblock %}

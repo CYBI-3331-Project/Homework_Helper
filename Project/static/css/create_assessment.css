@@ -1,14 +1,13 @@
 body {
-    background-color: #c5e0cc;
+    background-color: #c5e0cc;/*e9f7ec og background color*/
 }
 h1{
-    position:static;
-    padding-top: 5%;
-    padding-bottom: 15%;
+    text-align: center;
 }
 .spacer{
     padding-bottom: 15px;   
 }
+
 #submitButton{
     width: 90px;
     height: 25px;
@@ -28,4 +27,89 @@ h1{
     border-radius: 5px;
     padding: 15px;
     margin: 0;
+}
+
+.header {
+    font-size: 2rem;
+    font-weight: 500;
+    color: #08160c;
+}
+
+.label {
+    /* Style for labels */
+    font-weight: bold;
+}
+
+.value {
+    /* Style for values */
+    /* Add your styles here */
+    font-weight: lighter;
+}
+
+.form {
+    font-size: 2rem;
+    font-weight: 500;
+    color: #08160c;
+}
+.box2-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+  }
+.box2 {
+    width: auto;
+    min-width: 400px;
+    height: auto;
+    min-height: 180px;
+    text-align: left;
+    background-color: #4e835c;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    padding: 15px;
+    margin: 10px;
+}
+
+.container-body {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    position: relative;
+    justify-content: space-between;
+    width: 100%;
+    height: auto;
+    background-color: #c5e0cc;
+}
+
+.container {
+    width: auto;
+    min-width: 50%;
+    height: auto;
+    max-height: 630px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    background-color: #c5e0cc;
+
+}
+
+.left {
+    width: 50%;
+    padding: 20px;
+}
+
+.right {
+    width: 50%;
+    padding: 20px;
+}
+
+.alert{
+    position: relative;
+    text-align: center;
+    color: black;
+    font-size: 25px;
+}
+.formError{
+    color: red;
 }

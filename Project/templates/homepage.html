@@ -30,13 +30,12 @@
 <!--Navigation bar end-->
 
 <!-- Main content section -->
-
+{% for message in get_flashed_messages() %}
+<div class="alert" role="alert">{{ message }}</div>
+{% endfor %}
 <!-- Calendar contianer -->
 <div class="container-body">
     <!-- Flash message handler -->
-    {% for message in get_flashed_messages() %}
-    <div class="alert" role="alert" style="top: -15%;">{{ message }}</div>
-    {% endfor %}
     <div class="container">
         <!-- Left side: Calendar view section -->
         <div class="left">
