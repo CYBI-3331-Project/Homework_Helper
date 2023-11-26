@@ -76,16 +76,16 @@ def validatePassword(form, field):
             specials += 1
     if len(field.data) < passLen:
         print('len error')
-        raise ValidationError('Password must contian at least 9 characters')
+        raise ValidationError('Password must contian at least ' + str(passLen) + ' characters')
     elif uppers < passCase:
         print('case error')
-        raise ValidationError('Password must contain at least 1 upper-case character')
+        raise ValidationError('Password must contain at least ' + str(passCase) + ' upper-case character')
     elif digits < passNum:
         print('num error')
-        raise ValidationError('Password must contain at least 1 number')
+        raise ValidationError('Password must contain at least ' + str(passNum) + ' number')
     elif specials < passSpec:
         print('spec error')
-        raise ValidationError('Password must contain at least 1 special character')
+        raise ValidationError('Password must contain at least ' + str(passSpec) + ' special character')
     
 
 
@@ -131,7 +131,7 @@ class  Assignments(db.Model):
 
 #Create a registration form class
 class RegisterForm (FlaskForm):
-    username = StringField("Name: ", validators=[data_required()])
+    username = StringField("Username: ", validators=[data_required()])
     email = EmailField("Email: ", validators=[data_required()])
     phone = TelField("Phone: ")
     password = StringField("Password: ", validators=[data_required(), validatePassword])
@@ -139,7 +139,7 @@ class RegisterForm (FlaskForm):
     
 #Create a login form class
 class LoginForm (FlaskForm):
-    username = StringField("Name: ", validators=[data_required()])
+    username = StringField("Username: ", validators=[data_required()])
     password = StringField("Password: ", validators=[data_required()])
     submit = SubmitField("Log in")
 

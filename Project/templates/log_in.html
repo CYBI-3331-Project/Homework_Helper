@@ -22,11 +22,9 @@
     {{ form.hidden_tag() }}
 
     <!--Elements created through jinja-->
-    {{ form.username.label }}
-    {{ form.username }}
+    {{ form.username(placeholder="Username") }}
     <div class="spacer"></div>
-    {{ form.password.label }}
-    {{ form.password(type="password") }}
+    {{ form.password(type="password", placeholder="Password") }}
     <div class="spacer"></div>
     {{ form.submit(id="submitButton") }}
 
@@ -35,8 +33,11 @@
     <label for="remember">Remember me</label><br><br> -->
 
 
-<p>Not registered? <a href="{{ url_for('Register') }}">Create an account</a></p>
-<p>Forgot your password? <a href="{{ url_for('forgotpw') }}">Click here</a></p>
+
+</div>
+<div style="text-align: center">
+<p class="subText">Not registered? <a href="{{ url_for('Register') }}">Create an account</a></p>
+<p class="subText">Forgot your password? <a href="{{ url_for('forgotpw') }}">Click here</a></p>
 </div>
 
 <!-- Handling flash messages -->

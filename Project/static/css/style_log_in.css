@@ -13,7 +13,6 @@ body {
 */
 h1, h2, h3 {
     color: #c0e7cb;
-    text-align: center;
 }
 a, .link {
     color: #3c9f57;
@@ -35,9 +34,20 @@ button {
 button:hover {
     color: #f09d99;
 }
+p{
+    color: #08160c;
+}
+
+input{
+    height: 30px;
+    width: 250px;
+    font-size: 15px;
+}
+
 .box {
-    width: 30%;
-    height: 50%;
+    width: max-content;
+    max-width: 400px;
+    height: 250px;
     text-align: left;
     background-color: #235c32;/*lighter black 111113 */
     border-radius: 5px;
@@ -74,10 +84,10 @@ ul {
     padding-bottom: 15px;
 }
 #submitButton{
-    width: 90px;
-    height: 25px;
-    border-radius: 5px;
-    font-size: 18px;
+    width: 100%;
+    height: 30px;
+    border-radius: 15px;
+    font-size: 20px;
     font-weight: 600;
     color: #08160c;
     border-width: 1px;
