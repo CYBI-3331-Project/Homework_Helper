@@ -1,8 +1,14 @@
+html{
+    min-height:100%;
+    
+}
 body {
-    background-color: #e9f7ec;/*285136285136*/
-    color: #c0e7cb;/*FFFFFF99 another greyFFFFFF*/
+    height: 100vh;
+    margin: 0px;
+    display: flex;
     font-family: 'Figtree', sans-serif;
     text-align: justify;
+    overflow: hidden;
 }
 /*
 --text: #08160c;
@@ -13,6 +19,10 @@ body {
 */
 h1, h2, h3 {
     color: #c0e7cb;
+}
+h2{
+    font-weight: 400;
+    font-size: medium;
 }
 a, .link {
     color: #3c9f57;
@@ -47,7 +57,7 @@ input{
 .box {
     width: max-content;
     max-width: 400px;
-    height: 250px;
+    height: 300px;
     text-align: left;
     background-color: #235c32;/*lighter black 111113 */
     border-radius: 5px;
@@ -83,10 +93,15 @@ ul {
 .spacer{
     padding-bottom: 15px;
 }
+.formError{
+    position: absolute;
+    color: rgb(221 51 12);
+}
+
 #submitButton{
     width: 100%;
-    height: 30px;
-    border-radius: 15px;
+    height: 40px;
+    border-radius: 50px;
     font-size: 20px;
     font-weight: 600;
     color: #08160c;
@@ -95,7 +110,27 @@ ul {
     background-color: #2b6e3d;
 }
 
-.formError{
-    position: absolute;
-    color: rgb(221 51 12);
+#solidHalf{
+    background-color: #c0e7cb;
+    height: 100%;
+    width: 35%;
+    min-width: 30%;
 }
+#bgImage{
+    object-fit: cover;
+    width: 110%;
+    height: 100%;
+}
+#imgContainer{
+    position: relative;
+}
+#textBlock {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.75);
+    border-radius: 10px;
+    bottom: 20px;
+    right: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding: 10px;
+  }

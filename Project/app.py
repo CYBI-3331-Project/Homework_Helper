@@ -141,7 +141,7 @@ class RegisterForm (FlaskForm):
 class LoginForm (FlaskForm):
     username = StringField("Username: ", validators=[data_required()])
     password = StringField("Password: ", validators=[data_required()])
-    submit = SubmitField("Log in")
+    submit = SubmitField("Sign in")
 
 #Create a AssessmentForm form class
 class AssessmentForm (FlaskForm):
