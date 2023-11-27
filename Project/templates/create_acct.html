@@ -9,40 +9,51 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style_log_in.css') }}">
 {% endblock %}
 {% block body %}
-<br><br><br><br><br>
-<div class="box">
-<h1>Create a account</h1>
 
-<!-- Creating a form  with jinja formatting-->
-<form action="/create_account" method="post">
-    
-    <!--Uses the SECRET_KEY to lock this page behind said key, to prevent CSRF attacks.-->
-    {{ form.hidden_tag() }}
 
-    <!--Elements created through jinja-->
-    {{ form.username.label }}
-    {{ form.username }}
-    <div class="spacer"></div>
-    {{ form.email.label }}
-    {{ form.email }}
-    <div class="spacer"></div>
-    {{ form.phone.label }}
-    {{ form.phone }}
-    <div class="spacer"></div>
-    {{ form.password.label }}
-    {{ form.password(type="password") }}
-    <br>
-    {% for error in form.password.errors %}
-    <span class="formError">{{ error }}</span>
+<div id="solidHalf">
+    <div class="spacer" style="padding-top: 25%; padding-right: 400px"></div>
+    <div class="box">
+    <h1>Create a account</h1>
+    <h2 style="padding-bottom: 5px; transform: translatey(-10px)">Insert something corny here</h2>
+
+    <!-- Creating a form  with jinja formatting-->
+    <form action="/create_account" method="post">
+        
+        <!--Uses the SECRET_KEY to lock this page behind said key, to prevent CSRF attacks.-->
+        {{ form.hidden_tag() }}
+
+        <!--Elements created through jinja-->
+        {{ form.username(placeholder="Username") }}
+        <div class="spacer"></div>
+        {{ form.email(placeholder="Email") }}
+        <div class="spacer"></div>
+        {{ form.phone(placeholder="Phone") }}
+        <div class="spacer"></div>
+        {{ form.password(type="password", placeholder="Password") }}
+        <br>
+        {% for error in form.password.errors %}
+        <span class="formError">{{ error }}</span>
+        {% endfor %}
+        <div class="spacer"style="padding-top: 20px;"></div>
+        {{ form.submit(id="submitButton") }}
+
+    </form>
+    </div>
+    <div style="text-align: center">
+        <p class="subText">Already have an account? <a href="{{ url_for('homepage') }}">Sign in</a></p>
+    </div>
+    <!-- Handling flash messages -->
+    {% for message in get_flashed_messages() %}
+    <div class="alert" role="alert" style="text-align: center; color: black; font-size: 25px;">{{ message }}</div>
     {% endfor %}
-    <div class="spacer"></div>
-    {{ form.submit(id="submitButton") }}
-
-</form>
 </div>
 
-<!-- Handling flash messages -->
-{% for message in get_flashed_messages() %}
-<div class="alert" role="alert" style="text-align: center; color: black; font-size: 25px;">{{ message }}</div>
-{% endfor %}
+<div id="imgContainer">
+    <img src="../static/Assets/Images/calendar.jpg" alt="Image alt text" id="bgImage">
+    <div id="textBlock">
+        <p style="color: #dfdfdf; margin-bottom: 2px; display: inline;">Image by</p>
+        <a href="https://www.freepik.com/free-photo/time-organization-concept-with-calendar_16688688.htm#page=2&query=calendar%20green%20pin&position=18&from_view=search&track=ais&uuid=c78ee2f7-68ef-4a11-b2aa-67143f01c33b">Freepik</a>
+    </div>
+</div>
 {% endblock %}

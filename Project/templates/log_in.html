@@ -33,21 +33,16 @@
         {{ form.submit(id="submitButton") }}
 
     </form>
-    <!--<input type="checkbox" id="remember" name="remember" value="Remember me">
-        <label for="remember">Remember me</label><br><br> -->
-
-
-
     </div>
+
     <div style="text-align: center">
-    <p class="subText">Not registered? <a href="{{ url_for('Register') }}">Create an account</a></p>
-    <p class="subText">Forgot your password? <a href="{{ url_for('forgotpw') }}">Click here</a></p>
+        <p class="subText">Not registered? <a href="{{ url_for('Register') }}">Create an account</a></p>
+        <p class="subText">Forgot your password? <a href="{{ url_for('forgotpw') }}">Click here</a></p>
     </div>
     <!-- Handling flash messages -->
     {% for message in get_flashed_messages() %}
     <div class="alert" role="alert" style="text-align: center; color: black; font-size: 25px;">{{ message }}</div>
     {% endfor %}
-    
 </div>
 
 <div id="imgContainer">
