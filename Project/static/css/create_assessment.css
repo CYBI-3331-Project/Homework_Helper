@@ -84,7 +84,6 @@ h1{
 
 .container {
     width: auto;
-    min-width: 50%;
     height: auto;
     max-height: 630px;
     display: flex;
@@ -112,4 +111,11 @@ h1{
 }
 .formError{
     color: red;
+}
+
+.switch-view-body {
+    height: 10%;
+    width: 100%;
+    position: relative;
+
 }

@@ -155,7 +155,7 @@ class SettingForm(FlaskForm):
     new_phone = TelField("New Phone: ")
     new_username = StringField("New Username:", validators=[data_required()])
     new_email = EmailField("New Email: ", validators=[data_required()])
-    new_password = StringField("New Password: ", validators=[data_required(), validatePassword])
+    new_password = StringField("New Password: ")
     submit = SubmitField("Apply")
 
 #====================================================== App Context
@@ -425,18 +425,19 @@ def settings():
             # Check if the new email is already taken
             elif form.new_email.data != user.user_Email and UserCredentials.query.filter_by(user_Email=form.new_email.data).first():
                 flash("Error: New email is already taken.")
-            # Check if the new phone number is empty or equals the current phone number
+            # Check if the new phone number is not empty and contains non-numeric characters
             elif form.new_phone.data and (not form.new_phone.data.isdigit()):
-                flash("Error: New phone number cannot be empty and must contain non-numeric characters.")
-            # Check if the new phone number is already taken
-            elif form.new_phone.data != user.user_Phone and UserCredentials.query.filter_by(user_Phone=form.new_phone.data).first():
+                flash("Error: New phone number cannot contain non-numeric characters.")
+            # Check if the new phone number is not empty, is different from the current one, and is already taken
+            elif form.new_phone.data and form.new_phone.data != str(user.user_Phone) and UserCredentials.query.filter_by(user_Phone=form.new_phone.data).first():
                 flash("Error: New phone number is already taken.")
             else:
                 # Update user information
                 name_to_update.user_Name = form.new_username.data
                 name_to_update.user_Email = form.new_email.data
                 name_to_update.user_Phone = form.new_phone.data
-                name_to_update.pass_hash = generateHash(form.new_password.data, salt)
+                if form.new_password.data:
+                    name_to_update.pass_hash = generateHash(form.new_password.data, salt)
                 flash(generateHash(form.new_password.data, salt))
             try: 
                 db.session.commit()
@@ -473,6 +474,124 @@ def settings():
                             form=form,
                             name_to_update = name_to_update, 
                             id = id)
+    else:
+        return redirect(url_for('log_in'))
+
+@app.route('/Homepage/Settings/Edit', methods=['POST', 'GET'])
+def settings_edit():
+    # Initializes values to None 
+    new_username = None
+    new_email = None
+    new_phone = None
+    new_password = None
+    user_ID = None
+    salt = None
+    id = None
+    
+
+    # Specifies the form class to use
+    if session.get('username'):
+        # Query the user's information from the database
+        user = UserCredentials.query.filter_by(user_Name=session['username']).first()
+        # Check if the user is found in the database
+        id = user.user_ID
+        salt = user.pass_salt
+        name_to_update = UserCredentials.query.get_or_404(id)
+        form = SettingForm()
+        if form.validate_on_submit(): 
+            # Check if the new username is empty or equals the current username
+            if not form.new_username.data:
+                flash("Error: New username cannot be empty")
+            # Check if the new username is already taken
+            elif form.new_username.data != user.user_Name and UserCredentials.query.filter_by(user_Name=form.new_username.data).first():
+                flash("Error: New username is already taken.")
+            # Check if the new email is empty or equals the current email
+            elif not form.new_email.data:
+                flash("Error: New email cannot be empty")
+            # Check if the new email is already taken
+            elif form.new_email.data != user.user_Email and UserCredentials.query.filter_by(user_Email=form.new_email.data).first():
+                flash("Error: New email is already taken.")
+            # Check if the new phone number is not empty and contains non-numeric characters
+            elif form.new_phone.data and (not form.new_phone.data.isdigit()):
+                flash("Error: New phone number cannot contain non-numeric characters.")
+            # Check if the new phone number is not empty, is different from the current one, and is already taken
+            elif form.new_phone.data and form.new_phone.data != str(user.user_Phone) and UserCredentials.query.filter_by(user_Phone=form.new_phone.data).first():
+                flash("Error: New phone number is already taken.")
+
+            else:
+                # Update user information
+                name_to_update.user_Name = form.new_username.data
+                name_to_update.user_Email = form.new_email.data
+                name_to_update.user_Phone = form.new_phone.data
+                if form.new_password.data:
+                    name_to_update.pass_hash = generateHash(form.new_password.data, salt)
+                else: 
+                    flash('AHHH')
+            try: 
+                db.session.commit()
+                flash("User Information Updated Successfully!")
+                # Re-query the user after committing changes
+                name_to_update = UserCredentials.query.get_or_404(id)
+                print(f"Session username: {session.get('username')}")
+                print(f"User ID: {id}")
+
+                return render_template("settings.html", 
+                        form=form, 
+                        name_to_update = name_to_update, id=id)
+            except: 
+                flash("Error! There was an error updating your information. Please try again!")
+                return render_template("settings.html", 
+                        form=form,
+                        name_to_update = name_to_update, id=id)
+        else: 
+            flash("Update User...")
+            name_to_update = UserCredentials.query.get_or_404(id)
+            print('form.errors: ', form.errors)
+            print(f"Session username: {session.get('username')}")
+            print(f"User ID: {id}")
+            new_username = form.new_username.data
+            form.new_username.data = ''
+            new_email = form.new_email.data
+            form.new_email.data = ''
+            new_phone = form.new_phone.data
+            form.new_phone.data = ''
+            new_password = form.new_password.data
+            form.new_password.data = ''
+            #Clearing the form data after it has been submitted
+            return render_template("settings_edit.html", 
+                            form=form,
+                            name_to_update = name_to_update, 
+                            id = id)
+    else:
+        return redirect(url_for('log_in'))
+
+@app.route('/Homepage/Settings/Delete', methods=['GET', 'POST'])
+def settings_delete():
+    id = None
+    user_ID = None
+    if session.get('username'):
+        # Query the user's information from the database
+        user = UserCredentials.query.filter_by(user_Name=session['username']).first()
+        # Check if the user is found in the database
+        id = user.user_ID
+        user_to_delete = UserCredentials.query.get_or_404(id)
+        name_to_update = UserCredentials.query.get_or_404(id)
+        form = SettingForm()
+        try: 
+            db.session.delete(user_to_delete)
+            db.session.commit()
+            session.pop('username')
+            flash("User Deleted Successfully!!")
+
+            return redirect(url_for('log_in'))
+        except: 
+            flash("Whoops! There was a problem deleting the user!")
+            name_to_update = UserCredentials.query.get_or_404(id)
+            print(f"Session username: {session.get('username')}")
+            print(f"User ID: {id}")
+            return render_template('settings.html', 
+                    form=form, 
+                    name_to_update = name_to_update, id=id)
     else:
         return redirect(url_for('log_in'))
 
