@@ -45,6 +45,7 @@
         <div class="switch-view-body">
           <div class="switch-view">
               <ul>
+                  <li><a href="{{ url_for('settings_edit') }}">Edit Preferences</a></li>
                   <li><a href="{{ url_for('settings_edit') }}">Edit Account</a></li>
                   <li><a href="{{ url_for('settings_delete') }}" onclick="return confirm('Are you sure you want to delete your account?');">Delete Account</a></li>
               </ul>

@@ -158,6 +158,10 @@ class SettingForm(FlaskForm):
     new_password = StringField("New Password: ")
     submit = SubmitField("Apply")
 
+class Preferences(FlaskForm):
+    Study_time = IntegerField("Study time: ")
+    break_time = IntegerField("Break time: ")
+    submit = SubmitField("Apply")
 #====================================================== App Context
 
 #Creates a context to manage the database
@@ -182,52 +186,55 @@ with app.app_context():
 #Handles the backend of the login page
 @app.route('/', methods=['POST', 'GET'])
 def log_in():
-    # Initializes values to None 
-    username = None
-    password = None
-    passHash = None
-    salt = None
+    if session.get('username'):
+        return redirect(url_for('homepage'))
+    else:
+        # Initializes values to None 
+        username = None
+        password = None
+        passHash = None
+        salt = None
 
-    # Specifies the form class to use
-    form = LoginForm()
+        # Specifies the form class to use
+        form = LoginForm()
 
-    #Checks if the submit button has been pressed
-    if form.validate_on_submit():
-        # Queries the database to see if the username exists
-        user = UserCredentials.query.filter_by(user_Name=form.username.data).first()
-        # if user exists
-        if user is not None:
-            # The salt and hash associated with the user's profile are taken from the database
-            salt = user.pass_salt
-            userHash = user.pass_hash
-            # A new hash is generated with the password entered into the login form, using the same salt that is within the database
-            passHash = generateHash(form.password.data, salt)
-            # The newly generated hash is compared to the hash within the database
-            if passHash == userHash:
-                session['username'] = user.user_Name
-                session['user_id'] = user.user_ID
-                # If the hashes matched, the user is logged in and redirected to the home page
-                return redirect(url_for('homepage'))
-            #Otherwise, the user is not redirected and the form is cleared
+        #Checks if the submit button has been pressed
+        if form.validate_on_submit():
+            # Queries the database to see if the username exists
+            user = UserCredentials.query.filter_by(user_Name=form.username.data).first()
+            # if user exists
+            if user is not None:
+                # The salt and hash associated with the user's profile are taken from the database
+                salt = user.pass_salt
+                userHash = user.pass_hash
+                # A new hash is generated with the password entered into the login form, using the same salt that is within the database
+                passHash = generateHash(form.password.data, salt)
+                # The newly generated hash is compared to the hash within the database
+                if passHash == userHash:
+                    session['username'] = user.user_Name
+                    session['user_id'] = user.user_ID
+                    # If the hashes matched, the user is logged in and redirected to the home page
+                    return redirect(url_for('homepage'))
+                #Otherwise, the user is not redirected and the form is cleared
+                else:
+                    #SQL injection easter egg
+                    if form.password.data.lower() == "'or 1 = 1":
+                        flash("Nice try.")
+                    else:
+                        flash("Error: the information you entered does not match our records.")
             else:
-                #SQL injection easter egg
                 if form.password.data.lower() == "'or 1 = 1":
-                    flash("Nice try.")
+                        flash("Nice try.")
                 else:
                     flash("Error: the information you entered does not match our records.")
-        else:
-            if form.password.data.lower() == "'or 1 = 1":
-                    flash("Nice try.")
-            else:
-                flash("Error: the information you entered does not match our records.")
 
-        #Clearing the form data after it has been submitted
-        username = form.username.data
-        form.username.data = ''
-        password = form.password.data
-        form.password.data = ''
-    # Re-rendering the login page after a failed login attempt
-    return render_template('log_in.html', form=form, username = username, salt = salt, passHash = passHash)
+            #Clearing the form data after it has been submitted
+            username = form.username.data
+            form.username.data = ''
+            password = form.password.data
+            form.password.data = ''
+        # Re-rendering the login page after a failed login attempt
+        return render_template('log_in.html', form=form, username = username, salt = salt, passHash = passHash)
 
 #====================================================== Account creation
 @app.route('/create_account',  methods=['POST', 'GET'])

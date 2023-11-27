@@ -1,11 +1,5 @@
-/* Fonts */
-@font-face{
-    font-family: 'Digital', sans-serif;;
-    src: url("DigitalDismay.otf") format("opentype");
-    font-weight: normal;
-}
 .header{    
-    font-family: Digital;
+    font-family: Arial, sans-serif;
 }
 
 /* Element types */
@@ -46,7 +40,7 @@ p {
 .TimerNumbers{
     position: relative;
     text-align: center;
-    font-family: 'Digital', cursive;
+    font-family: Arial, sans-serif;
     color: #060907;
     font-size: 100px;
     
@@ -93,13 +87,12 @@ p {
     display: inline-flex;
     flex-direction: row;
     text-align: center;
-    left: 50%;
-    transform: translateY(-30px);
+    padding-bottom: 25px;
     
 }
 #mainContent{
     text-align: center;
-    width: 100%;
+    width: fit-content;
     position: relative;
     left: 50%;
     transform: translate(-250px, 100px);
