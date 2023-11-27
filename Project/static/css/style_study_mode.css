@@ -58,9 +58,9 @@ p {
     text-align: center;
     width: 300px;
     height: 80px;
-    left: 50%;
-    bottom: 40%;
-    transform: translate(-150px, 0);
+    margin-bottom: 50px;
+    left: 100px;
+    box-shadow: 5px 5px 5px rgba(143, 180, 143, 0.699);
 }
 
 #Tip{
@@ -75,8 +75,7 @@ p {
     width: 500px;
     height: 200px;
     position: relative;
-    left: 50%;
-    transform: translate(-250px, 15%);
+    box-shadow: 5px 5px 5px rgba(143, 180, 143, 0.699);
 }
 #TimerButton{
     position: relative;
@@ -87,7 +86,7 @@ p {
     border-color: #a1c2b6;
     font-family: cursive;
     font-size: 20px;
-    transform: translateY(-40px);
+    transform: translateY(-20px);
 }
 
 #NumContainer{
@@ -97,4 +96,11 @@ p {
     left: 50%;
     transform: translateY(-30px);
     
+}
+#mainContent{
+    text-align: center;
+    width: 100%;
+    position: relative;
+    left: 50%;
+    transform: translate(-250px, 100px);
 }

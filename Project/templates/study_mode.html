@@ -32,11 +32,11 @@
         </div>
     </div>
 </div>
-<!-- I created a div countainer for the entirety of the body because I wanted to organize each element relative to each other,
-    without making direct changes to the body (incase I introduce new elements outside of this container later). -->
-    <div class="container-home">
-    <div class="middle">
-    <!-- Container that holds the webpage 'Header'. Not the actual HTML header portion, just the textbox at the top. -->
+
+
+<div id="mainContent">
+
+    <!-- Container for the title -->
     <div class="Container" id="HeadBox">
 
         <!-- Text within the container, raised from the bottom to center it vertically -->
@@ -48,11 +48,11 @@
         <h2 id="timerTitle">Study time!</h2>
 
         <div id="NumContainer">
-            <div class="TimerNumbers", id="Hours"> 00 </div>
+            <div class="TimerNumbers" id="Hours"> 00 </div>
             <div class="TimerNumbers"> : </div>
-            <div class="TimerNumbers", id="Minutes"> 00 </div>
+            <div class="TimerNumbers" id="Minutes"> 00 </div>
             <div class="TimerNumbers"> : </div>
-            <div class="TimerNumbers", id="Seconds"> 00 </div>
+            <div class="TimerNumbers" id="Seconds"> 00 </div>
         </div>
 
         <!-- Took me an unreasonable amount of time to figure out how to center the numbers within the numcontainer. Ended up having to set the div to inline-flex.
@@ -64,10 +64,8 @@
 
         
         </div>
-        </div>
-
-    <p id="Tip"> Tip: Try putting on some relaxing music while you study! </p>
     
 </div>
+<p id="Tip"> Tip: Try putting on some relaxing music while you study! </p>
 <!-- End body -->
 {% endblock %}
