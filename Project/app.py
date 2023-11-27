@@ -438,7 +438,7 @@ def settings():
                 name_to_update.user_Phone = form.new_phone.data
                 if form.new_password.data:
                     name_to_update.pass_hash = generateHash(form.new_password.data, salt)
-                flash(generateHash(form.new_password.data, salt))
+                session['username'] = form.new_username.data
             try: 
                 db.session.commit()
                 flash("User Information Updated Successfully!")
