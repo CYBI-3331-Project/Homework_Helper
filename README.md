@@ -15,3 +15,4 @@
 - Enforce a password policy
 - Password confirmation box in registration page
 - Polish the salt generator to prevent collisions
+- 
