@@ -124,8 +124,7 @@ class  Assignments(db.Model):
 
 #Creating a model for user preferences
 class  Preferences(db.Model):
-    ID = db.Column(db.Integer,primary_key=True)
-    user_ID = db.Column(db.Integer, db.ForeignKey('user_credentials.user_ID'))  
+    user_ID = db.Column(db.Integer, db.ForeignKey('user_credentials.user_ID'), primary_key=True)  
     notifications = db.Column(db.Integer)
     study_time = db.Column(db.Integer)
     break_time = db.Column(db.Integer)
@@ -195,10 +194,10 @@ class PreferencesForm(FlaskForm):
 #Creates a context to manage the database
 with app.app_context():
     #Drops all tables from the database
-    db.drop_all()
+    # db.drop_all()
 
     #Adds tables out of all the modles in the database, unless they already exist
-    db.create_all()
+    # db.create_all()
 
     #LoginCredentials.__table__.create(db.engine)
 
@@ -373,9 +372,10 @@ def assignment_dash():
         return render_template('assignment_dash.html')
     else:
         return redirect(url_for('log_in'))
+
     
 
-#====================================================== Create assessment #===============================================#===============================================
+#====================================================== Create assessment
 @app.route('/Homepage/Assignment_dash/Create_Assessment',  methods=['POST', 'GET'])
 def create_assessment():
     if session.get('username'):
@@ -540,10 +540,7 @@ def settings():
             session['delete_account_confirmed'] = None
             session['user_authenticated'] = None
             #Clearing the form data after it has been submitted
-            return render_template("settings.html", 
-                            form=form,
-                            name_to_update = name_to_update, 
-                            id = id)
+            return render_template("settings.html", form=form, name_to_update = name_to_update, id = id)
     else:
         return redirect(url_for('log_in'))
 
@@ -634,13 +631,26 @@ def settings_edit():
             session['user_authenticated'] = None
             session['delete_account_confirmed'] = None
             #Clearing the form data after it has been submitted
-            return render_template("settings_edit.html", 
-                            form=form,
-                            name_to_update = name_to_update, 
-                            id = id)
+            return render_template("settings_edit.html", form=form, name_to_update = name_to_update, id = id)
     else: 
         return redirect(url_for('log_in'))
+#====================================================== Assignment Dashboard
+@app.route('/Homepage/Settings/preferences')
+def edit_preferences():
+    if session.get('username'):
+        session['user_authenticated'] = None
+        session['delete_account_confirmed'] = None
+        form = Preferences()
+        user_ID = None
+        notifications = None
+        study_time = None
+        break_time = None
 
+        return render_template('settings_preferences.html')
+    else:
+        return redirect(url_for('log_in'))
+    
+#====================================================== Confirm
 @app.route('/Homepage/Settings/Confirm', methods=['POST', 'GET'])
 def settings_confirm():
     # Initializes values to None 
@@ -680,10 +690,7 @@ def settings_confirm():
                 else:
                     flash("Error: the information you entered does not match our records.")
                     return render_template("settings_confirm.html", 
-                            form=form,
-                            username = username, 
-                            salt = salt,
-                            passHash = passHash)
+                            form=form, username = username, salt = salt, passHash = passHash)
         else:
             #Clearing the form data after it has been submitted
             username = form.username.data
