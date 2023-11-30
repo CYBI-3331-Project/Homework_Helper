@@ -1,5 +1,4 @@
 import string
-from flask import Flask, render_template, Response, flash, redirect, url_for, session
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy #pip install Flask-SQLAlchemy
 from pathlib import Path
@@ -7,7 +6,8 @@ from argon2 import PasswordHasher       #pip install argon2-cffi
 from flask_wtf import FlaskForm         #pip install flask-wtf
 from wtforms import StringField, IntegerField, SubmitField, EmailField, TelField, DateField, TextAreaField, RadioField, BooleanField 
 from wtforms.validators import data_required, ValidationError
-from flask import jsonify
+from flask import Flask, render_template, flash, redirect, url_for, session, request, Response, jsonify, abort
+from functools import wraps
 from password_strength import PasswordPolicy, PasswordStats
 import os, time
 
@@ -48,6 +48,24 @@ def generateHash(passw, salt):
     else:
         print('Password verification error')
         return -1
+    
+def requires_confirmation(route):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            if route == 'delete_account_confirm':
+                if not session.get('delete_account_confirmed'):
+                    flash("Please confirm account deletion.")
+                    return redirect(url_for('settings_delete_confirm'))
+            else: 
+                if not session.get('user_authenticated'):
+                    flash("Please log in to access this page.")
+                    return redirect(url_for('settings_confirm'))  # Change 'login' to your login route
+                # Check if the route is the delete account confirmation
+
+            return func(*args, **kwargs)
+        return wrapper
+    return decorator
 
 # Finction to strip multiple characters from a string
 def stripChars(input: string, strip: string):
@@ -146,6 +164,11 @@ class LoginForm (FlaskForm):
     password = StringField("Password: ", validators=[data_required()])
     submit = SubmitField("Sign in")
 
+class Settings_ConfirmForm (FlaskForm):
+    username = StringField("Confirm Username: ", validators=[data_required()])
+    password = StringField("Confirm Password: ", validators=[data_required()])
+    submit = SubmitField("Confirm")
+
 #Create a AssessmentForm form class
 class AssessmentForm (FlaskForm):
     title = StringField("Assessment Title", validators=[data_required()])
@@ -205,7 +228,6 @@ def log_in():
         password = None
         passHash = None
         salt = None
-
         # Specifies the form class to use
         form = LoginForm()
 
@@ -224,6 +246,8 @@ def log_in():
                 if passHash == userHash:
                     session['username'] = user.user_Name
                     session['user_id'] = user.user_ID
+                    session['user_authenticated'] = None
+                    session['delete_account_confirmed'] = None
                     # If the hashes matched, the user is logged in and redirected to the home page
                     return redirect(url_for('homepage'))
                 #Otherwise, the user is not redirected and the form is cleared
@@ -282,6 +306,8 @@ def Register():
                 db.session.add(prefs)
                 db.session.commit()
                 # The user is logged in and redirected to the homepage
+                session['user_authenticated'] = None
+                session['delete_account_confirmed'] = None
                 return redirect(url_for('homepage'))
             
             # If the phone number that was entered is associated with an existing user account, the user is instead brought back to the registration page
@@ -302,7 +328,8 @@ def Register():
         form.password.data = ''
 
      # Re-rendering the account creation page after an unsuccessful submission
-    
+    session['user_authenticated'] = None
+    session['delete_account_confirmed'] = None
     return render_template('create_acct.html', form=form, username = username, email = email, phone = phone, salt = salt, passHash = passHash)
 
        
@@ -318,6 +345,8 @@ def homepage():
     if session.get('username'):
         greeting = "Hello, " + session['username'] + '.'
         flash(greeting)
+        session['user_authenticated'] = None
+        session['delete_account_confirmed'] = None
         return render_template('homepage.html')
     else:
         return redirect(url_for('log_in'))
@@ -328,6 +357,8 @@ def homepage():
 @app.route('/Homepage/Study_Mode')
 def study_mode():
     if session.get('username'):
+        session['user_authenticated'] = None
+        session['delete_account_confirmed'] = None
         return render_template('study_mode.html')
     else:
         return redirect(url_for('log_in'))
@@ -337,6 +368,8 @@ def study_mode():
 @app.route('/Homepage/Assignment_dash')
 def assignment_dash():
     if session.get('username'):
+        session['user_authenticated'] = None
+        session['delete_account_confirmed'] = None
         return render_template('assignment_dash.html')
     else:
         return redirect(url_for('log_in'))
@@ -353,7 +386,8 @@ def create_assessment():
         submit = None
         priority = None
         maxChars = 500
-
+        session['user_authenticated'] = None
+        session['delete_account_confirmed'] = None
         # Specifies the form class to use
         form = AssessmentForm()
 
@@ -366,6 +400,8 @@ def create_assessment():
                 assignment = Assignments(user_ID=session['user_id'], title=form.title.data, description=form.description.data, date_Due=form.date.data, priority=form.priority.data)
                 db.session.add(assignment)
                 db.session.commit()
+                session['user_authenticated'] = None
+                session['delete_account_confirmed'] = None
                 flash("Assignment added to DB")
 
             
@@ -381,6 +417,8 @@ def create_assessment():
         form.submit.data = ''
         priority = form.priority.data
         form.priority.data = ''
+        session['user_authenticated'] = None
+        session['delete_account_confirmed'] = None
         # Re-rendering the login page after a failed login attempt
         return render_template('create_assessment.html', title=title, description=description, date=date, submit=submit, priority=priority, form=form)
     else:
@@ -407,6 +445,8 @@ def get_events_route():
 @app.route('/Homepage/Weekly_View')
 def weekly_calendar():
     if session.get('username'):
+        session['user_authenticated'] = None
+        session['delete_account_confirmed'] = None
         return render_template('weekly_calendar.html')
     else:
         return redirect(url_for('log_in'))
@@ -424,8 +464,7 @@ def settings():
     user_ID = None
     salt = None
     id = None
-    
-
+    session['delete_account_confirmed'] = None
     # Specifies the form class to use
     if session.get('username'):
         # Query the user's information from the database
@@ -456,6 +495,8 @@ def settings():
                 flash("Error: New phone number is already taken.")
             else:
                 # Update user information
+                session['user_authenticated'] = None
+                session['delete_account_confirmed'] = None
                 name_to_update.user_Name = form.new_username.data
                 name_to_update.user_Email = form.new_email.data
                 name_to_update.user_Phone = form.new_phone.data
@@ -466,6 +507,8 @@ def settings():
                 db.session.commit()
                 flash("User Information Updated Successfully!")
                 # Re-query the user after committing changes
+                session['user_authenticated'] = None
+                session['delete_account_confirmed'] = None
                 name_to_update = UserCredentials.query.get_or_404(id)
                 print(f"Session username: {session.get('username')}")
                 print(f"User ID: {id}")
@@ -475,6 +518,8 @@ def settings():
                         name_to_update = name_to_update, id=id)
             except: 
                 flash("Error! There was an error updating your information. Please try again!")
+                session['user_authenticated'] = None
+                session['delete_account_confirmed'] = None
                 return render_template("settings.html", 
                         form=form,
                         name_to_update = name_to_update, id=id)
@@ -492,6 +537,8 @@ def settings():
             form.new_phone.data = ''
             new_password = form.new_password.data
             form.new_password.data = ''
+            session['delete_account_confirmed'] = None
+            session['user_authenticated'] = None
             #Clearing the form data after it has been submitted
             return render_template("settings.html", 
                             form=form,
@@ -501,6 +548,7 @@ def settings():
         return redirect(url_for('log_in'))
 
 @app.route('/Homepage/Settings/Edit', methods=['POST', 'GET'])
+@requires_confirmation(route='edit')
 def settings_edit():
     # Initializes values to None 
     new_username = None
@@ -510,8 +558,8 @@ def settings_edit():
     user_ID = None
     salt = None
     id = None
-    
-
+    session['user_authenticated'] = None
+    session['delete_account_confirmed'] = None
     # Specifies the form class to use
     if session.get('username'):
         # Query the user's information from the database
@@ -557,12 +605,15 @@ def settings_edit():
                 name_to_update = UserCredentials.query.get_or_404(id)
                 print(f"Session username: {session.get('username')}")
                 print(f"User ID: {id}")
-
+                session['user_authenticated'] = None
+                session['delete_account_confirmed'] = None
                 return render_template("settings.html", 
                         form=form, 
                         name_to_update = name_to_update, id=id)
             except: 
                 flash("Error! There was an error updating your information. Please try again!")
+                session['user_authenticated'] = None
+                session['delete_account_confirmed'] = None
                 return render_template("settings.html", 
                         form=form,
                         name_to_update = name_to_update, id=id)
@@ -580,15 +631,77 @@ def settings_edit():
             form.new_phone.data = ''
             new_password = form.new_password.data
             form.new_password.data = ''
+            session['user_authenticated'] = None
+            session['delete_account_confirmed'] = None
             #Clearing the form data after it has been submitted
             return render_template("settings_edit.html", 
                             form=form,
                             name_to_update = name_to_update, 
                             id = id)
-    else:
+    else: 
+        return redirect(url_for('log_in'))
+
+@app.route('/Homepage/Settings/Confirm', methods=['POST', 'GET'])
+def settings_confirm():
+    # Initializes values to None 
+    password = None
+    username = None
+    passHash = None
+    salt = None
+    session['user_authenticated'] = None
+    session['delete_account_confirmed'] = None
+    form = Settings_ConfirmForm()
+    # Specifies the form class to use
+    if session.get('username'):
+        if form.validate_on_submit(): 
+            # Query the user's information from the database
+            user = UserCredentials.query.filter_by(user_Name=session['username']).first()
+            # Check if the user is found in the database
+            salt = user.pass_salt
+            userHash = user.pass_hash
+            passHash = generateHash(form.password.data, salt)
+            if passHash == userHash: 
+                session['user_authenticated'] = True
+                session['delete_account_confirmed'] = None
+                session['username'] = user.user_Name
+                session['user_id'] = user.user_ID
+                # If the hashes matched, the user is logged in and redirected to the home page
+                return redirect(url_for('settings_edit'))
+            #Otherwise, the user is not redirected and the form is cleared
+            else:
+                #SQL injection easter egg
+                if form.password.data.lower() == "'or 1 = 1":
+                    flash("Nice try.")
+                    return render_template("settings_confirm.html", 
+                            form=form,
+                            username = username, 
+                            salt = salt,
+                            passHash = passHash)
+                else:
+                    flash("Error: the information you entered does not match our records.")
+                    return render_template("settings_confirm.html", 
+                            form=form,
+                            username = username, 
+                            salt = salt,
+                            passHash = passHash)
+        else:
+            #Clearing the form data after it has been submitted
+            username = form.username.data
+            form.username.data = ''
+            password = form.password.data
+            form.password.data = ''
+            session['user_authenticated'] = None
+            session['delete_account_confirmed'] = None
+            return render_template("settings_confirm.html", 
+                form=form,
+                username = username, 
+                salt = salt,
+                passHash = passHash)
+    else: 
         return redirect(url_for('log_in'))
 
 @app.route('/Homepage/Settings/Delete', methods=['GET', 'POST'])
+@requires_confirmation(route='delete_account_confirm')
 def settings_delete():
     id = None
     user_ID = None
@@ -616,6 +729,65 @@ def settings_delete():
                     form=form, 
                     name_to_update = name_to_update, id=id)
     else:
+        return redirect(url_for('log_in'))
+    
+@app.route('/Homepage/Settings/Delete/Confirm', methods=['GET', 'POST'])
+def settings_delete_confirm():
+    # Initializes values to None 
+    password = None
+    username = None
+    passHash = None
+    salt = None
+    session['user_authenticated'] = None
+    session['delete_account_confirmed'] = None
+    form = Settings_ConfirmForm()
+    # Specifies the form class to use
+    if session.get('username'):
+        if form.validate_on_submit(): 
+            # Query the user's information from the database
+            user = UserCredentials.query.filter_by(user_Name=session['username']).first()
+            # Check if the user is found in the database
+            salt = user.pass_salt
+            userHash = user.pass_hash
+            passHash = generateHash(form.password.data, salt)
+            if passHash == userHash:    
+                session['user_authenticated'] = True
+                session['delete_account_confirmed'] = True             
+                session['username'] = user.user_Name
+                session['user_id'] = user.user_ID
+                # If the hashes matched, the user is logged in and redirected to the home page
+                return redirect(url_for('settings_delete'))
+            #Otherwise, the user is not redirected and the form is cleared
+            else:
+                #SQL injection easter egg
+                if form.password.data.lower() == "'or 1 = 1":
+                    flash("Nice try.")
+                    return render_template("settings_delete_confirm.html", 
+                            form=form,
+                            username = username, 
+                            salt = salt,
+                            passHash = passHash)
+                else:
+                    flash("Error: the information you entered does not match our records.")
+                    return render_template("settings_delete_confirm.html", 
+                            form=form,
+                            username = username, 
+                            salt = salt,
+                            passHash = passHash)
+        else:
+            #Clearing the form data after it has been submitted
+            username = form.username.data
+            form.username.data = ''
+            password = form.password.data
+            form.password.data = ''
+            session['user_authenticated'] = None
+            session['delete_account_confirmed'] = None
+            return render_template("settings_delete_confirm.html", 
+                form=form,
+                username = username, 
+                salt = salt,
+                passHash = passHash)
+    else: 
         return redirect(url_for('log_in'))
 
 #====================================================== Log out

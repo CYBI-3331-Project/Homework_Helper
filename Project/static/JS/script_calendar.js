@@ -322,7 +322,7 @@ function updateEvents(date) {
                     } //if N/A it'll just be the same color as the event=descripon and title
                     events += `
                         <div class="event-time" style="color: ${color};">
-                            <span class="event-time">${eventsArr[i][5]}</span>
+                            <span class="event-time">${eventsArr[i][5]} Priority</span>
                         </div> 
                     </div>
                     `;

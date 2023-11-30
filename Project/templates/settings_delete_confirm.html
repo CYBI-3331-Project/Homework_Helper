@@ -21,39 +21,28 @@
 </div>
 <!-- Creating a form  with jinja formatting-->
 <div class="container-body">
-  <h1>Settings</h1>
+  <h1>Confirm to delete your Account</h1>
   <div class="container">
     <div class="box2-container">
       <div class="box2">        
         <!--Elements created through jinja-->
-        <div class="header"> 
-          <span class="label">Username: </span>
-          <span class="value">{{ name_to_update.user_Name }}</span>
-        </div>
-        <div class="header"> 
-          <span class="label">User ID: </span>
-          <span class="value">{{ name_to_update.user_ID }}</span>
-        </div>
-        <div class="header"> 
-          <span class="label">Email: </span>
-          <span class="value">{{ name_to_update.user_Email }}</span>
-        </div>
-        <div class="header"> 
-          <span class="label">Phone Number: </span>
-          <span class="value">{{ name_to_update.user_Phone }}</span>
-        </div>
-        <div class="switch-view-body">
-          <div class="switch-view">
-              <ul>
-                  <li><a href="{{ url_for('settings_confirm') }}">Edit Preferences</a></li>
-                  <li><a href="{{ url_for('settings_edit') }}">Edit Account</a></li>
-                  <li><a href="{{ url_for('settings_delete') }}">Delete Account</a></li>
-              </ul>
+        <form action="/Homepage/Settings/Delete/Confirm" method="POST">
+          {{ form.hidden_tag() }}
+          <div class="form">
+            <span class="value">{{ form.username.label}}</span>
+            <span class="value">{{ form.username(class="form-control")}}</br></span>
           </div>
+          <div class="form">
+            <span class="value">{{ form.password.label}}</span>
+            <span class="value">{{ form.password(type="password")}}</br></span>
+          </div>
+          <div class="spacer"></div>
+          {{ form.submit(id="submitButton") }}
+        </form>
       </div>
     </div>
   </div>
-</div>
+  </div>
 {% for message in get_flashed_messages() %}
 <div class="alert" role="alert" style="color: black; font-size: 25px;">{{ message }}</div>
 {% endfor %}
