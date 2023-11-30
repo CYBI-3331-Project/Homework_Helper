@@ -23,7 +23,7 @@ h1{
     width: 450px;
     height: 475px;
     text-align: left;
-    background-color: #4e835c;
+    background-color: #4e835c;/*og bckgr color: 4e835c, 235c32*/
     border-radius: 5px;
     padding: 15px;
     margin: 0;
@@ -35,6 +35,15 @@ h1{
     font-weight: 500;
     color: #08160c;
 }
+.event1 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #08160c;
+    height: auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
 
 .label {
     /* Style for labels */
@@ -45,6 +54,7 @@ h1{
     /* Style for values */
     /* Add your styles here */
     font-weight: lighter;
+    color: #e9f7ec;
 }
 
 .form {
@@ -59,11 +69,9 @@ h1{
   }
 .box2 {
     width: auto;
-    min-width: 400px;
     height: auto;
-    min-height: 180px;
     text-align: left;
-    background-color: #4e835c;
+    background-color: #235c32;
     border-radius: 5px;
     display: flex;
     flex-direction: column;
@@ -78,7 +86,7 @@ h1{
     flex-wrap: wrap;
     position: relative;
     justify-content: space-between;
-    width: 100%;
+    width: auto;
     height: auto;
     background-color: #c5e0cc;
 }
@@ -110,6 +118,7 @@ h1{
     color: black;
     font-size: 25px;
 }
+
 .formError{
     color: red;
 }
@@ -119,4 +128,65 @@ h1{
     width: 100%;
     position: relative;
 
+}
+
+.options {
+    gap: 25px;
+}
+
+
+i {
+    cursor: pointer;
+    color: #3c9f57;
+}
+
+y {
+    color: #f09d99;
+    font-size: .5rem;
+    justify-content: center;
+    align-items: center;
+    padding: auto;
+}
+
+i:hover {
+    color: #f09d99;
+}
+
+
+
+/*.event55 {
+    min-height: 70px;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    padding: 0 20px;
+    padding-left: 50px;
+    color: #e9f7ec;
+    background-color:rgba(255,0,0,0.3); change the background color on the right
+}*/
+
+.event2 {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    height: auto;
+    flex-wrap: wrap;
+}
+
+.bullet {
+    width: 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.assessment {
+    width: 80%;
+    display: flex;
+}
+
+.actions {
+    display: flex;
+    width: 15%;
 }

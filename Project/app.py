@@ -55,11 +55,11 @@ def requires_confirmation(route):
         def wrapper(*args, **kwargs):
             if route == 'delete_account_confirm':
                 if not session.get('delete_account_confirmed'):
-                    flash("Please confirm account deletion.")
+                    flash("Please confirm information to delete your account.")
                     return redirect(url_for('settings_delete_confirm'))
             else: 
                 if not session.get('user_authenticated'):
-                    flash("Please log in to access this page.")
+                    flash("Please confirm information in order to access this page.")
                     return redirect(url_for('settings_confirm'))  # Change 'login' to your login route
                 # Check if the route is the delete account confirmation
 
@@ -105,6 +105,33 @@ def validatePassword(form, field):
         print('spec error')
         raise ValidationError('Password must contain at least ' + str(passSpec) + ' special character')
     
+def organize_events(events):
+    # Sort events by year, month, and day
+    sorted_events = sorted(events, key=lambda event: (event[2], event[1], event[0]))
+
+    return sorted_events
+
+# Example usage:
+
+
+def split_integer_at_rightmost_digit(input_integer):
+    # Convert the integer to a string
+    input_str = str(input_integer)
+
+    # Extract the rightmost digit
+    rightmost_digit = int(input_str[-1])
+
+    # Extract everything to the left of the rightmost digit
+    left_of_rightmost_digit_str = input_str[:-1]
+
+    # Check if the string is not empty before converting to int
+    if left_of_rightmost_digit_str:
+        left_of_rightmost_digit = int(left_of_rightmost_digit_str)
+    else:
+        # Handle the case when the string is empty
+        left_of_rightmost_digit = 0  # or any default value you prefer
+
+    return left_of_rightmost_digit, rightmost_digit
 
 
 
@@ -421,6 +448,112 @@ def create_assessment():
         session['delete_account_confirmed'] = None
         # Re-rendering the login page after a failed login attempt
         return render_template('create_assessment.html', title=title, description=description, date=date, submit=submit, priority=priority, form=form)
+    else:
+        return redirect(url_for('log_in'))
+
+@app.route('/Homepage/Assignment_dash/Edit_Assessment',  methods=['POST', 'GET'])
+def edit_assessment():
+    if session.get('username'):
+        # Initializes values to None 
+        title = None
+        description = None
+        date = None
+        submit = None
+        priority = None
+        maxChars = 500
+        session['user_authenticated'] = None
+        session['delete_account_confirmed'] = None
+        # Specifies the form class to use
+        form = AssessmentForm()
+
+        #Checks if the submit button has been pressed
+        if form.validate_on_submit():
+            if(len(form.description.data) > maxChars):
+                errorMsg = "Error: Max description length is", maxChars, "characters. Character count: ", len(form.description.data)
+                flash(stripChars(str(errorMsg), "',()"))
+            else:
+                assignment = Assignments(user_ID=session['user_id'], title=form.title.data, description=form.description.data, date_Due=form.date.data, priority=form.priority.data)
+                db.session.add(assignment)
+                db.session.commit()
+                session['user_authenticated'] = None
+                session['delete_account_confirmed'] = None
+                flash("Assignment added to DB")
+
+            
+
+            #Clearing the form data after it has been submitted
+        title = form.title.data
+        form.title.data = ''
+        description = form.description.data
+        form.description.data = ''
+        date = form.date.data
+        form.date.data = ''
+        submit = form.submit.data
+        form.submit.data = ''
+        priority = form.priority.data
+        form.priority.data = ''
+        session['user_authenticated'] = None
+        session['delete_account_confirmed'] = None
+        # Re-rendering the login page after a failed login attempt
+        return render_template('edit_assessment.html', title=title, description=description, date=date, submit=submit, priority=priority, form=form)
+    else:
+        return redirect(url_for('log_in'))
+
+@app.route('/Homepage/Assignment_dash/Delete_Assessment/<int:id>', methods=['POST', 'GET'])
+def delete_assessment(id):
+    if session.get('username'):
+        assignments = Assignments.query.filter_by(user_ID=session['user_id']).all()
+        print(assignments)
+        events = []
+        for assignment in assignments: #this is kinda redundant but I need the events[] so that I can organize it
+            #but I can't organize inside the next for loop because I need the assignment to link with it's specific event
+            date = str(assignment.date_Due).split('-')
+            day = date[2][:2]
+            month = date[1]
+            year = date[0]
+
+            events.append([day, month, year, assignment.title, assignment.description, assignment.priority])
+        priority_list = [('High', 0), ('Medium', 1), ('Low', 2), ('N/A', 3)]
+        left, right = split_integer_at_rightmost_digit(id)
+        print("Left of rightmost digit:", left)
+        ID = left
+        print("Rightmost digit:", right)
+        print('ID', ID)
+        x = right
+        print('x', x)
+        # Find the corresponding priority string using the reverse mapping
+        priority = next(item[0] for item in priority_list if item[1] == x)
+        print('priority: ', priority)
+        assessments = organize_events(events)
+        print('assessments: ', assessments)
+        priority_events = list(filter(lambda event: event and event[5] == priority, assessments))
+        assignment_to_delete = priority_events[ID]
+        # Sorted variable by day, month, year, that are within a specific priority level
+        print('priority_events: ', priority_events)
+
+        assignment_to_deleteduh = None  # Declare assignment_to_deleteduh outside the loop
+        for assignment in assignments:
+            date = str(assignment.date_Due).split('-')
+            day = date[2][:2]
+            month = date[1]
+            year = date[0]
+
+            events.append([day, month, year, assignment.title, assignment.description, assignment.priority])
+            try: 
+                if day == assignment_to_delete[0] and month == assignment_to_delete[1] and year == assignment_to_delete[2] and assignment.title == assignment_to_delete[3] and assignment.description == assignment_to_delete[4] and assignment.priority == assignment_to_delete[5]:
+                    # Find the assignment to delete
+                    assignment_to_deleteduh = Assignments.query.filter_by(user_ID=session['user_id'], title=assignment_to_delete[3], description=assignment_to_delete[4], priority=assignment_to_delete[5]).first()
+                    if assignment_to_deleteduh:
+                        db.session.delete(assignment_to_deleteduh)
+                        db.session.commit()
+                        flash("Assignment deleted successfully")
+                    else:
+                        flash("Assignment not found")
+                else:
+                    print('assignment not this one', events[-1])
+            except: 
+                print('came to except')
+        return redirect(url_for('assignment_dash'))
     else:
         return redirect(url_for('log_in'))
 

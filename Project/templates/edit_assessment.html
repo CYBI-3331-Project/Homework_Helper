@@ -1,0 +1,59 @@
+{% extends 'base_homepage.html' %}
+
+
+{% block head %}
+        <title>Create Assessments</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/create_assessment.css') }}">
+{% endblock %}
+{% block body %}
+<div class="navbar-body">
+    <div class="left">
+        <div class="navbar">
+            <ul>
+                <li><a href="{{ url_for('homepage') }}">Home</a></li>
+                <li><a class="active" href="{{ url_for('assignment_dash') }}">Assessments</a></li>
+                <li><a href="{{ url_for('study_mode') }}">Study Mode</a></li>
+                <li><a href="{{ url_for('settings') }}">Settings</a></li>
+                <li><a href="{{ url_for('log_out') }}">Log Out</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Creating a form  with jinja formatting-->
+<div class="container-body">   
+    <h1 style="padding-bottom: 25px;">Edit your Assessment</h1>
+    <div class="box">
+        <form action="/Homepage/Assignment_dash/Edit_Assessment" method="post">
+            
+            <!--Uses the SECRET_KEY to lock this page behind said key, to prevent CSRF attacks.-->
+            {{ form.hidden_tag() }}
+
+            <!--Elements created through jinja-->
+            {{ form.title.label }}
+            <div class="spacer"></div>
+            {{ form.title }}
+            <div class="spacer"></div>
+            {{ form.description.label }}
+            <div class="spacer"></div>
+            {{ form.description(style='height: 150px; width: 100%; resize: none; limit: 300') }}
+            <div class="spacer"></div>
+            {{ form.date.label }}
+            <div class="spacer"></div>
+            {{ form.date }}
+            <div class="spacer"></div>
+            {{ form.priority.label }}
+            <div class="spacer"></div>
+            {{ form.priority }}
+            <div class="spacer"></div>
+            <div class="spacer"></div>
+            {{ form.submit(id="submitButton") }}
+        </form>
+    </div>
+</div>
+
+<!-- Handling flash messages -->
+{% for message in get_flashed_messages() %}
+<div class="alert" role="alert" style="text-align: center; color: black; font-size: 25px;">{{ message }}</div>
+{% endfor %}
+{% endblock %}

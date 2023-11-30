@@ -29,11 +29,11 @@
         <form action="/Homepage/Settings/Confirm" method="POST">
           {{ form.hidden_tag() }}
           <div class="form">
-            <span class="value">{{ form.username.label}}</span>
+            <span class="label">{{ form.username.label}}</span>
             <span class="value">{{ form.username(class="form-control")}}</br></span>
           </div>
           <div class="form">
-            <span class="value">{{ form.password.label}}</span>
+            <span class="label">{{ form.password.label}}</span>
             <span class="value">{{ form.password(type="password")}}</br></span>
           </div>
           <div class="spacer"></div>
