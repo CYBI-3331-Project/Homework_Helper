@@ -94,6 +94,24 @@ def validatePassword(form, field):
 #============================================== Classes
 #======================================================== Databases
 
+#Creating a model for user assignments
+class  Assignments(db.Model):
+    ID = db.Column(db.Integer,primary_key=True)
+    user_ID = db.Column(db.Integer, db.ForeignKey('user_credentials.user_ID'))  
+    title = db.Column(db.String(50), nullable=False)
+    description = db.Column(db.String(300), nullable=True)
+    date_Created = db.Column(db.DateTime, default=datetime.utcnow)
+    date_Due = db.Column(db.DateTime, nullable=False)
+    priority = db.Column(db.String(10), nullable=False)
+
+#Creating a model for user preferences
+class  Preferences(db.Model):
+    ID = db.Column(db.Integer,primary_key=True)
+    user_ID = db.Column(db.Integer, db.ForeignKey('user_credentials.user_ID'))  
+    notifications = db.Column(db.Integer)
+    study_time = db.Column(db.Integer)
+    break_time = db.Column(db.Integer)
+
 #Creating a model for user credentials
 class  UserCredentials(db.Model):
     user_ID = db.Column(db.Integer, primary_key=True)
@@ -103,28 +121,13 @@ class  UserCredentials(db.Model):
     pass_salt = db.Column(db.Integer, nullable=False, unique=True)
     pass_hash = db.Column(db.String, nullable=False)
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
-    
     assignments = db.relationship('Assignments', backref='userCred', lazy=True)
+    preferences = db.relationship('Preferences', backref='userCred', lazy=True)
 
 
-    #Creating a string
-    def __repr__(self):
-        return '<Name %r>' % self.user_Name
-    
 
-#     #Creating a string    
-#     def __repr__(self):
-#         return '<Name %r>' % self.user_Name
 
-#Creating a model for user assignments
-class  Assignments(db.Model):
-    ID = db.Column(db.Integer,primary_key=True)
-    user_ID = db.Column(db.Integer, db.ForeignKey('user_credentials.user_ID'))  
-    title = db.Column(db.String(50), nullable=False)
-    description = db.Column(db.String(300), nullable=True)
-    date_Created = db.Column(db.DateTime, default=datetime.utcnow)
-    date_Due = db.Column(db.DateTime, nullable=False)
-    priority = db.Column(db.Integer, nullable=False)
+
 
 
 #======================================================== Forms
@@ -158,19 +161,21 @@ class SettingForm(FlaskForm):
     new_password = StringField("New Password: ")
     submit = SubmitField("Apply")
 
-class Preferences(FlaskForm):
+class PreferencesForm(FlaskForm):
     Study_time = IntegerField("Study time: ")
     break_time = IntegerField("Break time: ")
+    notifications = RadioField("Notifications", choices=['N/A', 'High', 'Medium', 'Low'])
     submit = SubmitField("Apply")
+
 #====================================================== App Context
 
 #Creates a context to manage the database
 with app.app_context():
     #Drops all tables from the database
-    # db.drop_all()
+    db.drop_all()
 
     #Adds tables out of all the modles in the database, unless they already exist
-    #  db.create_all()
+    db.create_all()
 
     #LoginCredentials.__table__.create(db.engine)
 
@@ -189,6 +194,12 @@ def log_in():
     if session.get('username'):
         return redirect(url_for('homepage'))
     else:
+        if(UserCredentials.query.filter_by(user_Name='admin').first() is None):
+            # Admin Creds for debugging purposes.  <------------------------------------------------------------------------------------ Remove before release
+            adminSalt = generateSalt()
+            adminPass = 'admin'
+            db.session.add(UserCredentials(user_Name = 'admin', user_Email = 'admin@email.com', user_Phone = 9561337420, pass_salt = adminSalt, pass_hash = generateHash(adminPass, adminSalt)))
+            db.session.commit()
         # Initializes values to None 
         username = None
         password = None
@@ -259,12 +270,17 @@ def Register():
                 passHash = generateHash(form.password.data, salt)
                 # A database object is created with the user's information
                 user = UserCredentials(user_Name = form.username.data, user_Email = form.email.data, user_Phone = form.phone.data, pass_salt = salt, pass_hash = passHash)
-                session['username'] = user.user_Name
+                session['username'] = user.user_Name                
                 
                 # The newly created user object is added to a database session, and committed as an entry to the user_credentials table
                 db.session.add(user)
                 db.session.commit()
                 session['user_id'] = (UserCredentials.query.filter_by(user_Name = form.username.data).first()).user_ID
+
+                # A database object is created alongside the user's account to store their preferences (initialized with default values).
+                prefs = Preferences(user_ID= session.get('user_id'), notifications= 0, study_time= 3600, break_time= 600)
+                db.session.add(prefs)
+                db.session.commit()
                 # The user is logged in and redirected to the homepage
                 return redirect(url_for('homepage'))
             
