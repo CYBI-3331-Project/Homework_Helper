@@ -119,16 +119,16 @@ function updateEventContainer(priority, eventsArr, date, month, year, containerI
             // Use the correct variable name here (e.g., priorityEvent)
             const assignmentId = l // Assuming the assignment ID is in the first position of the array
             l = l + 1;
-            // Your encoded URL string
-            var deleteAssessmentUrl = "/Homepage/Assignment_dash/{{url_for('delete_assessment')}}";
-
-            // Decode the URL
+            
             events += `
                 <div class="bullet">
                     <y class="fas fa-circle"></y>
                 </div>
                 <div class="assessment">
                     <span class="value">${event[3]}</span>
+                </div>
+                <div class="assessment_due">
+                    <span class="value"> due on ${months[event[1] - 1] + " " + event[0] + " " + event[2]}</span>
                 </div>
                 <div class="actions">
                     <span class="options">

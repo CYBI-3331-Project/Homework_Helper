@@ -363,7 +363,64 @@ def Register():
 #====================================================== Forgot Password
 @app.route('/Forgot_Password')
 def forgotpw():
-    return render_template('forgotpw.html')
+    if session.get('username'):
+        return redirect(url_for('homepage'))
+    else:
+        if(UserCredentials.query.filter_by(user_Name='admin').first() is None):
+            # Admin Creds for debugging purposes.  <------------------------------------------------------------------------------------ Remove before release
+            adminSalt = generateSalt()
+            adminPass = 'admin'
+            db.session.add(UserCredentials(user_Name = 'admin', user_Email = 'admin@email.com', user_Phone = 9561337420, pass_salt = adminSalt, pass_hash = generateHash(adminPass, adminSalt)))
+            db.session.commit()
+        # Initializes values to None 
+        username = None
+        password = None
+        passHash = None
+        salt = None
+        # Specifies the form class to use
+        form = LoginForm()
+
+        #Checks if the submit button has been pressed
+        if form.validate_on_submit():
+            # Queries the database to see if the username exists
+            user = UserCredentials.query.filter_by(user_Name=form.username.data).first()
+            # if user exists
+            if user is not None:
+                # The salt and hash associated with the user's profile are taken from the database
+                salt = user.pass_salt
+                userHash = user.pass_hash
+                # A new hash is generated with the password entered into the login form, using the same salt that is within the database
+                passHash = generateHash(form.password.data, salt)
+                # The newly generated hash is compared to the hash within the database
+                if passHash == userHash:
+                    session['username'] = user.user_Name
+                    session['user_id'] = user.user_ID
+                    session['user_authenticated'] = None
+                    session['delete_account_confirmed'] = None
+                    # If the hashes matched, the user is logged in and redirected to the home page
+                    return redirect(url_for('homepage'))
+                #Otherwise, the user is not redirected and the form is cleared
+                else:
+                    #SQL injection easter egg
+                    if form.password.data.lower() == "'or 1 = 1":
+                        flash("Nice try.")
+                    else:
+                        flash("Error: the information you entered does not match our records.")
+            else:
+                if form.password.data.lower() == "'or 1 = 1":
+                        flash("Nice try.")
+                else:
+                    flash("Error: the information you entered does not match our records.")
+
+            #Clearing the form data after it has been submitted
+            username = form.username.data
+            form.username.data = ''
+            password = form.password.data
+            form.password.data = ''
+        # Re-rendering the login page after a failed login attempt
+        session['user_authenticated'] = None
+        session['delete_account_confirmed'] = None
+        return render_template('forgotpw.html', form=form, username = username, salt = salt, passHash = passHash)
 
 #====================================================== Homepage
 @app.route('/Homepage')
@@ -451,8 +508,8 @@ def create_assessment():
     else:
         return redirect(url_for('log_in'))
 
-@app.route('/Homepage/Assignment_dash/Edit_Assessment',  methods=['POST', 'GET'])
-def edit_assessment():
+@app.route('/Homepage/Assignment_dash/Edit_Assessment/<int:id>',  methods=['POST', 'GET'])
+def edit_assessment(id):
     if session.get('username'):
         # Initializes values to None 
         title = None
@@ -465,23 +522,83 @@ def edit_assessment():
         session['delete_account_confirmed'] = None
         # Specifies the form class to use
         form = AssessmentForm()
+        #finds all assignments created by the user
+        assignments = Assignments.query.filter_by(user_ID=session['user_id']).all()
+        events = []
 
-        #Checks if the submit button has been pressed
+        for assignment in assignments: #this is kinda redundant but I need the events[] so that I can organize it
+            #but I can't organize inside the next for loop because I need the assignment to link with it's specific event
+            date = str(assignment.date_Due).split('-')
+            day = date[2][:2]
+            month = date[1]
+            year = date[0]
+            events.append([day, month, year, assignment.title, assignment.description, assignment.priority])
+
+        priority_list = [('High', 0), ('Medium', 1), ('Low', 2), ('N/A', 3)]
+        left, right = split_integer_at_rightmost_digit(id)
+        ID = left
+        print('ID', ID) #for each priority, assignments starts from 0 and increments, if only one assignment, it'll be 02, or 03, depending on it's priority level
+        priority_num = right
+        print('priority_num: ', priority_num)#priority level
+
+        # Find the corresponding priority string using the reverse mapping
+        priority = next(item[0] for item in priority_list if item[1] == priority_num)
+        print('priority: ', priority)
+        assessments = organize_events(events)
+        print('assessments: ', assessments)
+        priority_events = list(filter(lambda event: event and event[5] == priority, assessments))
+        assignment_to_edit = priority_events[ID]#we do this because it's the same way it's organized in the javascript
+        #that way we can match with the correct assignment, event if they are duplicate assignments
+        #whatever they click on will be deleted
+        # Sorted variable by day, month, year, that are within a specific priority level
+        print('priority_events: ', priority_events)
+
         if form.validate_on_submit():
             if(len(form.description.data) > maxChars):
                 errorMsg = "Error: Max description length is", maxChars, "characters. Character count: ", len(form.description.data)
                 flash(stripChars(str(errorMsg), "',()"))
             else:
-                assignment = Assignments(user_ID=session['user_id'], title=form.title.data, description=form.description.data, date_Due=form.date.data, priority=form.priority.data)
-                db.session.add(assignment)
-                db.session.commit()
-                session['user_authenticated'] = None
-                session['delete_account_confirmed'] = None
-                flash("Assignment added to DB")
+                assignment_to_editduh = None  # Declare assignment_to_deleteduh outside the loop
+                for assignment in assignments:
+                    date = str(assignment.date_Due).split('-')
+                    day = date[2][:2]
+                    month = date[1]
+                    year = date[0]
 
-            
+                    events.append([day, month, year, assignment.title, assignment.description, assignment.priority])
+                    try: 
+                        if day == assignment_to_edit[0] and month == assignment_to_edit[1] and year == assignment_to_edit[2] and assignment.title == assignment_to_edit[3] and assignment.description == assignment_to_edit[4] and assignment.priority == assignment_to_edit[5]:
+                            # Find the assignment to edit
+                            assignment_to_editduh = Assignments.query.filter_by(user_ID=session['user_id'], title=assignment_to_edit[3], description=assignment_to_edit[4], priority=assignment_to_edit[5]).first()
 
-            #Clearing the form data after it has been submitted
+                            if assignment_to_editduh:
+                                # Update the existing assignment with the new data
+                                assignment_to_editduh.title = form.title.data
+                                assignment_to_editduh.description = form.description.data
+                                assignment_to_editduh.date_Due = form.date.data
+                                assignment_to_editduh.priority = form.priority.data
+
+                                # Commit the changes
+                                try:
+                                    db.session.commit()
+                                    flash("Assignment edited successfully")
+                                    session['user_authenticated'] = None
+                                    session['delete_account_confirmed'] = None
+                                    return render_template('assignment_dash.html')
+                                except Exception as e:
+                                    session['user_authenticated'] = None
+                                    session['delete_account_confirmed'] = None
+                                    # Handle any exceptions that might occur during the commit
+                                    print(str(e))
+                                    flash("Error updating assignment")
+                                    return render_template("assignment_dash.html")
+                            else:
+                                flash("Assignment not found")
+                        else:
+                            print('assignment not this one', events[-1])
+                    except: 
+                        print('came to except')
+        assignment_to_edit = priority_events[ID]
         title = form.title.data
         form.title.data = ''
         description = form.description.data
@@ -495,13 +612,16 @@ def edit_assessment():
         session['user_authenticated'] = None
         session['delete_account_confirmed'] = None
         # Re-rendering the login page after a failed login attempt
-        return render_template('edit_assessment.html', title=title, description=description, date=date, submit=submit, priority=priority, form=form)
+        return render_template('edit_assessment.html', assignment_to_edit = assignment_to_edit, id=id, title=title, description=description, date=date, submit=submit, priority=priority, form=form)
     else:
         return redirect(url_for('log_in'))
 
 @app.route('/Homepage/Assignment_dash/Delete_Assessment/<int:id>', methods=['POST', 'GET'])
 def delete_assessment(id):
-    if session.get('username'):
+    if session.get('username'):    
+        session['user_authenticated'] = None
+        session['delete_account_confirmed'] = None
+
         assignments = Assignments.query.filter_by(user_ID=session['user_id']).all()
         print(assignments)
         events = []
@@ -511,19 +631,18 @@ def delete_assessment(id):
             day = date[2][:2]
             month = date[1]
             year = date[0]
-
             events.append([day, month, year, assignment.title, assignment.description, assignment.priority])
+
         priority_list = [('High', 0), ('Medium', 1), ('Low', 2), ('N/A', 3)]
         left, right = split_integer_at_rightmost_digit(id)
-        print("Left of rightmost digit:", left)
         ID = left
-        print("Rightmost digit:", right)
         print('ID', ID)
         x = right
         print('x', x)
         # Find the corresponding priority string using the reverse mapping
         priority = next(item[0] for item in priority_list if item[1] == x)
         print('priority: ', priority)
+
         assessments = organize_events(events)
         print('assessments: ', assessments)
         priority_events = list(filter(lambda event: event and event[5] == priority, assessments))
@@ -537,9 +656,10 @@ def delete_assessment(id):
             day = date[2][:2]
             month = date[1]
             year = date[0]
-
             events.append([day, month, year, assignment.title, assignment.description, assignment.priority])
-            try: 
+            try:
+                session['user_authenticated'] = None
+                session['delete_account_confirmed'] = None
                 if day == assignment_to_delete[0] and month == assignment_to_delete[1] and year == assignment_to_delete[2] and assignment.title == assignment_to_delete[3] and assignment.description == assignment_to_delete[4] and assignment.priority == assignment_to_delete[5]:
                     # Find the assignment to delete
                     assignment_to_deleteduh = Assignments.query.filter_by(user_ID=session['user_id'], title=assignment_to_delete[3], description=assignment_to_delete[4], priority=assignment_to_delete[5]).first()
@@ -553,6 +673,8 @@ def delete_assessment(id):
                     print('assignment not this one', events[-1])
             except: 
                 print('came to except')
+        session['user_authenticated'] = None
+        session['delete_account_confirmed'] = None
         return redirect(url_for('assignment_dash'))
     else:
         return redirect(url_for('log_in'))
@@ -726,8 +848,8 @@ def settings_edit():
                 name_to_update.user_Phone = form.new_phone.data
                 if form.new_password.data:
                     name_to_update.pass_hash = generateHash(form.new_password.data, salt)
-                else: 
-                    flash('AHHH')
+                session['username'] = form.new_username.data
+
             try: 
                 db.session.commit()
                 flash("User Information Updated Successfully!")
@@ -761,7 +883,7 @@ def settings_edit():
             form.new_phone.data = ''
             new_password = form.new_password.data
             form.new_password.data = ''
-            session['user_authenticated'] = None
+            session['user_authenticated'] = True
             session['delete_account_confirmed'] = None
             #Clearing the form data after it has been submitted
             return render_template("settings_edit.html", form=form, name_to_update = name_to_update, id = id)

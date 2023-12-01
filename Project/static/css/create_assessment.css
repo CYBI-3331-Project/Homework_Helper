@@ -182,7 +182,12 @@ i:hover {
 }
 
 .assessment {
-    width: 80%;
+    width: 40%;
+    display: flex;
+}
+
+.assessment_due {
+    width: 40%;
     display: flex;
 }
 

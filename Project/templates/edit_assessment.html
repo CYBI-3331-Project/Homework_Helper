@@ -4,6 +4,7 @@
 {% block head %}
         <title>Create Assessments</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='css/create_assessment.css') }}">
+
 {% endblock %}
 {% block body %}
 <div class="navbar-body">
@@ -24,33 +25,35 @@
 <div class="container-body">   
     <h1 style="padding-bottom: 25px;">Edit your Assessment</h1>
     <div class="box">
-        <form action="/Homepage/Assignment_dash/Edit_Assessment" method="post">
-            
-            <!--Uses the SECRET_KEY to lock this page behind said key, to prevent CSRF attacks.-->
+        <form action="{{ url_for('edit_assessment', id=id) }}" method="post">
             {{ form.hidden_tag() }}
-
-            <!--Elements created through jinja-->
+        
             {{ form.title.label }}
             <div class="spacer"></div>
-            {{ form.title }}
+            {{ form.title(class="form-control", value=assignment_to_edit[3]) }}
             <div class="spacer"></div>
+
             {{ form.description.label }}
             <div class="spacer"></div>
-            {{ form.description(style='height: 150px; width: 100%; resize: none; limit: 300') }}
+            {{ form.description(class="form-control", value=assignment_to_edit[4], style='height: 150px; width: 100%; resize: none; limit: 300;') }}
             <div class="spacer"></div>
-            {{ form.date.label }}
+        
+            {{ form.date.label}}
             <div class="spacer"></div>
-            {{ form.date }}
+            {{ form.date(class="form-control", value=assignment_to_edit[0, 1, 2]) }}
             <div class="spacer"></div>
+        
             {{ form.priority.label }}
             <div class="spacer"></div>
-            {{ form.priority }}
+            {{ form.priority(class="form-control", value=assignment_to_edit[5]) }}
             <div class="spacer"></div>
+        
             <div class="spacer"></div>
             {{ form.submit(id="submitButton") }}
-        </form>
+        </form>        
     </div>
 </div>
+
 
 <!-- Handling flash messages -->
 {% for message in get_flashed_messages() %}

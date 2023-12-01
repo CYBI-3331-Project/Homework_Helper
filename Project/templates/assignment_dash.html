@@ -49,37 +49,3 @@
 {% endfor %}
 <script src="{{ url_for('static', filename = 'JS/assignment_dash.js') }}"></script>
 {% endblock %}
-<!--
-<div class="event1">
-    <span class="label">High Priority Assessments </span>
-    <div class="event2">
-        <div class="bullet">
-            <y class="fas fa-circle"></y>
-        </div>
-        <div class="assessment">
-            <span class="value">Username: </span>
-        </div>
-        <div class="actions">
-            <span class="options">
-                <a href="{{ url_for('edit_assessment') }}"><i class="fas fa-edit"></i></a>
-                <a href="{{ url_for('delete_assessment') }}"><i class="fas fa-trash-alt"></i></a>
-            </span>
-        </div>
-    </div>
-</div>
-function getActiveDay(date) {
-    const day = new Date(year, month, date);
-    const dayName = day.toString().split(" ")[0];
-    eventDay.innerHTML = dayName;
-    eventDate.innerHTML = date + " " + months[month] + " " + year;
-}
-                    priorityEvents.forEach(event => {
-                        var color = '';
-                        if (eventsArr[i] [5] === 'Low') {
-                            color = 'yellow';
-                        } else if (eventsArr[i] [5] === 'Medium') {
-                            color = 'orange';
-                        } else if (eventsArr[i] [5] === 'High'){
-                            color = 'red';
-                        } //if N/A it'll just be the same color as the event=descripon and title
- style="color: ${color};-->
