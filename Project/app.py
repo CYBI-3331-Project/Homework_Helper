@@ -10,7 +10,7 @@ from flask import Flask, render_template, flash, redirect, url_for, session, req
 from functools import wraps
 from password_strength import PasswordPolicy, PasswordStats
 import os, time
-
+#delete---------------------------------------------------------
 from twilio.rest import Client
 import smtplib
 from email.mime.text import MIMEText
@@ -62,6 +62,7 @@ user_phone_number = '+8322192109'  # Replace with the actual phone number
 user_email = 'daniel.quiroz01@utrgv.edu'  # Replace with the actual email
 
 send_message("Hello from Python!", user_phone_number, user_email)
+#delete-0-----------------------------------------------------------
 
 app = Flask(__name__)
 
@@ -1115,5 +1116,7 @@ def log_out():
 
 #====================================================== Main
 if __name__ == "__main__":
-    app.run(debug=True) #app.run(host='192.168.1.142') to make searchable through IP    
+    app.run(host='127.0.0.1', port=3000, debug=True) #app.run(host='192.168.1.142') to make searchable through IP    
                         #I don't believe this option works if we are not on the same network
+#sudo socketxp login numbers
+#sudo socketxp connect http://localhost:3000
