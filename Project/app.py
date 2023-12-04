@@ -11,6 +11,58 @@ from functools import wraps
 from password_strength import PasswordPolicy, PasswordStats
 import os, time
 
+from twilio.rest import Client
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
+# Twilio credentials
+twilio_account_sid = 'AC7e1eef7802aca2b91a00b95f79a80a3f'
+twilio_auth_token = '6ae6c2e0738bd0736d2f9834948d95ad'
+twilio_phone_number = '+18669716573'
+
+# Email credentials
+email_sender = 'danielqjr04@gmail.com'
+email_password = 'cyb3i331project'
+email_recipient = 'user_phone_number@example.com'  # Assuming user has email-to-SMS enabled
+
+def send_sms(message, to_phone_number):
+    client = Client(twilio_account_sid, twilio_auth_token)
+
+    message = client.messages.create(
+        body=message,
+        from_=twilio_phone_number,
+        to=to_phone_number
+    )
+
+    print(f"SMS sent with SID: {message.sid}")
+
+def send_email(subject, body, to_email):
+    msg = MIMEMultipart()
+    msg['From'] = email_sender
+    msg['To'] = to_email
+    msg['Subject'] = subject
+
+    msg.attach(MIMEText(body, 'plain'))
+
+    with smtplib.SMTP('smtp.gmail.com', 587) as server:
+        server.starttls()
+        server.login(email_sender, email_password)
+        text = msg.as_string()
+        server.sendmail(email_sender, to_email, text)
+
+    print("Email sent successfully")
+
+def send_message(message, to_phone_number, to_email):
+    send_sms(message, to_phone_number)
+    send_email("Notification", message, to_email)
+
+# Example usage
+user_phone_number = '+8322192109'  # Replace with the actual phone number
+user_email = 'daniel.quiroz01@utrgv.edu'  # Replace with the actual email
+
+send_message("Hello from Python!", user_phone_number, user_email)
+
 app = Flask(__name__)
 
 #Secret key to prevent CSRF, cryptographically signs session cookies
@@ -525,6 +577,7 @@ def edit_assessment(id):
         #finds all assignments created by the user
         assignments = Assignments.query.filter_by(user_ID=session['user_id']).all()
         events = []
+        print(assignments)
 
         for assignment in assignments: #this is kinda redundant but I need the events[] so that I can organize it
             #but I can't organize inside the next for loop because I need the assignment to link with it's specific event
@@ -533,7 +586,8 @@ def edit_assessment(id):
             month = date[1]
             year = date[0]
             events.append([day, month, year, assignment.title, assignment.description, assignment.priority])
-
+            
+        print(assignment)
         priority_list = [('High', 0), ('Medium', 1), ('Low', 2), ('N/A', 3)]
         left, right = split_integer_at_rightmost_digit(id)
         ID = left
@@ -1058,9 +1112,6 @@ def log_out():
     if session.get('username'):
         session.pop('username')
     return redirect(url_for('log_in'))
-
-
-
 
 #====================================================== Main
 if __name__ == "__main__":
