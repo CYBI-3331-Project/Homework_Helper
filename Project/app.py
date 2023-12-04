@@ -12,21 +12,6 @@ from password_strength import PasswordPolicy, PasswordStats
 import os, time
 import subprocess
 
-# Terminal command to be executed
-terminal_command = '''
-curl -X POST \
-  -H "Authorization: Bearer 418898043c3a4004b50c7e4e3b534fe9" \
-  -H "Content-Type: application/json" -d '
-  {
-    "from": "12085813554",
-    "to": [ "18322192109" ],
-    "body": "You just created an assignment with the assignment title of insert here. "
-  }' \
-  "https://sms.api.sinch.com/xms/v1/52b8280514d041609ae8bf5666d898a6/batches"
-'''
-
-# Execute the terminal command without invoking a new shell
-subprocess.run(terminal_command, shell=True)
 
 app = Flask(__name__)
 
@@ -65,7 +50,7 @@ def generateHash(passw, salt):
     else:
         print('Password verification error')
         return -1
-    
+
 def requires_confirmation(route):
     def decorator(func):
         @wraps(func)
@@ -79,7 +64,6 @@ def requires_confirmation(route):
                     flash("Please confirm information in order to access this page.")
                     return redirect(url_for('settings_confirm'))  # Change 'login' to your login route
                 # Check if the route is the delete account confirmation
-
             return func(*args, **kwargs)
         return wrapper
     return decorator
@@ -478,7 +462,6 @@ def assignment_dash():
 
 #====================================================== Create assessment
 @app.route('/Homepage/Assignment_dash/Create_Assessment',  methods=['POST', 'GET'])
-
 def create_assessment():
     if session.get('username'):
         # Initializes values to None 
@@ -504,7 +487,14 @@ def create_assessment():
                 db.session.commit()
                 session['user_authenticated'] = None
                 session['delete_account_confirmed'] = None
-                flash("Assignment added to DB")
+                events=[]
+                date = str(assignment.date_Due).split('-')
+                day = date[2][:2]
+                month = date[1]
+                year = date[0]
+                events.append([day, month, year, assignment.title, assignment.description, assignment.priority])
+                session['event'] = events
+                return redirect(url_for('send_sms'))
 
             
 
@@ -821,7 +811,6 @@ def settings():
 
 @app.route('/Homepage/Settings/Edit', methods=['POST', 'GET'])
 @requires_confirmation(route='edit')
-
 def settings_edit():
     # Initializes values to None 
     new_username = None
@@ -1072,6 +1061,86 @@ def settings_delete_confirm():
                 passHash = passHash)
     else: 
         return redirect(url_for('log_in'))
+    
+# Define the Flask route to handle sending SMS
+@app.route('/send_sms', methods=['POST', 'GET'])
+def send_sms():
+    months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"]
+    session['user_authenticated'] = None
+    session['delete_account_confirmed'] = None
+    # Assume the user account is already created and added to the database
+    user = UserCredentials.query.filter_by(user_Name=session['username']).first()
+    username = user.user_Name
+    id = user.user_ID
+    phone = user.user_Phone
+    print('phone: ', phone)
+    notifications_num = Preferences.query.get_or_404(id)
+    notification = notifications_num.notifications #is 0 rn
+    notification = 3 #manually changing to high priotrity for rn
+    notifications_preference = str(notification)
+    user_phone = str(phone)
+    user_name = str(username)
+    events = session['event']
+    print('notification_preference: ', notifications_preference)
+    print(events[0])
+
+    # Determine the body of the SMS based on user preferences
+    if notifications_preference == '0':
+        sms_body = "Hello {user_name}! You don't have notifications enabled! (No notifications)"
+    elif notifications_preference == '1':
+        if events[0][5] == 'High':
+            sms_body = f"Hello {user_name}! You just created a high-priority assignment with {events[0][3]} as the title and {events[0][4]} as the description. This assignment is due at {months[int(events[0][1]) - 1]} {events[0][0]} {events[0][2]}! (High priority)"
+    elif notifications_preference == '2':
+        if events[0][5] == 'High' or events[0][5] == 'Medium':
+            sms_body = f"Hello {user_name}! You just created an assignment with {events[0][3]} as the title and {events[0][4]} as the description, and {events[0][5]} as the priority level. This assignment is due at {months[int(events[0][1]) - 1]} {events[0][0]} {events[0][2]}! (High or Medium priority)"
+    elif notifications_preference == '3':
+        if events[0][5] == 'Low' or events[0][5] == 'Medium' or events[0][5] == 'High':
+            sms_body = f"Hello {user_name}! You just created an assignment with {events[0][3]} as the title and {events[0][4]} as the description, and {events[0][5]} as the priority level. This assignment is due at {months[int(events[0][1]) - 1]} {events[0][0]} {events[0][2]}! (Low through High priority)"
+
+
+    # Terminal command to be executed
+    if notifications_preference == '0':
+        print('User has notifications disabled')
+        session['user_authenticated'] = None
+        session['delete_account_confirmed'] = None
+        return redirect(url_for('assignment_dash'))
+    else:
+        try:
+            terminal_command = f'''
+            curl -X POST \
+            -H "Authorization: Bearer 418898043c3a4004b50c7e4e3b534fe9" \
+            -H "Content-Type: application/json" -d '
+            {{
+                "from": "12085813554",
+                "to": [ "1{user_phone}" ],
+                "body": "{sms_body}"
+            }}' \
+            "https://sms.api.sinch.com/xms/v1/52b8280514d041609ae8bf5666d898a6/batches"
+            '''
+            # Execute the terminal command without invoking a new shell
+            session['user_authenticated'] = None
+            session['delete_account_confirmed'] = None
+            subprocess.run(terminal_command, shell=True)
+            return redirect(url_for('assignment_dash'))
+        except:
+            print('came to except')
+            print(user_phone)
+            print(sms_body)
+            print(terminal_command)
+            return redirect(url_for('assignment_dash'))
+        
 
 #====================================================== Log out
 @app.route('/logout')
