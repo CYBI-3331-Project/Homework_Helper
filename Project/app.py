@@ -1,4 +1,3 @@
-import string
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy #pip install Flask-SQLAlchemy
 from pathlib import Path
@@ -9,8 +8,8 @@ from wtforms.validators import data_required, ValidationError
 from flask import Flask, render_template, flash, redirect, url_for, session, request, Response, jsonify, abort
 from functools import wraps
 from password_strength import PasswordPolicy, PasswordStats
-import os, time
-import subprocess
+import os, time, subprocess, requests, platform, string, json
+
 
 
 app = Flask(__name__)
@@ -30,6 +29,14 @@ passCase = 1
 passNum = 1
 passSpec = 1
 
+# Settings for SMS messages
+service_plan_id = "52b8280514d041609ae8bf5666d898a6"
+access_token    = "418898043c3a4004b50c7e4e3b534fe9"
+from_ = "12085813554"
+to_   = ""
+
+# Checking the operating system for later use
+opSys = platform.system()
 
 
 #====================================================== Functions
@@ -212,8 +219,8 @@ class SettingForm(FlaskForm):
     submit = SubmitField("Apply")
 
 class PreferencesForm(FlaskForm):
-    study_time = IntegerField("Study time (minutes): ")
-    break_time = IntegerField("Break time (minutes): ")
+    study_time = IntegerField("Study time (minutes): ", validators=[data_required()])
+    break_time = IntegerField("Break time (minutes): ", validators=[data_required()])
     notifications = RadioField("Notifications received", choices=['N/A', 'Only High', 'Medium and High', 'Low to High'])
     submit = SubmitField("Apply")
 
@@ -924,11 +931,6 @@ def edit_preferences():
         form = PreferencesForm()
         prefs = Preferences.query.filter_by(user_ID=session['user_id']).first()
         if prefs is not None:
-            
-
-            
-
-
             #Checks if the submit button has been pressed
             if form.validate_on_submit():
                 if(form.notifications.data == 'N/A'):
@@ -948,13 +950,28 @@ def edit_preferences():
                     prefs.notifications = notiPrio
                     prefs.study_time = form.study_time.data * 60
                     prefs.break_time = form.break_time.data * 60
+                    print(form.notifications.data, ' ', notiPrio)
                     prefs.notifications = notiPrio
                     db.session.commit()
                     flash('Preferences saved')
-
-
+                else:
+                    flash('Error: Preferences could not be saved.')
                 return render_template('settings_preferences.html', form=form, study_time=study_time, break_time=break_time, notifications=notifications)
+            
+            notifications = form.notifications.data
+            if(prefs.notifications == 0):
+                form.notifications.default = 'N/A'
+            elif(prefs.notifications == 1):
+                form.notifications.default = 'Only High'
+            elif(prefs.notifications == 2):
+                form.notifications.default = 'Medium and High'
+            elif(prefs.notifications == 3):
+                form.notifications.default = 'Low to High'
 
+            study_time = form.study_time.data
+            form.study_time.data = int(prefs.study_time / 60) 
+            break_time = form.break_time.data
+            form.break_time.data = int(prefs.break_time / 60)
 
             return render_template('settings_preferences.html', form=form, study_time=study_time, break_time=break_time, notifications=notifications)
         else:
@@ -1134,13 +1151,14 @@ def send_sms():
     session['delete_account_confirmed'] = None
     # Assume the user account is already created and added to the database
     user = UserCredentials.query.filter_by(user_Name=session['username']).first()
-    username = user.user_Name
-    id = user.user_ID
+    username = session.get('username')
+    userID = session.get('user_id')
     phone = user.user_Phone
     print('phone: ', phone)
-    notifications_num = Preferences.query.get_or_404(id)
-    notification = notifications_num.notifications #is 0 rn
-    notification = 3 #manually changing to high priotrity for rn
+
+    prefs = Preferences.query.filter_by(user_ID= userID).first()
+    notification = prefs.notifications
+
     notifications_preference = str(notification)
     user_phone = str(phone)
     user_name = str(username)
@@ -1153,13 +1171,13 @@ def send_sms():
         sms_body = "Hello {user_name}! You don't have notifications enabled! (No notifications)"
     elif notifications_preference == '1':
         if events[0][5] == 'High':
-            sms_body = f"Hello {user_name}! You just created a high-priority assignment with {events[0][3]} as the title and {events[0][4]} as the description. This assignment is due at {months[int(events[0][1]) - 1]} {events[0][0]} {events[0][2]}! (High priority)"
+            notiPrio = "High priority"
     elif notifications_preference == '2':
         if events[0][5] == 'High' or events[0][5] == 'Medium':
-            sms_body = f"Hello {user_name}! You just created an assignment with {events[0][3]} as the title and {events[0][4]} as the description, and {events[0][5]} as the priority level. This assignment is due at {months[int(events[0][1]) - 1]} {events[0][0]} {events[0][2]}! (High or Medium priority)"
+            notiPrio = "High or Medium priority"
     elif notifications_preference == '3':
         if events[0][5] == 'Low' or events[0][5] == 'Medium' or events[0][5] == 'High':
-            sms_body = f"Hello {user_name}! You just created an assignment with {events[0][3]} as the title and {events[0][4]} as the description, and {events[0][5]} as the priority level. This assignment is due at {months[int(events[0][1]) - 1]} {events[0][0]} {events[0][2]}! (Low through High priority)"
+            notiPrio = "Low through High priority"
 
 
     # Terminal command to be executed
@@ -1169,30 +1187,61 @@ def send_sms():
         session['delete_account_confirmed'] = None
         return redirect(url_for('assignment_dash'))
     else:
-        try:
-            terminal_command = f'''
-            curl -X POST \
-            -H "Authorization: Bearer 418898043c3a4004b50c7e4e3b534fe9" \
-            -H "Content-Type: application/json" -d '
-            {{
-                "from": "12085813554",
-                "to": [ "1{user_phone}" ],
-                "body": "{sms_body}"
-            }}' \
-            "https://sms.api.sinch.com/xms/v1/52b8280514d041609ae8bf5666d898a6/batches"
-            '''
-            # Execute the terminal command without invoking a new shell
-            session['user_authenticated'] = None
-            session['delete_account_confirmed'] = None
-            subprocess.run(terminal_command, shell=True)
-            return redirect(url_for('assignment_dash'))
-        except:
-            print('came to except')
-            print(user_phone)
-            print(sms_body)
-            print(terminal_command)
-            return redirect(url_for('assignment_dash'))
-        
+        to_ = '1' + str(user_phone)
+
+        headers = {
+            "Authorization":f"Bearer {access_token}",
+            "Content-Type":"application/json"
+        }
+
+        payload = {
+            "from":from_,
+            "to":[to_],
+            "body": f"Hello, {user_name}. Looks like you've just created an assignment!\n\nTitle: {events[0][3]}\n\nDescription: {events[0][4]}\n\nPriority: {events[0][5]}\n\nDue date: {months[int(events[0][1]) - 1]} {events[0][0]} {events[0][2]}\n\n\nYour current notification settings are set to show you {notiPrio} events. This can be changed in your user preferences page."
+        }
+
+        response = requests.post(
+            f'https://sms.api.sinch.com/xms/v1/{service_plan_id}/batches',
+            headers=headers,
+            data=json.dumps(payload)
+        ).json()
+
+        print(response)
+
+
+        return redirect(url_for('assignment_dash'))
+    
+    
+#============================================================================================================== Temp
+        # # Will only work with unix-based OS
+        # if(opSys == 'Linux' or opSys == 'Darwin'):
+        #     print('Using linux')
+        #     try:
+        #         terminal_command = f'''
+        #         curl -X POST \
+        #         -H "Authorization: Bearer 418898043c3a4004b50c7e4e3b534fe9" \
+        #         -H "Content-Type: application/json" -d '
+        #         {{
+        #             "from": "12085813554",
+        #             "to": [ "1{user_phone}" ],
+        #             "body": "{sms_body}"
+        #         }}' \
+        #         "https://sms.api.sinch.com/xms/v1/52b8280514d041609ae8bf5666d898a6/batches"
+        #         '''
+        #         # Execute the terminal command without invoking a new shell
+        #         session['user_authenticated'] = None
+        #         session['delete_account_confirmed'] = None
+        #         subprocess.run(terminal_command, shell=True)
+        #         return redirect(url_for('assignment_dash'))
+        #     except:
+        #         print('came to except')
+        #         print(user_phone)
+        #         print(sms_body)
+        #         print(terminal_command)
+        #         return redirect(url_for('assignment_dash'))
+        #     # REMEMBER TO ADD COUNTRY CODE <----------------------------------------------------------------------------------------------------
+        # elif(opSys == 'Windows'):
+        #     print('test123123')
 
 #============================================================================================================== Log out
 @app.route('/logout')
