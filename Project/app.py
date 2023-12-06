@@ -138,7 +138,7 @@ def split_integer_at_rightmost_digit(input_integer):
 
 
 #============================================== Classes
-#======================================================== Databases
+#================================================================================================================ Database tables
 
 #Creating a model for user assignments
 class  Assignments(db.Model):
@@ -175,7 +175,7 @@ class  UserCredentials(db.Model):
 
 
 
-#======================================================== Forms
+#================================================================================================================ Forms
 
 #Create a registration form class
 class RegisterForm (FlaskForm):
@@ -212,9 +212,9 @@ class SettingForm(FlaskForm):
     submit = SubmitField("Apply")
 
 class PreferencesForm(FlaskForm):
-    Study_time = IntegerField("Study time: ")
-    break_time = IntegerField("Break time: ")
-    notifications = RadioField("Notifications", choices=['N/A', 'High', 'Medium', 'Low'])
+    study_time = IntegerField("Study time (minutes): ")
+    break_time = IntegerField("Break time (minutes): ")
+    notifications = RadioField("Notifications received", choices=['N/A', 'Only High', 'Medium and High', 'Low to High'])
     submit = SubmitField("Apply")
 
 #====================================================== App Context
@@ -237,7 +237,7 @@ with app.app_context():
 
 
 #============================================== App routes
-#====================================================== Default/Login
+#============================================================================================================== Default/Login
 #Handles the backend of the login page
 @app.route('/', methods=['POST', 'GET'])
 def log_in():
@@ -248,7 +248,14 @@ def log_in():
             # Admin Creds for debugging purposes.  <------------------------------------------------------------------------------------ Remove before release
             adminSalt = generateSalt()
             adminPass = 'admin'
-            db.session.add(UserCredentials(user_Name = 'admin', user_Email = 'admin@email.com', user_Phone = 9561337420, pass_salt = adminSalt, pass_hash = generateHash(adminPass, adminSalt)))
+            if(UserCredentials.query.filter_by(user_ID=1).first() is None):
+                db.session.add(UserCredentials(user_ID = 1, user_Name = 'admin', user_Email = 'admin@email.com', user_Phone = 9561337420, pass_salt = adminSalt, pass_hash = generateHash(adminPass, adminSalt)))
+            else:
+                db.session.add(UserCredentials(user_Name = 'admin', user_Email = 'admin@email.com', user_Phone = 9561337420, pass_salt = adminSalt, pass_hash = generateHash(adminPass, adminSalt)))
+            db.session.commit()
+
+
+            db.session.add(Preferences(user_ID= UserCredentials.query.filter_by(user_Name='admin').first().user_ID, notifications= 0, study_time= 3600, break_time= 600))
             db.session.commit()
         # Initializes values to None 
         username = None
@@ -298,7 +305,7 @@ def log_in():
         # Re-rendering the login page after a failed login attempt
         return render_template('log_in.html', form=form, username = username, salt = salt, passHash = passHash)
 
-#====================================================== Account creation
+#============================================================================================================== Account creation
 @app.route('/create_account',  methods=['POST', 'GET'])
 def Register():
     username = None
@@ -361,18 +368,12 @@ def Register():
 
        
 
-#====================================================== Forgot Password
+#============================================================================================================== Forgot Password
 @app.route('/Forgot_Password')
 def forgotpw():
     if session.get('username'):
         return redirect(url_for('homepage'))
     else:
-        if(UserCredentials.query.filter_by(user_Name='admin').first() is None):
-            # Admin Creds for debugging purposes.  <------------------------------------------------------------------------------------ Remove before release
-            adminSalt = generateSalt()
-            adminPass = 'admin'
-            db.session.add(UserCredentials(user_Name = 'admin', user_Email = 'admin@email.com', user_Phone = 9561337420, pass_salt = adminSalt, pass_hash = generateHash(adminPass, adminSalt)))
-            db.session.commit()
         # Initializes values to None 
         username = None
         password = None
@@ -423,7 +424,7 @@ def forgotpw():
         session['delete_account_confirmed'] = None
         return render_template('forgotpw.html', form=form, username = username, salt = salt, passHash = passHash)
 
-#====================================================== Homepage
+#============================================================================================================== Homepage
 @app.route('/Homepage')
 def homepage():
     if session.get('username'):
@@ -437,7 +438,7 @@ def homepage():
 
 
 
-#====================================================== Study Mode
+#============================================================================================================== Study Mode
 @app.route('/Homepage/Study_Mode')
 def study_mode():
     if session.get('username'):
@@ -448,7 +449,7 @@ def study_mode():
         return redirect(url_for('log_in'))
     
 
-#====================================================== Assignment Dashboard
+#============================================================================================================== Assignment Dashboard
 @app.route('/Homepage/Assignment_dash')
 def assignment_dash():
     if session.get('username'):
@@ -460,7 +461,7 @@ def assignment_dash():
 
     
 
-#====================================================== Create assessment
+#============================================================================================================== Create assessment
 @app.route('/Homepage/Assignment_dash/Create_Assessment',  methods=['POST', 'GET'])
 def create_assessment():
     if session.get('username'):
@@ -516,6 +517,7 @@ def create_assessment():
     else:
         return redirect(url_for('log_in'))
 
+#============================================================================================================== Edit assessment
 @app.route('/Homepage/Assignment_dash/Edit_Assessment/<int:id>',  methods=['POST', 'GET'])
 def edit_assessment(id):
     if session.get('username'):
@@ -626,6 +628,7 @@ def edit_assessment(id):
     else:
         return redirect(url_for('log_in'))
 
+#============================================================================================================== Delete assessment
 @app.route('/Homepage/Assignment_dash/Delete_Assessment/<int:id>', methods=['POST', 'GET'])
 def delete_assessment(id):
     if session.get('username'):    
@@ -690,7 +693,7 @@ def delete_assessment(id):
         return redirect(url_for('log_in'))
 
 
-#====================================================== Get Events
+#============================================================================================================== Get Events
 @app.route('/Homepage/get_events',  methods=['GET'])
 def get_events_route():
     userAssignments = Assignments.query.filter_by(user_ID= session['user_id']).all()
@@ -706,7 +709,7 @@ def get_events_route():
     # "description": assignment.description,
     return jsonify(events)
 
-#====================================================== Calendar
+#============================================================================================================== Calendar
 @app.route('/Homepage/Weekly_View')
 def weekly_calendar():
     if session.get('username'):
@@ -716,7 +719,7 @@ def weekly_calendar():
     else:
         return redirect(url_for('log_in'))
 
-#====================================================== Settings
+#============================================================================================================== Settings
 # ... (other routes)
 
 @app.route('/Homepage/Settings', methods=['POST', 'GET'])
@@ -809,6 +812,7 @@ def settings():
     else:
         return redirect(url_for('log_in'))
 
+#============================================================================================================== Edit Settings
 @app.route('/Homepage/Settings/Edit', methods=['POST', 'GET'])
 @requires_confirmation(route='edit')
 def settings_edit():
@@ -899,23 +903,64 @@ def settings_edit():
             return render_template("settings_edit.html", form=form, name_to_update = name_to_update, id = id)
     else: 
         return redirect(url_for('log_in'))
-#====================================================== Assignment Dashboard
-@app.route('/Homepage/Settings/preferences')
+#============================================================================================================== Preferences
+@app.route('/Homepage/Settings/preferences', methods=['POST', 'GET'])
 def edit_preferences():
     if session.get('username'):
         session['user_authenticated'] = None
         session['delete_account_confirmed'] = None
-        form = Preferences()
-        user_ID = None
+
+        # Setting initializing form variables
         notifications = None
         study_time = None
         break_time = None
+        validInfo = True
 
-        return render_template('settings_preferences.html')
+        # Specifies the form class to use
+        form = PreferencesForm()
+        prefs = Preferences.query.filter_by(user_ID=session['user_id']).first()
+        if prefs is not None:
+            
+
+            
+
+
+            #Checks if the submit button has been pressed
+            if form.validate_on_submit():
+                if(form.notifications.data == 'N/A'):
+                    notiPrio = 0
+                elif(form.notifications.data == 'Only High'):
+                    notiPrio = 1
+                elif(form.notifications.data == 'Medium and High'):
+                    notiPrio = 2
+                elif(form.notifications.data == 'Low to High'):
+                    notiPrio = 3
+                else:
+                    validInfo = False
+                    flash('Error: Invalid notification parameter')
+
+                if(validInfo):
+                    
+                    prefs.notifications = notiPrio
+                    prefs.study_time = form.study_time.data
+                    prefs.break_time = form.break_time.data
+                    prefs.notifications = notiPrio
+                    db.session.commit()
+
+
+                return render_template('settings_preferences.html', form=form, study_time=study_time, break_time=break_time, notifications=notifications)
+
+
+            return render_template('settings_preferences.html', form=form, study_time=study_time, break_time=break_time, notifications=notifications)
+        else:
+            print('Prefs not found for user with ID: ', session.get('user_id'), '. Adding default preferences.')
+            db.session.add(Preferences(user_ID= session.get('user_id'), notifications= 0, study_time= 3600, break_time= 600))
+            db.session.commit()
+            return render_template('settings_preferences.html', form=form, study_time=study_time, break_time=break_time, notifications=notifications)
     else:
         return redirect(url_for('log_in'))
     
-#====================================================== Confirm
+#============================================================================================================== Confirm
 @app.route('/Homepage/Settings/Confirm', methods=['POST', 'GET'])
 def settings_confirm():
     # Initializes values to None 
@@ -972,37 +1017,38 @@ def settings_confirm():
     else: 
         return redirect(url_for('log_in'))
 
+#============================================================================================================== Delete
 @app.route('/Homepage/Settings/Delete', methods=['GET', 'POST'])
 @requires_confirmation(route='delete_account_confirm')
 def settings_delete():
-    id = None
-    user_ID = None
+    userID = None
     if session.get('username'):
-        # Query the user's information from the database
-        user = UserCredentials.query.filter_by(user_Name=session['username']).first()
         # Check if the user is found in the database
-        id = user.user_ID
-        user_to_delete = UserCredentials.query.get_or_404(id)
-        name_to_update = UserCredentials.query.get_or_404(id)
+        userID = session.get('user_id')
+        user = UserCredentials.query.filter_by(user_ID=userID).first()
+
         form = SettingForm()
         try: 
-            db.session.delete(user_to_delete)
+            db.session.delete(user)
             db.session.commit()
             session.pop('username')
+            session.pop('user_id')
             flash("User Deleted Successfully!!")
 
             return redirect(url_for('log_in'))
         except: 
+            db.session.rollback()
             flash("Whoops! There was a problem deleting the user!")
             name_to_update = UserCredentials.query.get_or_404(id)
             print(f"Session username: {session.get('username')}")
-            print(f"User ID: {id}")
+            print(f"User ID: {userID}")
             return render_template('settings.html', 
                     form=form, 
-                    name_to_update = name_to_update, id=id)
+                    name_to_update = name_to_update, id=userID)
     else:
         return redirect(url_for('log_in'))
-    
+
+#============================================================================================================== Confirm Delete
 @app.route('/Homepage/Settings/Delete/Confirm', methods=['GET', 'POST'])
 def settings_delete_confirm():
     # Initializes values to None 
@@ -1061,7 +1107,8 @@ def settings_delete_confirm():
                 passHash = passHash)
     else: 
         return redirect(url_for('log_in'))
-    
+
+#============================================================================================================== SMS Handler
 # Define the Flask route to handle sending SMS
 @app.route('/send_sms', methods=['POST', 'GET'])
 def send_sms():
@@ -1142,14 +1189,14 @@ def send_sms():
             return redirect(url_for('assignment_dash'))
         
 
-#====================================================== Log out
+#============================================================================================================== Log out
 @app.route('/logout')
 def log_out():
     if session.get('username'):
         session.pop('username')
     return redirect(url_for('log_in'))
 
-#====================================================== Main
+#============================================================================================================== Main
 if __name__ == "__main__":
     app.run(host='127.0.0.1', port=3000, debug=True) #app.run(host='192.168.1.142') to make searchable through IP    
                         #I don't believe this option works if we are not on the same network
