@@ -9,13 +9,14 @@
 <!-- Defining 'functions.js' as the script source file -->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style_study_mode.css') }}">
 
-<script src="{{ url_for('static', filename = 'js/studymode.js') }}"> var hrs = 15 </script>
+<script type="text/javascript">
+    var studySeconds = '{{ prefData.studyTime }}'
+    var breakSeconds = '{{ prefData.breakTime }}'
+</script>
+<script src="{{ url_for('static', filename = 'js/studymode.js') }}"></script>
 
 <!-- End head -->
 {% endblock %}
-
-
-{% block body_attrs %} onload="initTimer(0, 0, 5);" {% endblock %}
 
 <!-- Begin body -->
 {% block body %}

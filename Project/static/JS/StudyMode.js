@@ -54,17 +54,26 @@ function sayHello() {
     }
  }
 
- var hours = 0;
- var minutes = 0;
- var seconds = 1;
- var paused = true;
-var studyTime = true;
+var hours = 0;
+var minutes = 0;
+var seconds = 0;
+var paused = true;
+var studyTime = false;
+
 
 //Initializes the values of the timer
  function initTimer(h, m, s){
     hours = h;
-    minutes = m;
+    minutes = m;    
     seconds = s;
+    while (seconds > 59){
+        seconds -= 60;
+        minutes += 1;
+    }
+    while (minutes > 59){
+        minutes -= 60;
+        hours += 1;
+    }
     setTimer();
 }
  //Set the values of the Study Mode Timer within the number elements
@@ -122,7 +131,7 @@ var studyTime = true;
         if(minutes > 0){
             minutes -= 1
             seconds = 59
-            setTimer();
+            setTimer(); 
         }
         else if(hours > 0){
             hours -= 1
@@ -134,12 +143,12 @@ var studyTime = true;
             if(studyTime){
                 document.getElementById("timerTitle").textContent = "Break time!";
                 studyTime = false
-                initTimer(0, 0, 5)
+                initTimer(0, 0, breakSeconds)
             }
             else{
                 document.getElementById("timerTitle").textContent = "Study time!";
                 studyTime = true
-                initTimer(0, 0, 15)
+                initTimer(0, 0, studySeconds)
             }
         }
 

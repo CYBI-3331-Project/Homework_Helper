@@ -444,7 +444,11 @@ def study_mode():
     if session.get('username'):
         session['user_authenticated'] = None
         session['delete_account_confirmed'] = None
-        return render_template('study_mode.html')
+
+        prefs = Preferences.query.filter_by(user_ID=session.get('user_id')).first()
+
+        prefData = {'studyTime': prefs.study_time, 'breakTime': prefs.break_time}
+        return render_template('study_mode.html', prefData=prefData)
     else:
         return redirect(url_for('log_in'))
     
@@ -942,10 +946,11 @@ def edit_preferences():
                 if(validInfo):
                     
                     prefs.notifications = notiPrio
-                    prefs.study_time = form.study_time.data
-                    prefs.break_time = form.break_time.data
+                    prefs.study_time = form.study_time.data * 60
+                    prefs.break_time = form.break_time.data * 60
                     prefs.notifications = notiPrio
                     db.session.commit()
+                    flash('Preferences saved')
 
 
                 return render_template('settings_preferences.html', form=form, study_time=study_time, break_time=break_time, notifications=notifications)
