@@ -42,6 +42,11 @@
     </div>
     <div style="text-align: center">
         <p class="subText">Already have an account? <a href="{{ url_for('log_in') }}">Sign in</a></p>
+        <h4>Password requirements:</h4>
+        <h4>Password must be 9 characters</h4>
+        <h4>Needs at least 1 capatalized character</h4>
+        <h4>Needs at least 1 number</h4>
+        <h4>Needs at least 1 special character</h4>
     </div>
     <!-- Handling flash messages -->
     {% for message in get_flashed_messages() %}

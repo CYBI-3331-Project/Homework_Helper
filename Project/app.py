@@ -1188,7 +1188,6 @@ def send_sms():
         session['delete_account_confirmed'] = None
         return redirect(url_for('assignment_dash'))
     else:
-<<<<<<< Updated upstream
         to_ = '1' + str(user_phone)
 
         headers = {
@@ -1246,34 +1245,6 @@ def send_sms():
         #     print('test123123')
 
 #============================================================================================================== Log out
-=======
-        try:
-            terminal_command = f'''
-            curl -X POST \
-            -H "Authorization: Bearer 418898043c3a4004b50c7e4e3b534fe9" \
-            -H "Content-Type: application/json" -d '
-            {{
-                "from": "12085813554",
-                "to": [ "1{user_phone}" ],
-                "body": "{sms_body}"
-            }}' \
-            "https://sms.api.sinch.com/xms/v1/52b8280514d041609ae8bf5666d898a6/batches"
-            '''
-            # Execute the terminal command without invoking a new shell
-            session['user_authenticated'] = None
-            session['delete_account_confirmed'] = None
-            subprocess.run(terminal_command, shell=True)
-            return redirect(url_for('assignment_dash'))
-        except:
-            print('came to except')
-            print(user_phone)
-            print(sms_body)
-            print(terminal_command)
-            return redirect(url_for('assignment_dash'))
-        
-print('this is in the terminal')
-#====================================================== Log out
->>>>>>> Stashed changes
 @app.route('/logout')
 def log_out():
     if session.get('username'):

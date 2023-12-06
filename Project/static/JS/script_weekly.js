@@ -95,11 +95,14 @@ fetchEvents();
 
 //function to display calendar ============================================================================================================================================
 function initCalendar(activeDay) {
+    
 //if active day is 9th of month, dayindex is 4 (thursday of current week)
 //9-4 = 5 (sunday of week)
     const firstDayOfWeek = new Date(year, month, activeDay - dayIndex);
+
 //9 + (6-4) = 11, last day of week (saturday)
     const lastDayOfWeek = new Date(year, month, activeDay + (6 - dayIndex));
+
 //global variables used in prev/next nav
 //simply stealing the first/last of week
     lastdayofweek = lastDayOfWeek;
