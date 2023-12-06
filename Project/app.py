@@ -1039,7 +1039,7 @@ def settings_confirm():
     else: 
         return redirect(url_for('log_in'))
 
-#============================================================================================================== Delete
+#============================================================================================================== Delete User
 @app.route('/Homepage/Settings/Delete', methods=['GET', 'POST'])
 @requires_confirmation(route='delete_account_confirm')
 def settings_delete():
@@ -1047,11 +1047,12 @@ def settings_delete():
     if session.get('username'):
         # Check if the user is found in the database
         userID = session.get('user_id')
-        user = UserCredentials.query.filter_by(user_ID=userID).first()
 
         form = SettingForm()
         try: 
-            db.session.delete(user)
+            UserCredentials.query.filter_by(user_ID= userID).delete()
+            Preferences.query.filter_by(user_ID= userID).delete()
+            Assignments.query.filter_by(user_ID= userID).delete()
             db.session.commit()
             session.pop('username')
             session.pop('user_id')
