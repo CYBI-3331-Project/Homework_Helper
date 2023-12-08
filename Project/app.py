@@ -30,9 +30,9 @@ passNum = 1
 passSpec = 1
 
 # Settings for SMS messages
-service_plan_id = "52b8280514d041609ae8bf5666d898a6"
-access_token    = "418898043c3a4004b50c7e4e3b534fe9"
-from_ = "12085813554"
+service_plan_id = ""
+access_token    = ""
+from_ = ""
 to_   = ""
 
 # Checking the operating system for later use
@@ -1220,10 +1220,10 @@ def send_sms():
         #     try:
         #         terminal_command = f'''
         #         curl -X POST \
-        #         -H "Authorization: Bearer 418898043c3a4004b50c7e4e3b534fe9" \
+        #         -H "" \
         #         -H "Content-Type: application/json" -d '
         #         {{
-        #             "from": "12085813554",
+        #             "from": "",
         #             "to": [ "1{user_phone}" ],
         #             "body": "{sms_body}"
         #         }}' \
